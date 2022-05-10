@@ -1,0 +1,28 @@
+method: random # type of tuning
+metric:
+  name: eval/loss
+  goal: minimize
+parameters:
+  EPOCHS:
+    distribution: q_uniform
+    min: 10
+    max: 100
+    q: 10
+  EPS:
+    min: 0.0001
+    max: 0.1
+  EVAL_BATCHSIZE:
+    value: 4
+  LR:
+    min: 0.0001
+    max: 0.1
+  TRAIN_BATCHSIZE:
+    value: 4
+  BATCH_UPDATE:
+    values: [4, 16, 32]
+  WARMUP_STEPS:
+    min: 0
+    max: 10
+  WEIGHT_DECAY:
+    min: 0.0001
+    max: 0.1

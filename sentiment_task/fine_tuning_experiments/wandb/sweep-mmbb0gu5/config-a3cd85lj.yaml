@@ -1,0 +1,10 @@
+wandb_version: 1
+
+no_repeat_ngram_size:
+  value: 5
+num_beams:
+  value: 9
+repetition_penalty:
+  value: 0.5496978412969115
+temperature:
+  value: 0.7179124515757778

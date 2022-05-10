@@ -1,0 +1,628 @@
+2022-04-27 16:48:41,538 INFO    MainThread:873012 [internal.py:wandb_internal():95] W&B internal server running at pid: 873012, started at: 2022-04-27 16:48:41.538075
+2022-04-27 16:48:41,540 INFO    WriterThread:873012 [datastore.py:open_for_write():77] open: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/run-b7gmuodz.wandb
+2022-04-27 16:48:41,542 DEBUG   SenderThread:873012 [sender.py:send():235] send: header
+2022-04-27 16:48:41,542 DEBUG   SenderThread:873012 [sender.py:send():235] send: run
+2022-04-27 16:48:41,899 INFO    SenderThread:873012 [dir_watcher.py:__init__():169] watching files in: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files
+2022-04-27 16:48:41,899 INFO    SenderThread:873012 [sender.py:_start_run_threads():815] run started: b7gmuodz with start time 1651074520
+2022-04-27 16:48:41,899 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:48:41,899 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:48:41,900 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: check_version
+2022-04-27 16:48:41,900 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: check_version
+2022-04-27 16:48:41,968 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: run_start
+2022-04-27 16:48:41,973 DEBUG   HandlerThread:873012 [meta.py:__init__():37] meta init
+2022-04-27 16:48:41,973 DEBUG   HandlerThread:873012 [meta.py:__init__():51] meta init done
+2022-04-27 16:48:41,973 DEBUG   HandlerThread:873012 [meta.py:probe():211] probe
+2022-04-27 16:48:41,980 DEBUG   HandlerThread:873012 [git.py:repo():33] git repository is invalid
+2022-04-27 16:48:41,980 DEBUG   HandlerThread:873012 [meta.py:_save_pip():55] save pip
+2022-04-27 16:48:41,980 DEBUG   HandlerThread:873012 [meta.py:_save_pip():69] save pip done
+2022-04-27 16:48:41,980 DEBUG   HandlerThread:873012 [meta.py:_save_conda():76] save conda
+2022-04-27 16:48:42,900 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_created():217] file/dir created: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/conda-environment.yaml
+2022-04-27 16:48:42,905 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_created():217] file/dir created: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:48:42,905 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_created():217] file/dir created: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/requirements.txt
+2022-04-27 16:48:43,736 DEBUG   HandlerThread:873012 [meta.py:_save_conda():86] save conda done
+2022-04-27 16:48:43,736 DEBUG   HandlerThread:873012 [meta.py:probe():249] probe done
+2022-04-27 16:48:43,739 DEBUG   SenderThread:873012 [sender.py:send():235] send: files
+2022-04-27 16:48:43,739 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-metadata.json with policy now
+2022-04-27 16:48:43,753 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:48:43,753 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:48:43,902 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/conda-environment.yaml
+2022-04-27 16:48:43,902 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_created():217] file/dir created: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:48:43,902 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_created():217] file/dir created: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-metadata.json
+2022-04-27 16:48:43,967 DEBUG   SenderThread:873012 [sender.py:send():235] send: telemetry
+2022-04-27 16:48:44,451 INFO    Thread-11 :873012 [upload_job.py:push():137] Uploaded file /tmp/tmpcqmkavgjwandb/ogfjf7ra-wandb-metadata.json
+2022-04-27 16:48:45,482 DEBUG   SenderThread:873012 [sender.py:send():235] send: config
+2022-04-27 16:48:45,483 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:48:45,484 DEBUG   SenderThread:873012 [sender.py:send():235] send: telemetry
+2022-04-27 16:48:45,484 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:48:45,484 WARNING SenderThread:873012 [sender.py:send_metric():905] Seen metric with glob (shouldnt happen)
+2022-04-27 16:48:45,484 DEBUG   SenderThread:873012 [sender.py:send():235] send: telemetry
+2022-04-27 16:48:47,903 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:48:49,903 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:48:51,904 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:48:53,905 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:48:55,905 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:48:57,906 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:48:58,969 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:48:58,969 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:48:59,906 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:01,907 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:03,908 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:05,908 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:07,909 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:09,910 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:10,190 DEBUG   SenderThread:873012 [sender.py:send():235] send: stats
+2022-04-27 16:49:11,910 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:12,910 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/config.yaml
+2022-04-27 16:49:13,911 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:14,164 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:49:14,165 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:49:15,911 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:17,912 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:18,789 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,790 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,791 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,791 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,792 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,793 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,793 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,794 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,795 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,795 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,798 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,798 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,799 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,800 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,801 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,802 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,802 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,803 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,804 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,805 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,806 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,806 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,809 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,810 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,810 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,811 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,811 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,816 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,820 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:18,828 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,828 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,828 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,828 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,828 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,829 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,830 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,831 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,832 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:49:18,833 DEBUG   SenderThread:873012 [sender.py:send():235] send: history
+2022-04-27 16:49:18,835 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:49:18,838 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:49:18,912 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:49:19,912 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:21,913 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:23,914 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:25,914 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:27,915 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:29,915 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:30,581 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:49:30,581 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:49:31,916 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:33,917 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:35,917 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:37,918 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:39,919 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:40,383 DEBUG   SenderThread:873012 [sender.py:send():235] send: stats
+2022-04-27 16:49:41,919 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:43,920 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:43,920 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/config.yaml
+2022-04-27 16:49:45,920 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:46,760 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:49:46,760 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:49:47,921 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:49,921 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:51,909 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,909 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,910 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,910 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,911 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,912 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,913 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,913 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,914 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,914 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,917 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,917 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,918 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,919 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,920 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,921 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,922 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,922 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:51,923 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,923 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,924 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,925 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,926 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,928 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,929 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,930 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,930 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,931 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,932 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,937 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:49:51,943 DEBUG   SenderThread:873012 [sender.py:send():235] send: history
+2022-04-27 16:49:51,945 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:49:51,948 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:49:52,923 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:49:53,923 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:55,924 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:57,924 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:49:59,925 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:01,925 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:02,016 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:50:02,017 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:50:03,926 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:05,927 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:07,927 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:09,928 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:10,585 DEBUG   SenderThread:873012 [sender.py:send():235] send: stats
+2022-04-27 16:50:11,928 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:13,929 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:15,930 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:17,930 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:19,931 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:20,246 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:50:20,246 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:50:21,931 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:23,932 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:25,009 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,010 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,011 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,011 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,012 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,013 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,013 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,014 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,015 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,015 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,018 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,018 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,019 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,020 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,022 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,022 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,023 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,024 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,025 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,026 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,027 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,027 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,030 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,030 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,031 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,031 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,032 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,036 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,040 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:25,046 DEBUG   SenderThread:873012 [sender.py:send():235] send: history
+2022-04-27 16:50:25,049 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:50:25,052 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:50:25,933 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:50:25,933 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:27,933 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:29,934 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:31,934 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:33,936 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:35,603 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:50:35,604 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:50:35,937 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:36,186 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:50:36,269 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:50:36,269 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:50:36,269 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:50:36,269 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:50:36,269 DEBUG   SenderThread:873012 [sender.py:send():235] send: history
+2022-04-27 16:50:36,269 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:50:36,272 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:50:36,937 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:50:37,937 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:39,938 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:40,808 DEBUG   SenderThread:873012 [sender.py:send():235] send: stats
+2022-04-27 16:50:41,938 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:43,939 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:44,939 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/config.yaml
+2022-04-27 16:50:45,940 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:47,940 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:49,941 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:51,273 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:50:51,273 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:50:51,941 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:53,942 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:55,942 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:57,943 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:50:59,944 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:01,944 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:03,945 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:05,229 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,230 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,231 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,233 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,234 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,236 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,237 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,238 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,239 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,240 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,244 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,245 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,246 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,248 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,249 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,250 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,252 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,253 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,254 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,255 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,257 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,258 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,261 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,262 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,263 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,264 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,266 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,268 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,276 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:05,283 DEBUG   SenderThread:873012 [sender.py:send():235] send: history
+2022-04-27 16:51:05,288 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:51:05,294 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:51:05,946 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:51:05,946 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:06,527 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:51:06,527 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:51:07,946 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:09,947 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:11,018 DEBUG   SenderThread:873012 [sender.py:send():235] send: stats
+2022-04-27 16:51:11,948 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:13,948 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:15,949 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:17,949 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:19,950 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:21,784 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:51:21,784 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:51:21,950 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:23,951 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:25,952 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:27,952 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:29,953 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:31,953 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:33,954 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:35,954 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:37,042 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:51:37,042 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:51:37,955 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:38,439 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,439 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,440 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,441 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,442 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,443 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,443 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,444 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,445 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,446 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,449 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,449 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,450 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,451 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,452 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,452 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,453 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,454 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,455 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,455 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,456 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,456 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,459 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,460 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,460 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,461 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,461 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,465 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,470 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:51:38,477 DEBUG   SenderThread:873012 [sender.py:send():235] send: history
+2022-04-27 16:51:38,479 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:51:38,482 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:51:38,955 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:51:39,956 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:41,213 DEBUG   SenderThread:873012 [sender.py:send():235] send: stats
+2022-04-27 16:51:41,956 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:43,957 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:45,957 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:47,958 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:49,958 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:52,299 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:51:52,299 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:51:52,959 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:54,960 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:56,961 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:51:58,961 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:00,962 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:02,962 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:04,963 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:06,963 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:07,556 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:52:07,556 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:52:08,964 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:10,964 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:11,413 DEBUG   SenderThread:873012 [sender.py:send():235] send: stats
+2022-04-27 16:52:11,664 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,665 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,665 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,666 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,667 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,667 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,668 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,669 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,669 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,670 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,673 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,673 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,674 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,674 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,675 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,676 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,676 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,677 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,678 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,678 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,679 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,679 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,682 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,683 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,683 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,684 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,685 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,689 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,694 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:11,699 DEBUG   SenderThread:873012 [sender.py:send():235] send: history
+2022-04-27 16:52:11,702 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:52:11,704 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:52:11,965 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:52:12,965 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:13,965 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:14,966 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:16,966 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:18,967 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:20,967 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:22,968 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:23,121 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: stop_status
+2022-04-27 16:52:23,121 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: stop_status
+2022-04-27 16:52:24,968 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:26,916 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:26,919 DEBUG   SenderThread:873012 [sender.py:send():235] send: history
+2022-04-27 16:52:26,919 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:52:26,923 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: partial_history
+2022-04-27 16:52:26,925 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:52:26,925 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:52:26,925 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:52:26,925 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:52:26,926 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:52:26,926 DEBUG   SenderThread:873012 [sender.py:send():235] send: metric
+2022-04-27 16:52:26,926 DEBUG   SenderThread:873012 [sender.py:send():235] send: history
+2022-04-27 16:52:26,926 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:52:26,928 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:52:26,965 DEBUG   SenderThread:873012 [sender.py:send():235] send: telemetry
+2022-04-27 16:52:26,969 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:52:26,969 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:26,982 DEBUG   SenderThread:873012 [sender.py:send():235] send: telemetry
+2022-04-27 16:52:27,240 DEBUG   SenderThread:873012 [sender.py:send():235] send: exit
+2022-04-27 16:52:27,240 INFO    SenderThread:873012 [sender.py:send_exit():371] handling exit code: 0
+2022-04-27 16:52:27,240 INFO    SenderThread:873012 [sender.py:send_exit():373] handling runtime: 225
+2022-04-27 16:52:27,244 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:27,244 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:52:27,244 INFO    SenderThread:873012 [sender.py:send_exit():379] send defer
+2022-04-27 16:52:27,244 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:27,245 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:27,245 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 0
+2022-04-27 16:52:27,245 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:27,245 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 0
+2022-04-27 16:52:27,245 INFO    SenderThread:873012 [sender.py:transition_state():392] send defer: 1
+2022-04-27 16:52:27,245 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:27,245 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 1
+2022-04-27 16:52:27,320 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:27,321 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 1
+2022-04-27 16:52:27,321 INFO    SenderThread:873012 [sender.py:transition_state():392] send defer: 2
+2022-04-27 16:52:27,321 DEBUG   SenderThread:873012 [sender.py:send():235] send: stats
+2022-04-27 16:52:27,321 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:27,321 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 2
+2022-04-27 16:52:27,321 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:27,321 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 2
+2022-04-27 16:52:27,321 INFO    SenderThread:873012 [sender.py:transition_state():392] send defer: 3
+2022-04-27 16:52:27,322 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:27,322 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 3
+2022-04-27 16:52:27,322 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:27,322 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 3
+2022-04-27 16:52:27,322 INFO    SenderThread:873012 [sender.py:transition_state():392] send defer: 4
+2022-04-27 16:52:27,322 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:27,322 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 4
+2022-04-27 16:52:27,324 DEBUG   SenderThread:873012 [sender.py:send():235] send: summary
+2022-04-27 16:52:27,329 INFO    SenderThread:873012 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-04-27 16:52:27,329 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:27,329 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 4
+2022-04-27 16:52:27,329 INFO    SenderThread:873012 [sender.py:transition_state():392] send defer: 5
+2022-04-27 16:52:27,330 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:27,330 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 5
+2022-04-27 16:52:27,330 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:27,330 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 5
+2022-04-27 16:52:27,349 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:27,715 INFO    SenderThread:873012 [sender.py:transition_state():392] send defer: 6
+2022-04-27 16:52:27,716 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:27,716 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:27,716 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 6
+2022-04-27 16:52:27,716 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:27,716 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 6
+2022-04-27 16:52:27,716 INFO    SenderThread:873012 [dir_watcher.py:finish():283] shutting down directory watcher
+2022-04-27 16:52:27,817 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:27,969 INFO    Thread-7  :873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:52:27,970 INFO    SenderThread:873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/config.yaml
+2022-04-27 16:52:27,971 INFO    SenderThread:873012 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:27,971 INFO    SenderThread:873012 [dir_watcher.py:finish():313] scan: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files
+2022-04-27 16:52:27,971 INFO    SenderThread:873012 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json wandb-summary.json
+2022-04-27 16:52:27,972 INFO    SenderThread:873012 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-metadata.json wandb-metadata.json
+2022-04-27 16:52:27,972 INFO    SenderThread:873012 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/config.yaml config.yaml
+2022-04-27 16:52:27,977 INFO    SenderThread:873012 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/requirements.txt requirements.txt
+2022-04-27 16:52:27,982 INFO    SenderThread:873012 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log output.log
+2022-04-27 16:52:27,982 INFO    SenderThread:873012 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/conda-environment.yaml conda-environment.yaml
+2022-04-27 16:52:27,983 INFO    SenderThread:873012 [sender.py:transition_state():392] send defer: 7
+2022-04-27 16:52:27,983 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:27,987 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:27,988 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 7
+2022-04-27 16:52:27,991 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:27,992 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 7
+2022-04-27 16:52:27,992 INFO    SenderThread:873012 [file_pusher.py:finish():145] shutting down file pusher
+2022-04-27 16:52:28,088 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:28,089 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:28,190 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:28,190 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:28,299 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:28,303 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:28,406 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:28,406 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:28,508 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:28,508 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:28,609 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:28,610 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:28,681 INFO    Thread-12 :873012 [upload_job.py:push():137] Uploaded file /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/wandb-summary.json
+2022-04-27 16:52:28,698 INFO    Thread-16 :873012 [upload_job.py:push():137] Uploaded file /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/conda-environment.yaml
+2022-04-27 16:52:28,711 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:28,711 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:28,739 INFO    Thread-13 :873012 [upload_job.py:push():137] Uploaded file /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/config.yaml
+2022-04-27 16:52:28,812 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:28,813 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:28,914 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:28,914 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:29,016 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:29,016 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:29,119 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:29,119 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:29,222 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:29,222 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:29,317 INFO    Thread-15 :873012 [upload_job.py:push():137] Uploaded file /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/output.log
+2022-04-27 16:52:29,324 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:29,325 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:29,343 INFO    Thread-14 :873012 [upload_job.py:push():137] Uploaded file /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/files/requirements.txt
+2022-04-27 16:52:29,427 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:29,428 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:29,530 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:29,531 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:29,544 INFO    Thread-6  :873012 [sender.py:transition_state():392] send defer: 8
+2022-04-27 16:52:29,545 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:29,545 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 8
+2022-04-27 16:52:29,545 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:29,546 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 8
+2022-04-27 16:52:29,633 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:30,735 INFO    SenderThread:873012 [sender.py:transition_state():392] send defer: 9
+2022-04-27 16:52:30,736 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:30,736 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:30,736 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 9
+2022-04-27 16:52:30,737 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:30,737 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 9
+2022-04-27 16:52:30,737 INFO    SenderThread:873012 [sender.py:transition_state():392] send defer: 10
+2022-04-27 16:52:30,738 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: defer
+2022-04-27 16:52:30,738 DEBUG   SenderThread:873012 [sender.py:send():235] send: final
+2022-04-27 16:52:30,738 INFO    HandlerThread:873012 [handler.py:handle_request_defer():164] handle defer: 10
+2022-04-27 16:52:30,738 DEBUG   SenderThread:873012 [sender.py:send():235] send: footer
+2022-04-27 16:52:30,739 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: defer
+2022-04-27 16:52:30,739 INFO    SenderThread:873012 [sender.py:send_request_defer():388] handle sender defer: 10
+2022-04-27 16:52:30,837 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: poll_exit
+2022-04-27 16:52:30,837 DEBUG   SenderThread:873012 [sender.py:send_request():249] send_request: poll_exit
+2022-04-27 16:52:30,837 INFO    SenderThread:873012 [file_pusher.py:join():150] waiting for file pusher
+2022-04-27 16:52:31,366 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: sampled_history
+2022-04-27 16:52:31,369 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: get_summary
+2022-04-27 16:52:31,377 DEBUG   HandlerThread:873012 [handler.py:handle_request():141] handle_request: shutdown
+2022-04-27 16:52:31,377 INFO    HandlerThread:873012 [handler.py:finish():790] shutting down handler
+2022-04-27 16:52:31,738 INFO    WriterThread:873012 [datastore.py:close():281] close: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/wandb/run-20220427_164840-b7gmuodz/run-b7gmuodz.wandb
+2022-04-27 16:52:32,264 INFO    SenderThread:873012 [sender.py:finish():1107] shutting down sender
+2022-04-27 16:52:32,264 INFO    SenderThread:873012 [file_pusher.py:finish():145] shutting down file pusher
+2022-04-27 16:52:32,264 INFO    SenderThread:873012 [file_pusher.py:join():150] waiting for file pusher
+2022-04-27 16:52:32,268 INFO    MainThread:873012 [internal.py:handle_exit():82] Internal process exited

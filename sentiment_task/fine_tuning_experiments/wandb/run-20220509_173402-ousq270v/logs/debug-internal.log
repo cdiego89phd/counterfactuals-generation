@@ -1,0 +1,151 @@
+2022-05-09 17:34:02,569 INFO    MainThread:49615 [internal.py:wandb_internal():95] W&B internal server running at pid: 49615, started at: 2022-05-09 17:34:02.569593
+2022-05-09 17:34:02,571 INFO    WriterThread:49615 [datastore.py:open_for_write():77] open: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/run-ousq270v.wandb
+2022-05-09 17:34:02,572 DEBUG   SenderThread:49615 [sender.py:send():235] send: header
+2022-05-09 17:34:02,572 DEBUG   SenderThread:49615 [sender.py:send():235] send: run
+2022-05-09 17:34:03,028 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: check_version
+2022-05-09 17:34:03,030 INFO    SenderThread:49615 [dir_watcher.py:__init__():169] watching files in: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files
+2022-05-09 17:34:03,030 INFO    SenderThread:49615 [sender.py:_start_run_threads():815] run started: ousq270v with start time 1652114042
+2022-05-09 17:34:03,030 DEBUG   SenderThread:49615 [sender.py:send():235] send: summary
+2022-05-09 17:34:03,030 INFO    SenderThread:49615 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-05-09 17:34:03,030 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: check_version
+2022-05-09 17:34:03,081 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: run_start
+2022-05-09 17:34:03,083 DEBUG   HandlerThread:49615 [meta.py:__init__():37] meta init
+2022-05-09 17:34:03,083 DEBUG   HandlerThread:49615 [meta.py:__init__():51] meta init done
+2022-05-09 17:34:03,083 DEBUG   HandlerThread:49615 [meta.py:probe():211] probe
+2022-05-09 17:34:03,089 DEBUG   HandlerThread:49615 [git.py:repo():33] git repository is invalid
+2022-05-09 17:34:03,089 DEBUG   HandlerThread:49615 [meta.py:_save_pip():55] save pip
+2022-05-09 17:34:03,089 DEBUG   HandlerThread:49615 [meta.py:_save_pip():69] save pip done
+2022-05-09 17:34:03,089 DEBUG   HandlerThread:49615 [meta.py:_save_conda():76] save conda
+2022-05-09 17:34:04,032 INFO    Thread-7  :49615 [dir_watcher.py:_on_file_created():217] file/dir created: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/wandb-summary.json
+2022-05-09 17:34:04,032 INFO    Thread-7  :49615 [dir_watcher.py:_on_file_created():217] file/dir created: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/conda-environment.yaml
+2022-05-09 17:34:04,033 INFO    Thread-7  :49615 [dir_watcher.py:_on_file_created():217] file/dir created: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/requirements.txt
+2022-05-09 17:34:04,740 DEBUG   HandlerThread:49615 [meta.py:_save_conda():86] save conda done
+2022-05-09 17:34:04,740 DEBUG   HandlerThread:49615 [meta.py:probe():249] probe done
+2022-05-09 17:34:04,743 DEBUG   SenderThread:49615 [sender.py:send():235] send: files
+2022-05-09 17:34:04,743 INFO    SenderThread:49615 [sender.py:_save_file():947] saving file wandb-metadata.json with policy now
+2022-05-09 17:34:04,749 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: stop_status
+2022-05-09 17:34:04,749 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: stop_status
+2022-05-09 17:34:04,969 DEBUG   SenderThread:49615 [sender.py:send():235] send: telemetry
+2022-05-09 17:34:05,032 INFO    Thread-7  :49615 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/conda-environment.yaml
+2022-05-09 17:34:05,032 INFO    Thread-7  :49615 [dir_watcher.py:_on_file_created():217] file/dir created: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/output.log
+2022-05-09 17:34:05,033 INFO    Thread-7  :49615 [dir_watcher.py:_on_file_created():217] file/dir created: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/wandb-metadata.json
+2022-05-09 17:34:05,348 INFO    Thread-11 :49615 [upload_job.py:push():137] Uploaded file /tmp/tmp_ir5rthywandb/2j3r0boj-wandb-metadata.json
+2022-05-09 17:34:06,145 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: partial_history
+2022-05-09 17:34:06,147 DEBUG   SenderThread:49615 [sender.py:send():235] send: history
+2022-05-09 17:34:06,147 DEBUG   SenderThread:49615 [sender.py:send():235] send: summary
+2022-05-09 17:34:06,147 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:06,148 INFO    SenderThread:49615 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-05-09 17:34:06,148 DEBUG   SenderThread:49615 [sender.py:send():235] send: telemetry
+2022-05-09 17:34:06,148 DEBUG   SenderThread:49615 [sender.py:send():235] send: telemetry
+2022-05-09 17:34:06,148 DEBUG   SenderThread:49615 [sender.py:send():235] send: exit
+2022-05-09 17:34:06,148 INFO    SenderThread:49615 [sender.py:send_exit():371] handling exit code: 0
+2022-05-09 17:34:06,148 INFO    SenderThread:49615 [sender.py:send_exit():373] handling runtime: 3
+2022-05-09 17:34:06,153 INFO    SenderThread:49615 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-05-09 17:34:06,153 INFO    SenderThread:49615 [sender.py:send_exit():379] send defer
+2022-05-09 17:34:06,153 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:06,154 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:06,154 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 0
+2022-05-09 17:34:06,154 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:06,154 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 0
+2022-05-09 17:34:06,154 INFO    SenderThread:49615 [sender.py:transition_state():392] send defer: 1
+2022-05-09 17:34:06,154 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:06,154 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 1
+2022-05-09 17:34:06,222 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:06,222 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 1
+2022-05-09 17:34:06,222 INFO    SenderThread:49615 [sender.py:transition_state():392] send defer: 2
+2022-05-09 17:34:06,222 DEBUG   SenderThread:49615 [sender.py:send():235] send: stats
+2022-05-09 17:34:06,222 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:06,222 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 2
+2022-05-09 17:34:06,223 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:06,223 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 2
+2022-05-09 17:34:06,223 INFO    SenderThread:49615 [sender.py:transition_state():392] send defer: 3
+2022-05-09 17:34:06,223 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:06,223 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 3
+2022-05-09 17:34:06,223 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:06,223 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 3
+2022-05-09 17:34:06,223 INFO    SenderThread:49615 [sender.py:transition_state():392] send defer: 4
+2022-05-09 17:34:06,223 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:06,223 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 4
+2022-05-09 17:34:06,223 DEBUG   SenderThread:49615 [sender.py:send():235] send: summary
+2022-05-09 17:34:06,224 INFO    SenderThread:49615 [sender.py:_save_file():947] saving file wandb-summary.json with policy end
+2022-05-09 17:34:06,224 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:06,224 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 4
+2022-05-09 17:34:06,224 INFO    SenderThread:49615 [sender.py:transition_state():392] send defer: 5
+2022-05-09 17:34:06,224 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:06,224 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 5
+2022-05-09 17:34:06,224 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:06,224 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 5
+2022-05-09 17:34:06,255 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:06,512 INFO    SenderThread:49615 [sender.py:transition_state():392] send defer: 6
+2022-05-09 17:34:06,513 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:06,513 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:06,514 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 6
+2022-05-09 17:34:06,514 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:06,514 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 6
+2022-05-09 17:34:06,514 INFO    SenderThread:49615 [dir_watcher.py:finish():283] shutting down directory watcher
+2022-05-09 17:34:06,615 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:07,033 INFO    Thread-7  :49615 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/config.yaml
+2022-05-09 17:34:07,035 INFO    SenderThread:49615 [dir_watcher.py:_on_file_modified():230] file/dir modified: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/wandb-summary.json
+2022-05-09 17:34:07,035 INFO    SenderThread:49615 [dir_watcher.py:finish():313] scan: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files
+2022-05-09 17:34:07,036 INFO    SenderThread:49615 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/wandb-summary.json wandb-summary.json
+2022-05-09 17:34:07,036 INFO    SenderThread:49615 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/wandb-metadata.json wandb-metadata.json
+2022-05-09 17:34:07,036 INFO    SenderThread:49615 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/config.yaml config.yaml
+2022-05-09 17:34:07,043 INFO    SenderThread:49615 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/requirements.txt requirements.txt
+2022-05-09 17:34:07,043 INFO    SenderThread:49615 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/output.log output.log
+2022-05-09 17:34:07,048 INFO    SenderThread:49615 [dir_watcher.py:finish():327] scan save: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/conda-environment.yaml conda-environment.yaml
+2022-05-09 17:34:07,048 INFO    SenderThread:49615 [sender.py:transition_state():392] send defer: 7
+2022-05-09 17:34:07,048 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:07,049 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:07,051 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 7
+2022-05-09 17:34:07,051 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:07,051 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 7
+2022-05-09 17:34:07,052 INFO    SenderThread:49615 [file_pusher.py:finish():145] shutting down file pusher
+2022-05-09 17:34:07,150 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:07,151 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:07,258 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:07,259 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:07,369 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:07,369 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:07,472 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:07,472 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:07,575 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:07,576 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:07,632 INFO    Thread-15 :49615 [upload_job.py:push():137] Uploaded file /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/conda-environment.yaml
+2022-05-09 17:34:07,636 INFO    Thread-13 :49615 [upload_job.py:push():137] Uploaded file /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/config.yaml
+2022-05-09 17:34:07,641 INFO    Thread-12 :49615 [upload_job.py:push():137] Uploaded file /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/wandb-summary.json
+2022-05-09 17:34:07,643 INFO    Thread-14 :49615 [upload_job.py:push():137] Uploaded file /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/files/requirements.txt
+2022-05-09 17:34:07,678 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:07,679 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:07,782 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:07,782 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:07,849 INFO    Thread-6  :49615 [sender.py:transition_state():392] send defer: 8
+2022-05-09 17:34:07,850 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:07,850 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 8
+2022-05-09 17:34:07,850 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:07,851 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 8
+2022-05-09 17:34:07,885 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:08,347 INFO    SenderThread:49615 [sender.py:transition_state():392] send defer: 9
+2022-05-09 17:34:08,347 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:08,348 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:08,348 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 9
+2022-05-09 17:34:08,349 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:08,349 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 9
+2022-05-09 17:34:08,350 INFO    SenderThread:49615 [sender.py:transition_state():392] send defer: 10
+2022-05-09 17:34:08,351 DEBUG   SenderThread:49615 [sender.py:send():235] send: final
+2022-05-09 17:34:08,352 DEBUG   SenderThread:49615 [sender.py:send():235] send: footer
+2022-05-09 17:34:08,352 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: defer
+2022-05-09 17:34:08,353 INFO    HandlerThread:49615 [handler.py:handle_request_defer():164] handle defer: 10
+2022-05-09 17:34:08,353 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: defer
+2022-05-09 17:34:08,353 INFO    SenderThread:49615 [sender.py:send_request_defer():388] handle sender defer: 10
+2022-05-09 17:34:08,451 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: poll_exit
+2022-05-09 17:34:08,451 DEBUG   SenderThread:49615 [sender.py:send_request():249] send_request: poll_exit
+2022-05-09 17:34:08,451 INFO    SenderThread:49615 [file_pusher.py:join():150] waiting for file pusher
+2022-05-09 17:34:08,960 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: sampled_history
+2022-05-09 17:34:08,963 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: get_summary
+2022-05-09 17:34:08,965 DEBUG   HandlerThread:49615 [handler.py:handle_request():141] handle_request: shutdown
+2022-05-09 17:34:08,965 INFO    HandlerThread:49615 [handler.py:finish():790] shutting down handler
+2022-05-09 17:34:09,353 INFO    WriterThread:49615 [datastore.py:close():281] close: /home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb/run-20220509_173402-ousq270v/run-ousq270v.wandb
+2022-05-09 17:34:09,859 INFO    SenderThread:49615 [sender.py:finish():1107] shutting down sender
+2022-05-09 17:34:09,859 INFO    SenderThread:49615 [file_pusher.py:finish():145] shutting down file pusher
+2022-05-09 17:34:09,859 INFO    SenderThread:49615 [file_pusher.py:join():150] waiting for file pusher
+2022-05-09 17:34:09,863 INFO    MainThread:49615 [internal.py:handle_exit():82] Internal process exited

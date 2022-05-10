@@ -1,0 +1,50 @@
+# Template
+
+RESULTS_PATH: "/home/diego/counterfactuals-generation/sentiment_task/zs_gpt2_experiments/results/"
+SST2_MODEL_PATH: "/home/diego/counterfactuals-generation/"
+
+RANDOM_SEED_SHUFFLE: 22
+AUGMENT_VALSET: True
+KEEP_FIRST_N: 1
+
+FOLDS: # ["0", "1", "2", "3", "4"]
+  - "0"
+MODEL_NAME: 'gpt2'
+SPECIAL_TOKENS :
+  pad_token: "<|endoftext|>"
+
+TEMPLATE_PROMPT: "<label_ex> review:<example_text> <label_counter> review:"
+MAP_LABELS:
+  0: "Negative"
+  1: "Positive"
+
+# CFGs on generation
+ON_CUDA: False
+PARALLELIZATION: False
+GEN_ARGS:
+  "no_repeat_ngram_size":
+    - 4
+    - 8
+    - 12
+  "num_beams":
+    - 5
+    - 10
+  "repetition_penalty":
+    - 1.0
+    - 2.0
+  "temperature":
+    - 0.7
+
+#a_dictionary:
+#  a_key: a_value
+#  another_key: another_value
+#  nested_dictionary:
+#    nested_key: nested_value
+#
+#a_list:
+#  - an item
+#  - another item
+#  - 1.25
+#  - a_key: a_value
+#  -
+#    - another list

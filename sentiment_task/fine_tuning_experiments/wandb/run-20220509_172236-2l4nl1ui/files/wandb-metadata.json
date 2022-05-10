@@ -1,0 +1,27 @@
+{
+    "os": "Linux-5.4.0-109-generic-x86_64-with-debian-bullseye-sid",
+    "python": "3.7.11",
+    "heartbeatAt": "2022-05-09T16:22:37.854899",
+    "startedAt": "2022-05-09T16:22:36.765758",
+    "docker": null,
+    "gpu": "Quadro M2200",
+    "gpu_count": 1,
+    "cpu_count": 8,
+    "cuda": null,
+    "args": [
+        "--setting_path",
+        "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/settings/",
+        "--setting_name",
+        "tuning_gen_hypers_prompt-1_fold-0.yaml",
+        "--wandb_key",
+        "ac0eb1b13268d81f2526a3d354e135e6a1ede08c",
+        "--sweep_id",
+        "mmbb0gu5"
+    ],
+    "state": "running",
+    "program": "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/wandb_gpt2_gen_tuning.py",
+    "codePath": "wandb_gpt2_gen_tuning.py",
+    "host": "diego-workstation",
+    "username": "diego",
+    "executable": "/home/diego/miniconda3/envs/deeptransformers/bin/python"
+}

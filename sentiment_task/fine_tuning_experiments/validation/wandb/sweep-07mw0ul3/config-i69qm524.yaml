@@ -1,0 +1,18 @@
+wandb_version: 1
+
+BATCH_UPDATE:
+  value: 1
+EPOCHS:
+  value: 4
+EPS:
+  value: 0.12932868854512442
+EVAL_BATCHSIZE:
+  value: 1
+LR:
+  value: 0.42290337727867305
+TRAIN_BATCHSIZE:
+  value: 1
+WARMUP_STEPS:
+  value: 0.1333283832908079
+WEIGHT_DECAY:
+  value: 0.1218169066820848

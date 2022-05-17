@@ -4,23 +4,20 @@ import datasets
 import argparse
 import datetime
 import yaml
-import wandb
-import sys
 import openprompt
-from sentiment_task import evaluation
 from sentiment_task import generation
 
 from openprompt.prompts import ManualTemplate
 from openprompt.plms.lm import LMTokenizerWrapper
-import os
 
 
 # TODO remove the filter for debug
 def load_dataset(loading_path):
     trainset = pd.read_csv(loading_path + "training_set", sep='\t')
     val = pd.read_csv(loading_path + "val_set", sep='\t')
-    return trainset, val
-    # return trainset[:100], val[:100]
+    testset = pd.read_csv(loading_path + "test_set", sep='\t')
+    return trainset, val, testset
+    # return trainset[:10], val[:10], testset[:10]
 
 
 def load_language_model_objects(model_name, spec_tokens):
@@ -78,8 +75,7 @@ def freeze_layers_lm(to_freeze, n_to_unfreeze, model):
     return model
 
 
-# TODO check to remove valset also in the method above
-def train(out_dir, model, trainset, valset, no_cuda, train_cfg):
+def train(out_dir, model, trainset, no_cuda, train_cfg):
 
     training_args = transformers.TrainingArguments(
         output_dir=out_dir,
@@ -89,7 +85,7 @@ def train(out_dir, model, trainset, valset, no_cuda, train_cfg):
         per_device_eval_batch_size=train_cfg["EVAL_BATCHSIZE"],
         gradient_accumulation_steps=train_cfg["BATCH_UPDATE"],
         do_eval=False,
-        evaluation_strategy=transformers.IntervalStrategy.EPOCH,
+        evaluation_strategy='no',
         warmup_steps=train_cfg["WARMUP_STEPS"],
         learning_rate=train_cfg["LR"],
         adam_epsilon=train_cfg["EPS"],
@@ -104,17 +100,14 @@ def train(out_dir, model, trainset, valset, no_cuda, train_cfg):
         model=model,
         args=training_args,
         train_dataset=trainset,
-        eval_dataset=None
+        # eval_dataset=trainset
     )
 
     trainer.train()
     return trainer.model
 
 
-def train_model(yaml_file):
-
-    fold = yaml_file['FOLD']
-    dataset_path = yaml_file['DATASET_PATH']
+def train_model(yaml_file, df_trainset, df_valset):
 
     lm_name = yaml_file['LM_NAME']
     special_tokens = yaml_file['SPECIAL_TOKENS']
@@ -130,84 +123,58 @@ def train_model(yaml_file):
 
     print("Tuning params read from yaml file")
 
-    # load the dataset
-    df_trainset, df_valset = load_dataset(f"{dataset_path}/fold_{fold}/")
-    print(f"# of samples for training:{len(df_trainset)}")
-    print(f"# of samples for validation:{len(df_valset)}")
-
     tokenizer, lm, lm_config_class = load_language_model_objects(lm_name, special_tokens)
     print("Downloaded tokenizer, model and cfg!")
 
+    df_train = pd.concat([df_trainset, df_valset], ignore_index=True, copy=True)
+    print(f"# of total samples for training (train + val):{len(df_train)}")
+
     # wrap the datasets with the prompt template
-    df_trainset["wrapped_input"] = df_trainset.apply(lambda row: wrap_with_prompt(row,
-                                                                                  template_prompt,
-                                                                                  map_labels,
-                                                                                  special_tokens), axis=1)
+    df_train["wrapped_input"] = df_train.apply(lambda row: wrap_with_prompt(row,
+                                                                            template_prompt,
+                                                                            map_labels,
+                                                                            special_tokens), axis=1)
     print("Training set wrapped!")
-    df_valset["wrapped_input"] = df_valset.apply(lambda row: wrap_with_prompt(row,
-                                                                              template_prompt,
-                                                                              map_labels,
-                                                                              special_tokens), axis=1)
-    print("Validation set wrapped!")
 
     # convert dataset from pandas to Dataset
-    training_set = datasets.Dataset.from_pandas(df_trainset)
-    val_set = datasets.Dataset.from_pandas(df_valset)
+    training_set = datasets.Dataset.from_pandas(df_train)
 
     # TOKENIZE datasets
     tokenized_train = training_set.map(lambda examples: tokenizer(examples["wrapped_input"],
                                                                   padding="max_length",
                                                                   truncation=True), batched=tokenize_in_batch)
-    # tokenized_train.features['labels'] = tokenized_train.features['input_ids']
     tokenized_train = tokenized_train.add_column("labels", tokenized_train['input_ids'])
-    tokenized_val = val_set.map(lambda examples: tokenizer(examples["wrapped_input"],
-                                                           padding="max_length",
-                                                           truncation=True), batched=tokenize_in_batch)
-    # tokenized_val.features['labels'] = tokenized_val.features['input_ids']
-    tokenized_val = tokenized_val.add_column("labels", tokenized_val['input_ids'])
-    print("Datasets have been tokenized successfully!")
+    print("Training set has been tokenized successfully!")
 
     lm = freeze_layers_lm(to_freeze_layers, unfreeze_last_n, lm)
 
     out_dir = yaml_file['OUT_DIR']
-    trained_lm = train(out_dir, lm, tokenized_train, tokenized_val, no_cuda, train_cfg)
+    trained_lm = train(out_dir, lm, tokenized_train, no_cuda, train_cfg)
 
     return trained_lm, tokenizer
 
 
-def prepare_classifier(classifier_name):
-    # load the sentiment classifier
-    classifier_tokenizer = transformers.AutoTokenizer.from_pretrained(classifier_name)
-    classifier = transformers.AutoModelForSequenceClassification.from_pretrained(classifier_name)
-    classifier_label_map = {'NEGATIVE':  0, 'POSITIVE': 1}
-    classification_tools = {"tokenizer": classifier_tokenizer,
-                            "classifier": classifier,
-                            "label_map": classifier_label_map}
-
-    return classification_tools
-
-
-def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_params):
+def generate_counterfactuals(yaml_file, df_testset, trained_lm, tokenizer, gen_params):
 
     special_tokens = yaml_file['SPECIAL_TOKENS']
     map_labels = yaml_file['MAP_LABELS']
     generation_prompt = yaml_file['GENERATION_PROMPT']
 
     # wrap the datasets with the prompt template
-    df_valset["wrapped_input"] = df_valset.apply(lambda row: wrap_with_prompt(row,
-                                                                              generation_prompt,
-                                                                              map_labels,
-                                                                              special_tokens), axis=1)
+    df_testset["wrapped_input"] = df_testset.apply(lambda row: wrap_with_prompt(row,
+                                                                                generation_prompt,
+                                                                                map_labels,
+                                                                                special_tokens), axis=1)
 
     # prepare the data loader
-    valset = generation.SentimentDataset(raw_dataframe=df_valset.copy(deep=True))
-    valset.prepare_dataloader()
+    test_set = generation.SentimentDataset(raw_dataframe=df_testset.copy(deep=True))
+    test_set.prepare_dataloader()
 
     template_prompt = '{"placeholder":"text_a"}{"mask"}'
     prompt_template = ManualTemplate(text=template_prompt, tokenizer=tokenizer)
     tokenizer_wrapper = LMTokenizerWrapper
-    val_data_loader = openprompt.PromptDataLoader(
-        dataset=list(valset.get_dataset().values()),
+    test_data_loader = openprompt.PromptDataLoader(
+        dataset=list(test_set.get_dataset().values()),
         tokenizer=tokenizer,
         template=prompt_template,
         tokenizer_wrapper_class=tokenizer_wrapper
@@ -215,14 +182,14 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
 
     counter_generator = generation.CounterGenerator(prompt_template,
                                                     trained_lm,
-                                                    val_data_loader,
-                                                    valset,
+                                                    test_data_loader,
+                                                    test_set,
                                                     gen_params)
 
     counter_generator.perform_generation(not yaml_file['NO_CUDA'], tokenizer)
 
     # the generated counterfactuals are held inside the counter_generator object
-    return counter_generator.dataset
+    return counter_generator
 
 
 def dataframe_from_dataset(gen_valset):
@@ -242,39 +209,6 @@ def dataframe_from_dataset(gen_valset):
          "generated_counter": generated_counters
          }
     return pd.DataFrame(data=d)
-
-
-def run_agent(yaml_file, trained_lm, tokenizer, classification_tools):
-
-    fold = yaml_file['FOLD']
-    dataset_path = yaml_file['DATASET_PATH']
-
-    # load the dataset (we only use the valset)
-    _, df_valset = load_dataset(f"{dataset_path}/fold_{fold}/")
-
-    with wandb.init(settings=wandb.Settings(console='off'),
-                    project="conterfactuals-generation"):
-        gen_params = wandb.config
-
-        gen_valset = generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_params)
-        print("Generation completed!")
-
-        eval_valset = dataframe_from_dataset(gen_valset)
-        evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],
-                                                  classification_tools["classifier"],
-                                                  classification_tools["label_map"],
-                                                  trained_lm.device.index)
-
-        eval_valset = evaluator.clean_evalset(eval_valset)
-        evaluator.infer_predictions(eval_valset)
-        lf_score = evaluator.calculate_lf_score(eval_valset)
-        conf_score = evaluator.get_conf_score_pred()
-        blue_mean, blue_var = evaluator.calculate_blue_score(eval_valset)
-
-        wandb.log({"lf_score": lf_score,
-                   "conf_score": conf_score,
-                   "blue_mean": blue_mean,
-                   "blue_var": blue_var})
 
 
 def main():
@@ -299,55 +233,43 @@ def main():
         help="The name of yaml file where to load the setting from."
     )
 
-    parser.add_argument(
-        "--wandb_key",
-        default=None,
-        type=str,
-        required=True,
-        help="The API key of wandb used to login."
-    )
-
-    parser.add_argument(
-        "--sweep_id",
-        default=None,
-        type=str,
-        required=True,
-        help="The id of the sweep."
-    )
-
     args = parser.parse_args()
 
     # read params from yaml file
     setting_yaml_file = open(f"{args.setting_path}{args.setting_name}")
     parsed_yaml_file = yaml.load(setting_yaml_file, Loader=yaml.FullLoader)
 
-    fold = parsed_yaml_file['FOLD']
-    n_sweep_runs = parsed_yaml_file['N_SWEEP_RUNS']
-    classifier_name = parsed_yaml_file['CLASSIFIER_NAME']
+    folds = parsed_yaml_file['FOLDS']
 
-    print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
+    for fold in folds:
 
-    # initialize WANDB logging system
-    wandb.login(relogin=True, key=args.wandb_key)
+        print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
 
-    sweep_id = f"cdiego89/counterfactuals-generation/{args.sweep_id}"
-    print(f"Sweep id:{sweep_id}")
+        # load the dataset
+        dataset_path = parsed_yaml_file['DATASET_PATH']
+        df_trainset, df_valset, df_testset = load_dataset(f"{dataset_path}/fold_{fold}/")
+        print(f"# of samples for training:{len(df_trainset)}")
+        print(f"# of samples for validation:{len(df_valset)}")
+        print(f"# of samples for test:{len(df_testset)}")
 
-    trained_lm, tokenizer = train_model(parsed_yaml_file)
-    classification_tools = prepare_classifier(classifier_name)
+        print(f"{datetime.datetime.now()}: Fine tuning language model for fold:{fold}")
+        trained_lm, tokenizer = train_model(parsed_yaml_file,
+                                            df_trainset,
+                                            df_valset)  # fine tune language model
 
-    try:
-        wandb.agent(sweep_id, function=lambda: run_agent(parsed_yaml_file, trained_lm, tokenizer, classification_tools),
-                    count=n_sweep_runs)
+        # generate the counterfactuals
+        gen_params = parsed_yaml_file['GEN_CFG']
+        gen_testset = generate_counterfactuals(parsed_yaml_file, df_testset, trained_lm, tokenizer, gen_params)
+        df_gen_testset = gen_testset.dataframe_from_dataset()
+        print("Generation completed!")
 
-    except wandb.errors.CommError:
-        print(f"wandb.errors.CommError: could not find sweep: {sweep_id}")
-        sys.exit()
+        # print test generation
+        prompt_id = parsed_yaml_file['PROMPT_ID']
+        gen_filename = f"prompt-{prompt_id}_fold-{fold}.csv"
+        df_gen_testset.to_csv(f"{parsed_yaml_file['GEN_PATH']}{gen_filename}", sep='\t', header=True, index=False)
 
-    print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")
-    sys.exit()
+        print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")
 
 
 if __name__ == "__main__":
-    os.environ['WANDB_CONSOLE'] = 'off'  # this will prevent the sweep to finish with no errors
     main()

@@ -12,6 +12,6 @@ parameters:
     min: 3
     max: 10
   repetition_penalty:
-    values: [0.0, 0.4, 0.8, 1.2, 1.6, 2.0]
+    values: [0.4, 0.8, 1.2, 1.6, 2.0]
   temperature:
     values: [0.0, 0.4, 0.8, 1.2, 1.6, 2.0]

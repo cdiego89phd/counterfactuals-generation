@@ -6,21 +6,12 @@ import datetime
 import yaml
 import wandb
 import sys
-import openprompt
-from sentiment_task import evaluation
-from sentiment_task import generation
-
-from openprompt.prompts import ManualTemplate
-from openprompt.plms.lm import LMTokenizerWrapper
-import os
 
 
-# TODO remove the filter for debug
 def load_dataset(loading_path):
     trainset = pd.read_csv(loading_path + "training_set", sep='\t')
     val = pd.read_csv(loading_path + "val_set", sep='\t')
     return trainset, val
-    # return trainset[:100], val[:100]
 
 
 def load_language_model_objects(model_name, spec_tokens):
@@ -61,6 +52,7 @@ def freeze_layers_lm(to_freeze, n_to_unfreeze, model):
 
         for i, m in enumerate(model.transformer.h):
             # Only un-freeze the last n transformer blocks
+            # dklas
             if i+1 > len(model.transformer.h) - n_to_unfreeze:
                 for parameter in m.parameters():
                     parameter.requires_grad = True
@@ -78,42 +70,42 @@ def freeze_layers_lm(to_freeze, n_to_unfreeze, model):
     return model
 
 
-# TODO check to remove valset also in the method above
-def train(out_dir, model, trainset, valset, no_cuda, train_cfg):
+def train(out_dir, model, trainset, valset, no_cuda):
 
-    training_args = transformers.TrainingArguments(
-        output_dir=out_dir,
-        no_cuda=no_cuda,
-        num_train_epochs=train_cfg["EPOCHS"],
-        per_device_train_batch_size=train_cfg["TRAIN_BATCHSIZE"],
-        per_device_eval_batch_size=train_cfg["EVAL_BATCHSIZE"],
-        gradient_accumulation_steps=train_cfg["BATCH_UPDATE"],
-        do_eval=False,
-        evaluation_strategy=transformers.IntervalStrategy.EPOCH,
-        warmup_steps=train_cfg["WARMUP_STEPS"],
-        learning_rate=train_cfg["LR"],
-        adam_epsilon=train_cfg["EPS"],
-        weight_decay=train_cfg["WEIGHT_DECAY"],
-        save_total_limit=0,
-        save_strategy='no',
-        load_best_model_at_end=False,
-        report_to='none'
-    )
+    with wandb.init():
+        config_dict = wandb.config
+        training_args = transformers.TrainingArguments(
+            output_dir=out_dir,
+            no_cuda=no_cuda,
+            num_train_epochs=config_dict["EPOCHS"],
+            per_device_train_batch_size=config_dict["TRAIN_BATCHSIZE"],
+            per_device_eval_batch_size=config_dict["EVAL_BATCHSIZE"],
+            gradient_accumulation_steps=config_dict["BATCH_UPDATE"],
+            do_eval=True,
+            evaluation_strategy=transformers.IntervalStrategy.EPOCH,
+            warmup_steps=config_dict["WARMUP_STEPS"],
+            learning_rate=config_dict["LR"],
+            adam_epsilon=config_dict["EPS"],
+            weight_decay=config_dict["WEIGHT_DECAY"],
+            save_total_limit=0,
+            save_strategy='no',
+            # save_strategy=transformers.IntervalStrategy.EPOCH,
+            load_best_model_at_end=False
+        )
 
-    trainer = transformers.Trainer(
-        model=model,
-        args=training_args,
-        train_dataset=trainset,
-        eval_dataset=None
-    )
+        trainer = transformers.Trainer(
+            model=model,
+            args=training_args,
+            train_dataset=trainset,
+            eval_dataset=valset
+        )
 
-    trainer.train()
-    return trainer.model
+        trainer.train()
+        # trainer.save_model()
+        print(f"{datetime.datetime.now()}: End of experiments for cfg: {config_dict}")
 
 
-def train_model(yaml_file):
-
-    fold = yaml_file['FOLD']
+def run_agent(data_fold, yaml_file):
     dataset_path = yaml_file['DATASET_PATH']
 
     lm_name = yaml_file['LM_NAME']
@@ -126,18 +118,18 @@ def train_model(yaml_file):
     to_freeze_layers = yaml_file['TO_FREEZE_LAYERS']
     unfreeze_last_n = yaml_file['UNFREEZE_LAST_N']
 
-    train_cfg = yaml_file["TRAIN_CFG"]
-
     print("Tuning params read from yaml file")
+    # print(f"{datetime.datetime.now()}: BEGIN OF THE EXPERIMENTS")
 
     # load the dataset
-    df_trainset, df_valset = load_dataset(f"{dataset_path}/fold_{fold}/")
+    df_trainset, df_valset = load_dataset(f"{dataset_path}/fold_{data_fold}/")
     print(f"# of samples for training:{len(df_trainset)}")
     print(f"# of samples for validation:{len(df_valset)}")
 
     tokenizer, lm, lm_config_class = load_language_model_objects(lm_name, special_tokens)
     print("Downloaded tokenizer, model and cfg!")
 
+    # TODO prepare dataset with prepare_train()
     # wrap the datasets with the prompt template
     df_trainset["wrapped_input"] = df_trainset.apply(lambda row: wrap_with_prompt(row,
                                                                                   template_prompt,
@@ -169,112 +161,9 @@ def train_model(yaml_file):
 
     lm = freeze_layers_lm(to_freeze_layers, unfreeze_last_n, lm)
 
+    # TODO train with train()
     out_dir = yaml_file['OUT_DIR']
-    trained_lm = train(out_dir, lm, tokenized_train, tokenized_val, no_cuda, train_cfg)
-
-    return trained_lm, tokenizer
-
-
-def prepare_classifier(classifier_name):
-    # load the sentiment classifier
-    classifier_tokenizer = transformers.AutoTokenizer.from_pretrained(classifier_name)
-    classifier = transformers.AutoModelForSequenceClassification.from_pretrained(classifier_name)
-    classifier_label_map = {'NEGATIVE':  0, 'POSITIVE': 1}
-    classification_tools = {"tokenizer": classifier_tokenizer,
-                            "classifier": classifier,
-                            "label_map": classifier_label_map}
-
-    return classification_tools
-
-
-def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_params):
-
-    special_tokens = yaml_file['SPECIAL_TOKENS']
-    map_labels = yaml_file['MAP_LABELS']
-    generation_prompt = yaml_file['GENERATION_PROMPT']
-
-    # wrap the datasets with the prompt template
-    df_valset["wrapped_input"] = df_valset.apply(lambda row: wrap_with_prompt(row,
-                                                                              generation_prompt,
-                                                                              map_labels,
-                                                                              special_tokens), axis=1)
-
-    # prepare the data loader
-    valset = generation.SentimentDataset(raw_dataframe=df_valset.copy(deep=True))
-    valset.prepare_dataloader()
-
-    template_prompt = '{"placeholder":"text_a"}{"mask"}'
-    prompt_template = ManualTemplate(text=template_prompt, tokenizer=tokenizer)
-    tokenizer_wrapper = LMTokenizerWrapper
-    val_data_loader = openprompt.PromptDataLoader(
-        dataset=list(valset.get_dataset().values()),
-        tokenizer=tokenizer,
-        template=prompt_template,
-        tokenizer_wrapper_class=tokenizer_wrapper
-    )
-
-    counter_generator = generation.CounterGenerator(prompt_template,
-                                                    trained_lm,
-                                                    val_data_loader,
-                                                    valset,
-                                                    gen_params)
-
-    counter_generator.perform_generation(not yaml_file['NO_CUDA'], tokenizer)
-
-    # the generated counterfactuals are held inside the counter_generator object
-    return counter_generator.dataset
-
-
-def dataframe_from_dataset(gen_valset):
-    """Build a dataframe from dataset"""
-
-    paired_ids = [idx for idx in gen_valset]
-    labels_ex = [gen_valset.__getitem__(idx).meta["label_ex"] for idx in gen_valset]
-    examples = [gen_valset.__getitem__(idx).meta["example"] for idx in gen_valset]
-    labels_counter = [gen_valset.__getitem__(idx).meta["label_counter"] for idx in gen_valset]
-    counterfactuals = [gen_valset.__getitem__(idx).meta["counterfactual"] for idx in gen_valset]
-    generated_counters = [gen_valset.__getitem__(idx).meta["generated_counter"] for idx in gen_valset]
-    d = {"paired_id": paired_ids,
-         "label_ex": labels_ex,
-         "example": examples,
-         "label_counter": labels_counter,
-         "counterfactual": counterfactuals,
-         "generated_counter": generated_counters
-         }
-    return pd.DataFrame(data=d)
-
-
-def run_agent(yaml_file, trained_lm, tokenizer, classification_tools):
-
-    fold = yaml_file['FOLD']
-    dataset_path = yaml_file['DATASET_PATH']
-
-    # load the dataset (we only use the valset)
-    _, df_valset = load_dataset(f"{dataset_path}/fold_{fold}/")
-
-    with wandb.init(settings=wandb.Settings(console='off'),
-                    project="conterfactuals-generation"):
-        gen_params = wandb.config
-
-        gen_valset = generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_params)
-        print("Generation completed!")
-
-        eval_valset = dataframe_from_dataset(gen_valset)
-        evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],
-                                                  classification_tools["classifier"],
-                                                  classification_tools["label_map"],
-                                                  trained_lm.device.index)
-
-        eval_valset = evaluator.clean_evalset(eval_valset)
-        evaluator.infer_predictions(eval_valset)
-        lf_score = evaluator.calculate_lf_score(eval_valset)
-        conf_score = evaluator.get_conf_score_pred()
-        blue_mean, blue_var = evaluator.calculate_blue_score(eval_valset)
-
-        wandb.log({"lf_score": lf_score,
-                   "conf_score": conf_score,
-                   "blue_mean": blue_mean,
-                   "blue_var": blue_var})
+    train(out_dir, lm, tokenized_train, tokenized_val, no_cuda)
 
 
 def main():
@@ -290,7 +179,7 @@ def main():
         help="The absolute path of the file settings."
     )
 
-    # e.g. SETTING_NAME = "tuning_gen_hypers_prompt-1_fold-0.yaml"
+    # e.g. SETTING_NAME = "tuning_cad_prompt_1.yaml"
     parser.add_argument(
         "--setting_name",
         default=None,
@@ -323,31 +212,25 @@ def main():
 
     fold = parsed_yaml_file['FOLD']
     n_sweep_runs = parsed_yaml_file['N_SWEEP_RUNS']
-    classifier_name = parsed_yaml_file['CLASSIFIER_NAME']
 
-    print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
+    print(f"{datetime.datetime.now()}: Begin of the experiments for fold:{fold}")
 
     # initialize WANDB logging system
     wandb.login(relogin=True, key=args.wandb_key)
 
-    sweep_id = f"cdiego89/counterfactuals-generation/{args.sweep_id}"
+    sweep_id = f"cdiego89/counterfactual-generation/{args.sweep_id}"
     print(f"Sweep id:{sweep_id}")
 
-    trained_lm, tokenizer = train_model(parsed_yaml_file)
-    classification_tools = prepare_classifier(classifier_name)
-
     try:
-        wandb.agent(sweep_id, function=lambda: run_agent(parsed_yaml_file, trained_lm, tokenizer, classification_tools),
-                    count=n_sweep_runs)
+        wandb.agent(sweep_id, function=lambda: run_agent(fold, parsed_yaml_file), count=n_sweep_runs)
 
     except wandb.errors.CommError:
         print(f"wandb.errors.CommError: could not find sweep: {sweep_id}")
         sys.exit()
 
-    print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")
+    print(f"{datetime.datetime.now()}: End of experiments for fold:{fold}")
     sys.exit()
 
 
 if __name__ == "__main__":
-    os.environ['WANDB_CONSOLE'] = 'off'  # this will prevent the sweep to finish with no errors
     main()

@@ -3,11 +3,15 @@ metric:
   name: eval/loss
   goal: minimize
 parameters:
-  EPOCHS:
+  FREEZE_LAYERS:
+    value: False
+  UNFREEZE_LAST_N:
+    value: 6
+  MAX_EPOCHS:
     distribution: int_uniform
     min: 3
     max: 20
-  EPS:
+  ADAM_EPS:
     values: [0.0001, 0.0006, 0.001, 0.006, 0.01, 0.06, 0.1, 0.6]
   EVAL_BATCHSIZE:
     value: 4

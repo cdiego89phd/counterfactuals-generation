@@ -99,8 +99,8 @@ class CounterGenerator:
                 "min_length": 5,
                 "no_repeat_ngram_size": self.gen_cfgs["no_repeat_ngram_size"],
                 "num_beams": self.gen_cfgs["num_beams"],
-                "repetition_penalty": self.gen_cfgs["repetition_penalty"],
-                "temperature": self.gen_cfgs["temperature"],
+                "repetition_penalty": float(self.gen_cfgs["repetition_penalty"]),
+                "temperature": float(self.gen_cfgs["temperature"]),
                 "do_sample": False,
                 "top_k": 10,
                 "top_p": 0,
@@ -119,7 +119,7 @@ class CounterGenerator:
 
             except Exception as e:
                 instance_to_update.meta["generated_counter"] = None
-                print(instance_guid)
+                print(f"Instance that generated the exception:{instance_guid}")
                 print(e)
 
             if (step % 100) == 0 and (step > 0):

@@ -1,7 +1,6 @@
-import torch
+import pandas as pd
 import transformers
 import numpy as np
-import pandas as pd
 import sklearn
 import nltk
 
@@ -29,11 +28,12 @@ class SentimentEvaluator:
         self.score_labels = []
 
     @staticmethod
-    def clean_evalset(eval_dataset):
+    def clean_evalset(eval_dataset) -> (pd.DataFrame, int):
         """Remove some nan values in the generated counterfactuals"""
 
-        print(f"# of nan values removed in generated counterfactuals:{eval_dataset['generated_counter'].isna().sum()}")
-        return eval_dataset.dropna()
+        n_nan = eval_dataset['generated_counter'].isna().sum()
+        print(f"# of nan values removed in generated counterfactuals:{n_nan}")
+        return eval_dataset.dropna(), n_nan
 
     def infer_predictions(self, eval_dataset):
         """Infer the labels for the counterfactuals"""
@@ -49,22 +49,21 @@ class SentimentEvaluator:
             self.predicted_labels.append(self.s_label_dict[result['label']])
             self.score_labels.append(result['score'])
 
-    def calculate_lf_score(self, eval_dataset):
+    def calculate_lf_score(self, eval_dataset) -> float:
         """Calculate the Label Flip Score (LFS)"""
 
         y_desired = eval_dataset["label_counter"].values
         return sklearn.metrics.accuracy_score(y_desired, self.predicted_labels)
 
-    def get_conf_score_pred(self):
+    def get_conf_score_pred(self) -> np.ndarray:
         return np.mean(self.score_labels)
 
     @staticmethod
-    def calculate_blue_score(eval_dataset):
+    def calculate_blue_score(eval_dataset) -> (float, float):
         """Calculate the BLUE score for a pair of example-counter.
-
            Returns mean and variance of the BLUE scores.
         """
-        BLEUscore = []
+        blue_score = []
         smoothing_function = nltk.translate.bleu_score.SmoothingFunction()
         true_counters = eval_dataset["counterfactual"].values
         gen_counters = eval_dataset["generated_counter"].values
@@ -77,30 +76,28 @@ class SentimentEvaluator:
             # the hypothesis is the generated counterfactual
             hypothesis = nltk.tokenize.word_tokenize(gen_counter)
 
-            BLEUscore.append(nltk.translate.bleu_score.sentence_bleu([reference],
-                                                                     hypothesis,
-                                                                     smoothing_function=smoothing_function.method1))
-        return np.mean(BLEUscore), np.var(BLEUscore)
+            blue_score.append(nltk.translate.bleu_score.sentence_bleu([reference],
+                                                                      hypothesis,
+                                                                      smoothing_function=smoothing_function.method1))
+        return np.mean(blue_score), np.var(blue_score)
 
+    @staticmethod
+    def calculate_blue_corpus(eval_dataset) -> float:
+        """Calculate the corpus BLUE score for the entire set of reference-hypothesis pairs.
+           Returns the BLUE score.
+        """
+        smoothing_function = nltk.translate.bleu_score.SmoothingFunction()
+        true_counters = eval_dataset["counterfactual"].values
+        gen_counters = eval_dataset["generated_counter"].values
 
-def load_results(folds, results_path, results_name, params):
-    results = {}
-    for fold in folds:
-        results[fold] = {}
-        for pars in params:
-            results[fold][pars] = pd.read_csv(f"{results_path}fold_{fold}/{results_name}{pars}.gen", sep='\t')
-    return results
+        # need to tokenize sentences
+        # the reference is the true counterfactual
+        references = [nltk.tokenize.word_tokenize(sentence) for sentence in true_counters]
 
+        # the hypothesis is the generated counterfactual
+        hypothesis = [nltk.tokenize.word_tokenize(sentence) for sentence in gen_counters]
 
-def evaluate_fold_results(f_res, o_file, fold, token, model, label_map, cuda_device):
-    for cfg_gen in f_res:
-        print(f"Cfg:{cfg_gen}")
-        cfg_res = f_res[cfg_gen]
-        evaluator = SentimentEvaluator(cfg_res, token, model, label_map, cuda_device)
-        blue_score, var_blue_score = evaluator.blue_score()
-        evaluator.infer_predictions()
-        conf_score = evaluator.get_conf_score_pred()
-        lf_score = evaluator.lf_score()
-
-        o_str = f"{fold}\t{cfg_gen}\t{blue_score}\t{var_blue_score}\t{lf_score}\t{conf_score}\n"
-        o_file.write(o_str)
+        score = nltk.translate.bleu_score.corpus_bleu(references,
+                                                      hypothesis,
+                                                      smoothing_function=smoothing_function.method1)
+        return score

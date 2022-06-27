@@ -1,6 +1,6 @@
 method: random # type of tuning
 metric:
-  name: lf_score
+  name: blue_corpus
   goal: maximize
 parameters:
   num_beams:

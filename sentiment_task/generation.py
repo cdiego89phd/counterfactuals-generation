@@ -58,10 +58,12 @@ class SentimentDataset(Dataset):
 
 
 class CounterGenerator:
-    def __init__(self, template: ManualTemplate,
+    def __init__(self,
+                 template: ManualTemplate,
                  lm,
                  dataloader: openprompt.PromptDataLoader,
                  dataset: SentimentDataset,
+                 cuda_device: int,
                  cfgs: dict):
         """Constructor of the counterfactual generator
         @param: dataloader That store the dataset
@@ -80,7 +82,10 @@ class CounterGenerator:
             plm_eval_mode=True
         )
 
-    def perform_generation(self, on_cuda, tokenizer):
+        if torch.cuda.is_available() and cuda_device > -1:
+            self.generator = self.generator.to(cuda_device)
+
+    def perform_generation(self, tokenizer, cuda_device=0, n_to_generate=1):
         self.generator.eval()
 
         for (step, inputs) in enumerate(self.dataloader):
@@ -102,13 +107,14 @@ class CounterGenerator:
                 "repetition_penalty": float(self.gen_cfgs["repetition_penalty"]),
                 "temperature": float(self.gen_cfgs["temperature"]),
                 "do_sample": False,
+                "num_return_sequences": n_to_generate,
                 "top_k": 10,
                 "top_p": 0,
             }
 
             try:
-                if torch.cuda.is_available() and on_cuda:
-                    inputs = inputs.cuda()
+                if torch.cuda.is_available() and cuda_device > -1:
+                    inputs = inputs.to(cuda_device)
                 _, generated_counter = self.generator.generate(inputs,
                                                                verbose=False,
                                                                **generation_arguments)
@@ -143,11 +149,11 @@ class CounterGenerator:
              }
         return pd.DataFrame(data=d)
 
-    # TODO modify
-    def print_dataset(self, file_to_print, args):
-        """Print the dataset"""
-        df_to_print = self.dataframe_from_dataset()
-
-        # print such dataframe
-        filename = f"{file_to_print[:-5]}-{args}.gen"
-        df_to_print.to_csv(filename, sep='\t', index=False)
+    # # TODO modify
+    # def print_dataset(self, file_to_print, args):
+    #     """Print the dataset"""
+    #     df_to_print = self.dataframe_from_dataset()
+    #
+    #     # print such dataframe
+    #     filename = f"{file_to_print[:-5]}-{args}.gen"
+    #     df_to_print.to_csv(filename, sep='\t', index=False)

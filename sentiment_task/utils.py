@@ -6,7 +6,18 @@ def load_dataset(loading_path):
     train = pd.read_csv(loading_path + "training_set", sep='\t')
     val = pd.read_csv(loading_path + "val_set", sep='\t')
     test = pd.read_csv(loading_path + "test_set", sep='\t')
-    return train[:10], val[:10], test
+    return train[:10], val[:10], test[:10]
+
+
+def wrap_dataset_with_prompt(df_row, template, mapping_labels, spec_tokens):
+    final_text = template.replace("<label_ex>", mapping_labels[df_row["label_ex"]])
+    final_text = final_text.replace("<example_text>", df_row["example"])
+    final_text = final_text.replace("<label_counter>", mapping_labels[df_row["label_counter"]])
+    final_text = final_text.replace("<counter_text>", df_row["counterfactual"])
+    final_text = final_text.replace("<sep>", spec_tokens["sep_token"])
+    final_text = final_text.replace("<bos_token>", spec_tokens["bos_token"])
+    final_text = final_text.replace("<eos_token>", spec_tokens["eos_token"])
+    return final_text
 
 
 def load_gpt2_objects(model_name, spec_tokens):
@@ -29,6 +40,11 @@ def load_gpt2_objects(model_name, spec_tokens):
     return tok, model, model_config_class
 
 
+def load_gpt2_from_local(model_path):
+    model = transformers.GPT2LMHeadModel.from_pretrained(model_path, local_files_only=True)
+    return model
+
+
 def prepare_classifier(classifier_name):
     # load the sentiment classifier
     classifier_tokenizer = transformers.AutoTokenizer.from_pretrained(classifier_name)
@@ -43,3 +59,5 @@ def prepare_classifier(classifier_name):
                             "label_map": classifier_label_map}
 
     return classification_tools
+
+#%%

@@ -1,8 +1,9 @@
 DATASET_PATH: "/home/diego/counterfactuals-generation/sentiment_task/cad_imdb/"
-OUT_DIR: "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/trained_models"
+OUT_DIR: "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/saved_models"
 FOLD: "0" # ["0", "1", "2", "3", "4"]
 IS_SWEEP: "False"
 
+PROMPT_ID: "prompt-1"
 LM_NAME: "sshleifer/tiny-gpt2" #{gpt2 (gpt2-small, 12 layers), gpt2-medium (24 layers), gpt2-large (36 layers), gpt2-xl (48 layers)}
 SPECIAL_TOKENS: # or set it to None
   "bos_token": "<|BOS|>"

@@ -49,7 +49,7 @@ def prepare_training(df_trainset,
     return tokenized_train, tokenized_val
 
 
-def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs):
+def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, run_name=None, save_model=True):
 
     if training_cfgs is None:
         # use wandb sweep config dict
@@ -70,7 +70,7 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs):
     lm = freeze_layers_lm(to_freeze_layers, unfreeze_last_n, lm)
 
     early_stopping = transformers.EarlyStoppingCallback(early_stopping_patience=stopping_patience)
-    with wandb.init():
+    with wandb.init(project=project_name, name=run_name):
         training_args = transformers.TrainingArguments(
             output_dir=out_dir,
             no_cuda=no_cuda,
@@ -99,4 +99,6 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs):
         )
 
         trainer.train()
-        # trainer.save_model() # TODO save the model??
+
+        if save_model:
+            trainer.save_model()

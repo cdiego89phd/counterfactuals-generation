@@ -1,5 +1,6 @@
 DATASET_PATH: "/home/diego/counterfactuals-generation/sentiment_task/cad_imdb/"
 OUT_DIR: "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/validation/trained_models"
+MODEL_DIR: "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/saved_models"
 FOLD: "0" # ["0", "1", "2", "3", "4"]
 N_SWEEP_RUNS: 1
 
@@ -14,7 +15,7 @@ SPECIAL_TOKENS: # or set it to None
   "pad_token": "<|PAD|>"
   "sep_token": "<|SEP|>"
 TOKENIZE_IN_BATCH: True
-NO_CUDA: False
+CUDA_DEVICE: 0  # set to -1 for cpu
 
 CLASSIFIER_NAME: "distilbert-base-uncased-finetuned-sst-2-english"
 

@@ -1,20 +1,8 @@
-# import transformers
 import argparse
 import datetime
 import yaml
 from sentiment_task.fine_tuning_experiments import cad_fine_tuning_trainer
 from sentiment_task import utils
-
-
-def wrap_with_prompt(df_row, template, mapping_labels, spec_tokens):
-    final_text = template.replace("<label_ex>", mapping_labels[df_row["label_ex"]])
-    final_text = final_text.replace("<example_text>", df_row["example"])
-    final_text = final_text.replace("<label_counter>", mapping_labels[df_row["label_counter"]])
-    final_text = final_text.replace("<counter_text>", df_row["counterfactual"])
-    final_text = final_text.replace("<sep>", spec_tokens["sep_token"])
-    final_text = final_text.replace("<bos_token>", spec_tokens["bos_token"])
-    final_text = final_text.replace("<eos_token>", spec_tokens["eos_token"])
-    return final_text
 
 
 def main():
@@ -47,6 +35,14 @@ def main():
         help="The API key of wandb."
     )
 
+    parser.add_argument(
+        "--wandb_project",
+        default=None,
+        type=str,
+        required=True,
+        help="The name of the wandb project."
+    )
+
     args = parser.parse_args()
 
     # read params from yaml file
@@ -58,6 +54,7 @@ def main():
 
     dataset_path = parsed_yaml_file['DATASET_PATH']
 
+    prompt_id = parsed_yaml_file['PROMPT_ID']
     lm_name = parsed_yaml_file['LM_NAME']
     special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
     tokenize_in_batch = parsed_yaml_file['TOKENIZE_IN_BATCH']
@@ -80,15 +77,15 @@ def main():
     print("Downloaded tokenizer, model and cfg!")
 
     # wrap the datasets with the prompt template
-    df_trainset["wrapped_input"] = df_trainset.apply(lambda row: wrap_with_prompt(row,
-                                                                                  template_prompt,
-                                                                                  map_labels,
-                                                                                  special_tokens), axis=1)
+    df_trainset["wrapped_input"] = df_trainset.apply(lambda row: utils.wrap_dataset_with_prompt(row,
+                                                                                                template_prompt,
+                                                                                                map_labels,
+                                                                                                special_tokens), axis=1)
     print("Training set wrapped!")
-    df_valset["wrapped_input"] = df_valset.apply(lambda row: wrap_with_prompt(row,
-                                                                              template_prompt,
-                                                                              map_labels,
-                                                                              special_tokens), axis=1)
+    df_valset["wrapped_input"] = df_valset.apply(lambda row: utils.wrap_dataset_with_prompt(row,
+                                                                                            template_prompt,
+                                                                                            map_labels,
+                                                                                            special_tokens), axis=1)
     print("Validation set wrapped!")
 
     tokenized_train, tokenized_val = cad_fine_tuning_trainer.prepare_training(df_trainset,
@@ -100,7 +97,11 @@ def main():
     if not parsed_yaml_file['IS_SWEEP']:
         training_cfgs = None
 
-    cad_fine_tuning_trainer.train(out_dir, lm, tokenized_train, tokenized_val, no_cuda, training_cfgs)
+    run_name = f"{lm_name}@{prompt_id}@cad_fine_tuning"
+    out_name = f"{out_dir}/{lm_name}"
+
+    cad_fine_tuning_trainer.train(out_name, lm, tokenized_train, tokenized_val,
+                                  no_cuda, training_cfgs, args.wandb_project, run_name)
 
     print(f"{datetime.datetime.now()}: End of experiments for fold:{fold}")
 

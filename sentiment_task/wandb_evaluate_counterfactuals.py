@@ -80,8 +80,8 @@ def main():
 
     # extract cfg from filename
     cfgs = args.results_filename.split('_')
-    prompt_template = cfgs[0]
-    fold = cfgs[1][-1]
+    prompt_template = cfgs[1]
+    fold = cfgs[2][-1]
 
     print(f"{datetime.datetime.now()}: Beginning of evaluation with filename:{args.generation_path}")
 
@@ -98,7 +98,7 @@ def main():
                                               int(args.cuda_device))
 
     # run evaluation
-    eval_set, _ = evaluator.clean_evalset(results_table)  # remove the Nan counterfactuals
+    eval_set, n_nan = evaluator.clean_evalset(results_table)  # remove the Nan counterfactuals
     evaluator.infer_predictions(eval_set)
     lf_score = evaluator.calculate_lf_score(eval_set)
     conf_score = evaluator.get_conf_score_pred()
@@ -112,8 +112,9 @@ def main():
     with wandb.init(settings=wandb.Settings(console='off'),
                     project=args.wandb_project):
 
-        wandb.run.name = f"{args.lm_name}@{args.eval_task_name}@{prompt_template}@fold_{fold}"
-        d = {"lf_score": lf_score,
+        wandb.run.name = f"{args.eval_task_name}@{args.results_filename}"
+        d = {"n_nan": n_nan,
+             "lf_score": lf_score,
              "conf_score": conf_score,
              "blue_corpus": blue_corpus,
              "blue_mean": blue_mean,

@@ -1,4 +1,3 @@
-import datasets
 import argparse
 import datetime
 import yaml
@@ -8,7 +7,7 @@ from sentiment_task import utils
 from sentiment_task.fine_tuning_experiments import cad_fine_tuning_trainer
 
 
-def run_agent(data_fold, wandb_project, yaml_file):
+def run_agent(args, data_fold, wandb_project, yaml_file):
     dataset_path = yaml_file['DATASET_PATH']
 
     lm_name = yaml_file['LM_NAME']
@@ -23,6 +22,9 @@ def run_agent(data_fold, wandb_project, yaml_file):
 
     # load the dataset
     df_trainset, df_valset, _ = utils.load_dataset(f"{dataset_path}/fold_{data_fold}/")
+    if args.debug_mode:
+        df_trainset = df_trainset[:10]
+        df_valset = df_valset[:10]
     print(f"# of samples for training:{len(df_trainset)}")
     print(f"# of samples for validation:{len(df_valset)}")
 
@@ -98,6 +100,14 @@ def main():
         help="The id of the sweep."
     )
 
+    parser.add_argument(
+        "--debug_mode",
+        default=None,
+        type=int,
+        required=True,
+        help="Whether to run the script in debug mode. The script will run with a reduced dataset size."
+    )
+
     args = parser.parse_args()
 
     # read params from yaml file
@@ -116,7 +126,7 @@ def main():
     print(f"Sweep id:{sweep_id}")
 
     try:
-        wandb.agent(sweep_id, function=lambda: run_agent(fold, args.wandb_project,
+        wandb.agent(sweep_id, function=lambda: run_agent(args, fold, args.wandb_project,
                                                          parsed_yaml_file), count=n_sweep_runs)
 
     except wandb.errors.CommError:

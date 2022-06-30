@@ -6,7 +6,7 @@ def load_dataset(loading_path):
     train = pd.read_csv(loading_path + "training_set", sep='\t')
     val = pd.read_csv(loading_path + "val_set", sep='\t')
     test = pd.read_csv(loading_path + "test_set", sep='\t')
-    return train[:10], val[:10], test[:10]
+    return train, val, test
 
 
 def wrap_dataset_with_prompt(df_row, template, mapping_labels, spec_tokens):

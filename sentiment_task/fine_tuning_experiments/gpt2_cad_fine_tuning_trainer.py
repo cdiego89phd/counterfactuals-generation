@@ -43,6 +43,14 @@ def main():
         help="The name of the wandb project."
     )
 
+    parser.add_argument(
+        "--debug_mode",
+        default=None,
+        type=int,
+        required=True,
+        help="Whether to run the script in debug mode. The script will run with a reduced dataset size."
+    )
+
     args = parser.parse_args()
 
     # read params from yaml file
@@ -68,6 +76,9 @@ def main():
 
     # load the dataset
     df_trainset, df_valset, _ = utils.load_dataset(f"{dataset_path}/fold_{fold}/")
+    if args.debug_mode:
+        df_trainset = df_trainset[:10]
+        df_valset = df_valset[:10]
     print(f"# of samples for training:{len(df_trainset)}")
     print(f"# of samples for validation:{len(df_valset)}")
 

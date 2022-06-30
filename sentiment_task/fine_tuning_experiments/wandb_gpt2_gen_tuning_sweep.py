@@ -71,13 +71,15 @@ def dataframe_from_dataset(gen_valset):
     return pd.DataFrame(data=d)
 
 
-def run_agent(yaml_file, trained_lm, tokenizer, classification_tools):
+def run_agent(args, yaml_file, trained_lm, tokenizer, classification_tools):
 
     fold = yaml_file['FOLD']
     dataset_path = yaml_file['DATASET_PATH']
 
     # load the dataset (we only use the valset)
     _, df_valset, _ = utils.load_dataset(f"{dataset_path}/fold_{fold}/")
+    if args.debug_mode:
+        df_valset = df_valset[:10]
 
     with wandb.init(settings=wandb.Settings(console='off')):
         gen_params = wandb.config
@@ -146,6 +148,14 @@ def main():
         help="The id of the sweep."
     )
 
+    parser.add_argument(
+        "--debug_mode",
+        default=None,
+        type=int,
+        required=True,
+        help="Whether to run the script in debug mode. The script will run with a reduced dataset size."
+    )
+
     args = parser.parse_args()
 
     # read params from yaml file
@@ -172,8 +182,8 @@ def main():
     print(f"Sweep id:{sweep_id}")
 
     try:
-        wandb.agent(sweep_id, function=lambda: run_agent(parsed_yaml_file, trained_lm, tokenizer, classification_tools),
-                    count=n_sweep_runs)
+        wandb.agent(sweep_id, function=lambda: run_agent(args, parsed_yaml_file, trained_lm, tokenizer,
+                                                         classification_tools), count=n_sweep_runs)
 
     except wandb.errors.CommError:
         print(f"wandb.errors.CommError: could not find sweep: {sweep_id}")

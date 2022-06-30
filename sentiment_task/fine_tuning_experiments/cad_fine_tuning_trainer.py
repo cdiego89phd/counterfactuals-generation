@@ -90,4 +90,4 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, r
         trainer.train()
 
         if save_model:
-            trainer.save_model()
+            trainer.save_model(run_name)

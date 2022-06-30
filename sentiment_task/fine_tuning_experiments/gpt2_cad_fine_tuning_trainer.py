@@ -108,7 +108,7 @@ def main():
     if not parsed_yaml_file['IS_SWEEP']:
         training_cfgs = parsed_yaml_file['TRAINING_CFGS']
 
-    run_name = f"{lm_name}@{prompt_id}@cad_fine_tuning"
+    run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@cad_fine_tuning"
     out_name = f"{out_dir}/{lm_name}"
 
     cad_fine_tuning_trainer.train(out_name, lm, tokenized_train, tokenized_val,

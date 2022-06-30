@@ -109,7 +109,7 @@ def main():
         training_cfgs = parsed_yaml_file['TRAINING_CFGS']
 
     run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@cad_fine_tuning"
-    out_name = f"{out_dir}/{lm_name}"
+    out_name = f"{out_dir}/{run_name}"
 
     cad_fine_tuning_trainer.train(out_name, lm, tokenized_train, tokenized_val,
                                   no_cuda, training_cfgs, args.wandb_project, run_name)

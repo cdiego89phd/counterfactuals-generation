@@ -62,6 +62,7 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, r
 
         training_args = transformers.TrainingArguments(
             output_dir=out_dir,
+            overwrite_output_dir=True,
             no_cuda=no_cuda,
             num_train_epochs=training_cfgs['MAX_EPOCHS'],
             per_device_train_batch_size=training_cfgs['TRAIN_BATCHSIZE'],
@@ -90,4 +91,4 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, r
         trainer.train()
 
         if save_model:
-            trainer.save_model(run_name)
+            trainer.save_model()

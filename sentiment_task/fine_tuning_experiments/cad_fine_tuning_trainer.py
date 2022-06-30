@@ -51,39 +51,28 @@ def prepare_training(df_trainset,
 
 def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, run_name=None, save_model=True):
 
-    if training_cfgs is None:
-        # use wandb sweep config dict
-        training_cfgs = wandb.config
-
-    max_epochs = training_cfgs['MAX_EPOCHS']
-    train_batch_size = training_cfgs['TRAIN_BATCHSIZE']
-    eval_batch_size = training_cfgs['EVAL_BATCHSIZE']
-    batch_update = training_cfgs['BATCH_UPDATE']
-    warmup_steps = training_cfgs['WARMUP_STEPS']
-    lr = training_cfgs['LR']
-    adam_epsilon = training_cfgs['ADAM_EPS']
-    weight_decay = training_cfgs['WEIGHT_DECAY']
-    stopping_patience = training_cfgs['STOPPING_PATIENCE']
-    to_freeze_layers = training_cfgs['FREEZE_LAYERS']
-    unfreeze_last_n = training_cfgs['UNFREEZE_LAST_N']
-
-    lm = freeze_layers_lm(to_freeze_layers, unfreeze_last_n, lm)
-
-    early_stopping = transformers.EarlyStoppingCallback(early_stopping_patience=stopping_patience)
     with wandb.init(project=project_name, name=run_name):
+        if training_cfgs is None:
+            # use wandb sweep config dict
+            training_cfgs = wandb.config
+
+        lm = freeze_layers_lm(training_cfgs['FREEZE_LAYERS'], training_cfgs['UNFREEZE_LAST_N'], lm)
+
+        early_stopping = transformers.EarlyStoppingCallback(early_stopping_patience=training_cfgs['STOPPING_PATIENCE'])
+
         training_args = transformers.TrainingArguments(
             output_dir=out_dir,
             no_cuda=no_cuda,
-            num_train_epochs=max_epochs,
-            per_device_train_batch_size=train_batch_size,
-            per_device_eval_batch_size=eval_batch_size,
-            gradient_accumulation_steps=batch_update,
+            num_train_epochs=training_cfgs['MAX_EPOCHS'],
+            per_device_train_batch_size=training_cfgs['TRAIN_BATCHSIZE'],
+            per_device_eval_batch_size=training_cfgs['EVAL_BATCHSIZE'],
+            gradient_accumulation_steps=training_cfgs['BATCH_UPDATE'],
             do_eval=True,
             evaluation_strategy=transformers.IntervalStrategy.EPOCH,
-            warmup_steps=warmup_steps,
-            learning_rate=lr,
-            adam_epsilon=adam_epsilon,
-            weight_decay=weight_decay,
+            warmup_steps=training_cfgs['WARMUP_STEPS'],
+            learning_rate=training_cfgs['LR'],
+            adam_epsilon=training_cfgs['ADAM_EPS'],
+            weight_decay=training_cfgs['WEIGHT_DECAY'],
             save_total_limit=1,
             save_strategy=transformers.IntervalStrategy.EPOCH,
             load_best_model_at_end=True,

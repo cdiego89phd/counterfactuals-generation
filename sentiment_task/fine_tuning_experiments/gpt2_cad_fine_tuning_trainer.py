@@ -59,7 +59,6 @@ def main():
     special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
     tokenize_in_batch = parsed_yaml_file['TOKENIZE_IN_BATCH']
     no_cuda = parsed_yaml_file['NO_CUDA']
-    training_cfgs = parsed_yaml_file['TRAINING_CFGS']
 
     template_prompt = parsed_yaml_file['TEMPLATE_PROMPT']
     map_labels = parsed_yaml_file['MAP_LABELS']
@@ -94,8 +93,9 @@ def main():
                                                                               tokenize_in_batch)
     print("Datasets have been tokenized successfully!")
 
+    training_cfgs = None
     if not parsed_yaml_file['IS_SWEEP']:
-        training_cfgs = None
+        training_cfgs = parsed_yaml_file['TRAINING_CFGS']
 
     run_name = f"{lm_name}@{prompt_id}@cad_fine_tuning"
     out_name = f"{out_dir}/{lm_name}"

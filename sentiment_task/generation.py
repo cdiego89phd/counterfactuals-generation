@@ -149,6 +149,10 @@ class CounterGenerator:
              }
         return pd.DataFrame(data=d)
 
+    # TODO
+    def perform_single_generation(self):
+        pass
+
     # # TODO modify
     # def print_dataset(self, file_to_print, args):
     #     """Print the dataset"""

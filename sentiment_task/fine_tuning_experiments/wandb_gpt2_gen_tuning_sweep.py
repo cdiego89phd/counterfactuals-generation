@@ -164,6 +164,7 @@ def main():
 
     fold = parsed_yaml_file['FOLD']
     lm_name = parsed_yaml_file['LM_NAME']
+    prompt_id = parsed_yaml_file['PROMPT_ID']
     special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
     classifier_name = parsed_yaml_file['CLASSIFIER_NAME']
 
@@ -171,7 +172,8 @@ def main():
 
     print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
 
-    model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{parsed_yaml_file['LM_NAME']}"
+    run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@cad_fine_tuning"
+    model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{run_name}"
     tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
     trained_lm = utils.load_gpt2_from_local(model_local_path)
     classification_tools = utils.prepare_classifier(classifier_name)

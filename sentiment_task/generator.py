@@ -71,7 +71,7 @@ def main():
 
     # read params from command line
     parser = argparse.ArgumentParser()
-    # SETTINGS_PATH = "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/settings/"
+    # SETTINGS_PATH = "/home/diego/counterfactuals-generation/sentiment_task/zero_shot_experiments/settings/"
     parser.add_argument(
         "--setting_path",
         default=None,
@@ -80,13 +80,21 @@ def main():
         help="The absolute path of the file settings."
     )
 
-    # e.g. SETTING_NAME = "tuning_gen_hypers_prompt-1_fold-0.yaml"
+    # e.g. SETTING_NAME = "generation_prompt-1.yaml"
     parser.add_argument(
         "--setting_name",
         default=None,
         type=str,
         required=True,
         help="The name of yaml file where to load the setting from."
+    )
+
+    parser.add_argument(
+        "--debug_mode",
+        default=None,
+        type=int,
+        required=True,
+        help="Whether to run the script in debug mode. The script will run with a reduced dataset size."
     )
 
     args = parser.parse_args()
@@ -97,6 +105,7 @@ def main():
 
     fold = parsed_yaml_file['FOLD']
     lm_name = parsed_yaml_file['LM_NAME']
+    base_lm_name = parsed_yaml_file['BASE_LM_NAME']
     special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
     cuda_device = parsed_yaml_file['CUDA_DEVICE']
     n_to_generate = parsed_yaml_file['N_TO_GENERATE']
@@ -106,16 +115,19 @@ def main():
     # load the dataset
     dataset_path = parsed_yaml_file['DATASET_PATH']
     _, _, df_testset = utils.load_dataset(f"{dataset_path}/fold_{fold}/")
+    if args.debug_mode:
+        df_testset = df_testset[:10]
     print(f"{datetime.datetime.now()}: Test set loaded for fold:{fold}")
     print(f"# of samples for test:{len(df_testset)}")
 
-    # TODO CHECK either retrain with val and train or take the model previously tuned.
-    model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{parsed_yaml_file['LM_NAME']}"
-    tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
-    trained_lm = utils.load_gpt2_from_local(model_local_path)
+    tokenizer, trained_lm, _ = utils.load_gpt2_objects(base_lm_name, special_tokens)
+    if parsed_yaml_file['MODEL_FROM_LOCAL']:
+        model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{parsed_yaml_file['LM_NAME']}"
+        trained_lm = utils.load_gpt2_from_local(model_local_path)
+    print(f"{datetime.datetime.now()}: Language model loaded from local:{parsed_yaml_file['MODEL_FROM_LOCAL']}")
 
     # generate the counterfactuals
-    gen_params = parsed_yaml_file['GEN_CFG']
+    gen_params = parsed_yaml_file['GEN_CFGS']
     gen_testset = generate_counterfactuals(parsed_yaml_file, df_testset, trained_lm, tokenizer,
                                            gen_params, cuda_device, n_to_generate)
     df_gen_testset = gen_testset.dataframe_from_dataset()
@@ -124,7 +136,7 @@ def main():
     # print test generation
     prompt_id = parsed_yaml_file['PROMPT_ID']
     gen_filename = f"{lm_name}_prompt-{prompt_id}_fold-{fold}.csv"
-    df_gen_testset.to_csv(f"{parsed_yaml_file['GEN_PATH']}{gen_filename}", sep='\t', header=True, index=False)
+    df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
 
     print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")
 

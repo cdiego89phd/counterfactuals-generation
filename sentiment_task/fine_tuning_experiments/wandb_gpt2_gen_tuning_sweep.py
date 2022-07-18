@@ -173,9 +173,12 @@ def main():
     print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
 
     run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@cad_fine_tuning"
-    model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{run_name}"
+
     tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
+    model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{run_name}"
     trained_lm = utils.load_gpt2_from_local(model_local_path)
+
+    # load classifier for the evaluation
     classification_tools = utils.prepare_classifier(classifier_name)
 
     # initialize WANDB logging system

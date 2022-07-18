@@ -122,7 +122,7 @@ def main():
     # initialize WANDB logging system
     wandb.login(relogin=True, key=args.wandb_key)
 
-    sweep_id = f"cdiego89/counterfactuals-generation/{args.sweep_id}"
+    sweep_id = f"cdiego89/{args.wandb_project}/{args.sweep_id}"
     print(f"Sweep id:{sweep_id}")
 
     try:

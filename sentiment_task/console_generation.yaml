@@ -1,0 +1,18 @@
+CUDA_DEVICE: 0
+
+SPECIAL_TOKENS: # or set it to None
+  "bos_token": "<|BOS|>"
+  "eos_token": "<|EOS|>"
+  "unk_token": "<|UNK|>"
+  "pad_token": "<|PAD|>"
+  "sep_token": "<|SEP|>"
+
+MAP_LABELS:
+  0: "Negative"
+  1: "Positive"
+
+GEN_PARAMS:
+  "num_beams": 1
+  "no_repeat_ngram_size": 5
+  "repetition_penalty": 0.9
+  "temperature": 0.9

@@ -9,7 +9,29 @@ from openprompt.prompts import ManualTemplate
 from openprompt.plms.lm import LMTokenizerWrapper
 
 
-def generate_counterfactuals(yaml_file, df_testset, trained_lm, tokenizer, gen_params, cuda_device=0, n_to_generate=1):
+def generate_single_counterfactual(yaml_file,
+                                   prompt,
+                                   seed_review,
+                                   seed_class,
+                                   trained_lm,
+                                   tokenizer,
+                                   cuda_device=0,
+                                   n_to_generate=1) -> str:
+
+    special_tokens = yaml_file['SPECIAL_TOKENS']
+    map_labels = yaml_file['MAP_LABELS']
+    gen_params = yaml_file['GEN_PARAMS']
+
+    return "None"
+
+
+def generate_counterfactuals(yaml_file,
+                             df_testset,
+                             trained_lm,
+                             tokenizer,
+                             gen_params,
+                             cuda_device=0,
+                             n_to_generate=1) -> generation.CounterGenerator:
 
     special_tokens = yaml_file['SPECIAL_TOKENS']
     map_labels = yaml_file['MAP_LABELS']
@@ -48,7 +70,7 @@ def generate_counterfactuals(yaml_file, df_testset, trained_lm, tokenizer, gen_p
     return counter_generator
 
 
-def dataframe_from_dataset(gen_valset):
+def dataframe_from_dataset(gen_valset) -> pd.DataFrame:
     """Build a dataframe from dataset"""
 
     paired_ids = [idx for idx in gen_valset]

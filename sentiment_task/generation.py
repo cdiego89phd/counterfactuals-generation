@@ -119,8 +119,10 @@ class CounterGenerator:
             }
 
             try:
-                if torch.cuda.is_available() and cuda_device > -1:
-                    inputs = inputs.to(cuda_device)
+                # if torch.cuda.is_available() and cuda_device > -1:
+                #     inputs = inputs.to(cuda_device)
+                if torch.cuda.is_available():
+                    inputs = inputs.cuda()
                 _, generated_counter = self.generator.generate(inputs,
                                                                verbose=False,
                                                                **generation_arguments)

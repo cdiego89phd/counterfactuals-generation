@@ -81,7 +81,6 @@ class CounterGenerator:
             plm=lm,
             plm_eval_mode=True
         )
-        print(f"index: {self.generator.device.index}")
 
         print("DIEGO")
         if torch.cuda.is_available():
@@ -90,6 +89,7 @@ class CounterGenerator:
             #     self.generator = self.generator.to(cuda_device).cuda()
         # if torch.cuda.is_available() and cuda_device > -1:
         #     self.generator = self.generator.to(cuda_device)
+        print(f"index: {self.generator.device.index}")
         print("OK")
 
     def perform_generation(self, tokenizer, cuda_device=0, n_to_generate=1):

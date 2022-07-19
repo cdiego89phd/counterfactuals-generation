@@ -86,7 +86,8 @@ def run_agent(args, yaml_file):
     tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
     model_local_path = f"{yaml_file['MODEL_DIR']}/{run_name}"
     trained_lm = utils.load_gpt2_from_local(model_local_path)
-    device = torch.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
+    # device = torch.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
+    device = torch.cuda.device(yaml_file['CUDA_DEVICE'])
     trained_lm.to(device)
     print("model to CUDA!")
 

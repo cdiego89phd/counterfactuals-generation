@@ -63,7 +63,7 @@ class CounterGenerator:
                  lm,
                  dataloader: openprompt.PromptDataLoader,
                  dataset: SentimentDataset,
-                 cuda_device: int,
+                 cuda_device: torch.cuda.device,
                  cfgs: dict):
         """Constructor of the counterfactual generator
         @param: dataloader That store the dataset

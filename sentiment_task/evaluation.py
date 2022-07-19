@@ -24,6 +24,7 @@ class SentimentEvaluator:
             tokenizer=s_tokenizer,
             framework="pt",
             device=s_device)
+        print(f"S device: {s_device}")
 
         # TODO put this to cuda
         self.predicted_labels = []

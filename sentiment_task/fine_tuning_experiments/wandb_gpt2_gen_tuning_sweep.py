@@ -89,6 +89,7 @@ def run_agent(args, yaml_file):
 
     # load classifier for the evaluation
     classification_tools = utils.prepare_classifier(classifier_name)
+    print("Classifier prepared!")
 
     # load the dataset (we only use the valset)
     _, df_valset, _ = utils.load_dataset(f"{dataset_path}/fold_{fold}/")

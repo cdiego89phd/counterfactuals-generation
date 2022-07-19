@@ -84,8 +84,9 @@ class CounterGenerator:
 
         print("DIEGO")
         if torch.cuda.is_available():
-            with torch.cuda.device(1):
-                self.generator = self.generator.to(cuda_device).cuda()
+            self.generator = self.generator.cuda()
+            # with torch.cuda.device(1):
+            #     self.generator = self.generator.to(cuda_device).cuda()
         # if torch.cuda.is_available() and cuda_device > -1:
         #     self.generator = self.generator.to(cuda_device)
         print("OK")

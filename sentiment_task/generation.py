@@ -82,7 +82,8 @@ class CounterGenerator:
             plm_eval_mode=True
         )
 
-        if torch.cuda.is_available() and cuda_device > -1:
+        if torch.cuda.is_available():
+        # if torch.cuda.is_available() and cuda_device > -1:
             self.generator = self.generator.to(cuda_device)
 
     def perform_generation(self, tokenizer, cuda_device=0, n_to_generate=1):

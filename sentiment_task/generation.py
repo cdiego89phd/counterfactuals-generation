@@ -81,6 +81,7 @@ class CounterGenerator:
             plm=lm,
             plm_eval_mode=True
         )
+        print(f"index: {self.generator.device.index}")
 
         print("DIEGO")
         if torch.cuda.is_available():

@@ -28,6 +28,7 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
     # prepare the data loader
     valset = generation.SentimentDataset(raw_dataframe=df_valset.copy(deep=True))
     valset.prepare_dataloader()
+    print("Valset prepared!")
 
     template_prompt = '{"placeholder":"text_a"}{"mask"}'
     prompt_template = ManualTemplate(text=template_prompt, tokenizer=tokenizer)
@@ -42,6 +43,7 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
     print("HERE")
     # cuda_device = yaml_file['CUDA_DEVICE']
     cuda_device = torch.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
+    cuda_device = torch.device("cuda:1")
     counter_generator = generation.CounterGenerator(prompt_template,
                                                     trained_lm,
                                                     val_data_loader,

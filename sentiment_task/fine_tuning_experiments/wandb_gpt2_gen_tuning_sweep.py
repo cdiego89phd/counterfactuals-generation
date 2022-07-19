@@ -41,7 +41,7 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
 
     print("HERE")
     # cuda_device = yaml_file['CUDA_DEVICE']
-    cuda_device = torch.cuda.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
+    cuda_device = torch.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
     counter_generator = generation.CounterGenerator(prompt_template,
                                                     trained_lm,
                                                     val_data_loader,

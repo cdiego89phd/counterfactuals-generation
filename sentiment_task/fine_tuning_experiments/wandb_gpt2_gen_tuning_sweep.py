@@ -109,7 +109,7 @@ def run_agent(args, yaml_file):
         evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],
                                                   classification_tools["classifier"],
                                                   classification_tools["label_map"],
-                                                  trained_lm.device.index)
+                                                  device)
 
         eval_valset, n_nan = evaluator.clean_evalset(eval_valset)
         evaluator.infer_predictions(eval_valset)

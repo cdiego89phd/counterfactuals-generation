@@ -31,8 +31,12 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
     print(f"{datetime.datetime.now()}: Valset prepared!")
 
     template_prompt = '{"placeholder":"text_a"}{"mask"}'
+    print("si")
     prompt_template = ManualTemplate(text=template_prompt, tokenizer=tokenizer)
+    print("sii")
+
     tokenizer_wrapper = LMTokenizerWrapper
+    print("siii")
     val_data_loader = openprompt.PromptDataLoader(
         dataset=list(valset.get_dataset().values()),
         tokenizer=tokenizer,
@@ -98,8 +102,7 @@ def run_agent(args, yaml_file):
     print(f"model to CUDA: {trained_lm.device.index}")
     # print(f"model to CUDA: {trained_lm}")
 
-
-# load classifier for the evaluation
+    # load classifier for the evaluation
     classification_tools = utils.prepare_classifier(classifier_name)
     print(f"{datetime.datetime.now()}: Classifier prepared!")
 

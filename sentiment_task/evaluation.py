@@ -7,7 +7,7 @@ import nltk
 
 class SentimentEvaluator:
 
-    def __init__(self, s_tokenizer, s_model, s_label_dict, s_device):
+    def __init__(self, s_tokenizer, s_model, s_label_dict, s_device=0):
         """Constructor of the evaluator
         @param: s_dataset The dataset for the sentiment classifier
         @param: s_tokenizer The tokenizer for the sentiment classifier
@@ -24,9 +24,7 @@ class SentimentEvaluator:
             tokenizer=s_tokenizer,
             framework="pt",
             device=s_device)
-        print(f"S device: {s_device}")
 
-        # TODO put this to cuda
         self.predicted_labels = []
         self.score_labels = []
 

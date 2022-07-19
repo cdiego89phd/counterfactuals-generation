@@ -5,7 +5,6 @@ import yaml
 import wandb
 import sys
 import openprompt
-import torch
 from sentiment_task import evaluation, generation, utils
 
 from openprompt.prompts import ManualTemplate
@@ -31,12 +30,8 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
     print(f"{datetime.datetime.now()}: Valset prepared!")
 
     template_prompt = '{"placeholder":"text_a"}{"mask"}'
-    print("si")
     prompt_template = ManualTemplate(text=template_prompt, tokenizer=tokenizer)
-    print("sii")
-
     tokenizer_wrapper = LMTokenizerWrapper
-    print("siii")
     val_data_loader = openprompt.PromptDataLoader(
         dataset=list(valset.get_dataset().values()),
         tokenizer=tokenizer,
@@ -44,20 +39,13 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
         tokenizer_wrapper_class=tokenizer_wrapper
     )
 
-    print("HERE")
-    # cuda_device = yaml_file['CUDA_DEVICE']
-    cuda_device = torch.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
-    cuda_device = torch.device("cuda:1")
     counter_generator = generation.CounterGenerator(prompt_template,
                                                     trained_lm,
                                                     val_data_loader,
                                                     valset,
-                                                    cuda_device,
                                                     gen_params)
     print(f"{datetime.datetime.now()}: Begin of generation...")
-    counter_generator.perform_generation(tokenizer, cuda_device)
-
-    print("WHERE")
+    counter_generator.perform_generation(tokenizer)
 
     # the generated counterfactuals are held inside the counter_generator object
     return counter_generator.dataset
@@ -82,7 +70,6 @@ def dataframe_from_dataset(gen_valset):
     return pd.DataFrame(data=d)
 
 
-# def run_agent(args, yaml_file, trained_lm, tokenizer, classification_tools):
 def run_agent(args, yaml_file):
 
     fold = yaml_file['FOLD']
@@ -96,11 +83,6 @@ def run_agent(args, yaml_file):
     tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
     model_local_path = f"{yaml_file['MODEL_DIR']}/{run_name}"
     trained_lm = utils.load_gpt2_from_local(model_local_path)
-    # device = torch.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
-    # device = torch.cuda.device(yaml_file['CUDA_DEVICE'])
-    # trained_lm.to(device)
-    print(f"model to CUDA: {trained_lm.device.index}")
-    # print(f"model to CUDA: {trained_lm}")
 
     # load classifier for the evaluation
     classification_tools = utils.prepare_classifier(classifier_name)
@@ -121,8 +103,7 @@ def run_agent(args, yaml_file):
         eval_valset = dataframe_from_dataset(gen_valset)
         evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],
                                                   classification_tools["classifier"],
-                                                  classification_tools["label_map"],
-                                                  trained_lm.device.index)
+                                                  classification_tools["label_map"])
 
         eval_valset, n_nan = evaluator.clean_evalset(eval_valset)
         evaluator.infer_predictions(eval_valset)

@@ -63,7 +63,6 @@ class CounterGenerator:
                  lm,
                  dataloader: openprompt.PromptDataLoader,
                  dataset: SentimentDataset,
-                 cuda_device: torch.device,
                  cfgs: dict):
         """Constructor of the counterfactual generator
         @param: dataloader That store the dataset
@@ -82,17 +81,11 @@ class CounterGenerator:
             plm_eval_mode=True
         )
 
-        print("DIEGO")
         if torch.cuda.is_available():
             self.generator = self.generator.cuda()
-            # with torch.cuda.device(1):
-            #     self.generator = self.generator.to(cuda_device).cuda()
-        # if torch.cuda.is_available() and cuda_device > -1:
-        #     self.generator = self.generator.to(cuda_device)
-        print(f"index: {self.generator.device.index}")
-        print("OK")
+        print(f"The counterfactual generator is placed on cuda device:{self.generator.device.index}")
 
-    def perform_generation(self, tokenizer, cuda_device=0, n_to_generate=1):
+    def perform_generation(self, tokenizer, n_to_generate=1):
         self.generator.eval()
 
         for (step, inputs) in enumerate(self.dataloader):
@@ -120,8 +113,6 @@ class CounterGenerator:
             }
 
             try:
-                # if torch.cuda.is_available() and cuda_device > -1:
-                #     inputs = inputs.to(cuda_device)
                 if torch.cuda.is_available():
                     inputs = inputs.cuda()
                 _, generated_counter = self.generator.generate(inputs,
@@ -130,7 +121,6 @@ class CounterGenerator:
 
                 # insert the generated counterfactual
                 instance_to_update.meta["generated_counter"] = generated_counter[0]
-                # print(generated_counter)
 
             except Exception as e:
                 instance_to_update.meta["generated_counter"] = None
@@ -161,12 +151,3 @@ class CounterGenerator:
     # TODO
     def perform_single_generation(self):
         pass
-
-    # # TODO modify
-    # def print_dataset(self, file_to_print, args):
-    #     """Print the dataset"""
-    #     df_to_print = self.dataframe_from_dataset()
-    #
-    #     # print such dataframe
-    #     filename = f"{file_to_print[:-5]}-{args}.gen"
-    #     df_to_print.to_csv(filename, sep='\t', index=False)

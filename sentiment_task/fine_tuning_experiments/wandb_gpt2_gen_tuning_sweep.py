@@ -5,6 +5,7 @@ import yaml
 import wandb
 import sys
 import openprompt
+import torch
 from sentiment_task import evaluation, generation, utils
 
 from openprompt.prompts import ManualTemplate
@@ -85,7 +86,8 @@ def run_agent(args, yaml_file):
     tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
     model_local_path = f"{yaml_file['MODEL_DIR']}/{run_name}"
     trained_lm = utils.load_gpt2_from_local(model_local_path)
-    trained_lm.to(f"cuda:{yaml_file['CUDA_DEVICE']}")
+    device = torch.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
+    trained_lm.to(device)
 
     # load classifier for the evaluation
     classification_tools = utils.prepare_classifier(classifier_name)

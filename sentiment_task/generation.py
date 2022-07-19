@@ -63,7 +63,7 @@ class CounterGenerator:
                  lm,
                  dataloader: openprompt.PromptDataLoader,
                  dataset: SentimentDataset,
-                 cuda_device: torch.cuda.device,
+                 cuda_device: torch.device,
                  cfgs: dict):
         """Constructor of the counterfactual generator
         @param: dataloader That store the dataset
@@ -85,6 +85,7 @@ class CounterGenerator:
         if torch.cuda.is_available():
         # if torch.cuda.is_available() and cuda_device > -1:
             self.generator = self.generator.to(cuda_device)
+        print("OK")
 
     def perform_generation(self, tokenizer, cuda_device=0, n_to_generate=1):
         self.generator.eval()

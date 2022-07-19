@@ -71,10 +71,23 @@ def dataframe_from_dataset(gen_valset):
     return pd.DataFrame(data=d)
 
 
-def run_agent(args, yaml_file, trained_lm, tokenizer, classification_tools):
+# def run_agent(args, yaml_file, trained_lm, tokenizer, classification_tools):
+def run_agent(args, yaml_file):
 
     fold = yaml_file['FOLD']
+    lm_name = yaml_file['LM_NAME']
+    prompt_id = yaml_file['PROMPT_ID']
     dataset_path = yaml_file['DATASET_PATH']
+    special_tokens = yaml_file['SPECIAL_TOKENS']
+    classifier_name = yaml_file['CLASSIFIER_NAME']
+    run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@cad_fine_tuning"
+
+    tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
+    model_local_path = f"{yaml_file['MODEL_DIR']}/{run_name}"
+    trained_lm = utils.load_gpt2_from_local(model_local_path)
+
+    # load classifier for the evaluation
+    classification_tools = utils.prepare_classifier(classifier_name)
 
     # load the dataset (we only use the valset)
     _, df_valset, _ = utils.load_dataset(f"{dataset_path}/fold_{fold}/")
@@ -163,23 +176,23 @@ def main():
     parsed_yaml_file = yaml.load(setting_yaml_file, Loader=yaml.FullLoader)
 
     fold = parsed_yaml_file['FOLD']
-    lm_name = parsed_yaml_file['LM_NAME']
-    prompt_id = parsed_yaml_file['PROMPT_ID']
-    special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
-    classifier_name = parsed_yaml_file['CLASSIFIER_NAME']
+    # lm_name = parsed_yaml_file['LM_NAME']
+    # prompt_id = parsed_yaml_file['PROMPT_ID']
+    # special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
+    # classifier_name = parsed_yaml_file['CLASSIFIER_NAME']
 
     n_sweep_runs = parsed_yaml_file['N_SWEEP_RUNS']
 
     print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
 
-    run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@cad_fine_tuning"
+    # run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@cad_fine_tuning"
 
-    tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
-    model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{run_name}"
-    trained_lm = utils.load_gpt2_from_local(model_local_path)
-
-    # load classifier for the evaluation
-    classification_tools = utils.prepare_classifier(classifier_name)
+    # tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
+    # model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{run_name}"
+    # trained_lm = utils.load_gpt2_from_local(model_local_path)
+    #
+    # # load classifier for the evaluation
+    # classification_tools = utils.prepare_classifier(classifier_name)
 
     # initialize WANDB logging system
     wandb.login(relogin=True, key=args.wandb_key)
@@ -187,8 +200,9 @@ def main():
     print(f"Sweep id:{sweep_id}")
 
     try:
-        wandb.agent(sweep_id, function=lambda: run_agent(args, parsed_yaml_file, trained_lm, tokenizer,
-                                                         classification_tools), count=n_sweep_runs)
+        # wandb.agent(sweep_id, function=lambda: run_agent(args, parsed_yaml_file, trained_lm, tokenizer,
+        #                                                  classification_tools), count=n_sweep_runs)
+        wandb.agent(sweep_id, function=lambda: run_agent(args, parsed_yaml_file), count=n_sweep_runs)
 
     except wandb.errors.CommError:
         print(f"wandb.errors.CommError: could not find sweep: {sweep_id}")

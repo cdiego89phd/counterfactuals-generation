@@ -88,6 +88,7 @@ def run_agent(args, yaml_file):
     trained_lm = utils.load_gpt2_from_local(model_local_path)
     device = torch.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
     trained_lm.to(device)
+    print("model to CUDA!")
 
     # load classifier for the evaluation
     classification_tools = utils.prepare_classifier(classifier_name)

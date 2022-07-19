@@ -95,9 +95,11 @@ def run_agent(args, yaml_file):
     # device = torch.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
     # device = torch.cuda.device(yaml_file['CUDA_DEVICE'])
     # trained_lm.to(device)
-    print("model to CUDA!")
+    print(f"model to CUDA: {trained_lm.device.index}")
+    # print(f"model to CUDA: {trained_lm}")
 
-    # load classifier for the evaluation
+
+# load classifier for the evaluation
     classification_tools = utils.prepare_classifier(classifier_name)
     print("Classifier prepared!")
 
@@ -227,5 +229,5 @@ def main():
 if __name__ == "__main__":
     os.environ['WANDB_CONSOLE'] = 'off'  # this will prevent the sweep to finish with no errors
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
-    os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+    os.environ["CUDA_VISIBLE_DEVICES"] = 1
     main()

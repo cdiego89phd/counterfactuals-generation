@@ -225,4 +225,5 @@ def main():
 if __name__ == "__main__":
     os.environ['WANDB_CONSOLE'] = 'off'  # this will prevent the sweep to finish with no errors
     os.environ["TOKENIZERS_PARALLELISM"] = "false"
+    os.environ["CUDA_VISIBLE_DEVICES"] = "1"
     main()

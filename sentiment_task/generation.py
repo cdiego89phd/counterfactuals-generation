@@ -82,6 +82,7 @@ class CounterGenerator:
             plm_eval_mode=True
         )
 
+        print("DIEGO")
         if torch.cuda.is_available():
             with torch.cuda.device(1):
                 self.generator = self.generator.to(cuda_device).cuda()

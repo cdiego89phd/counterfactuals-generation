@@ -87,8 +87,8 @@ def run_agent(args, yaml_file):
     model_local_path = f"{yaml_file['MODEL_DIR']}/{run_name}"
     trained_lm = utils.load_gpt2_from_local(model_local_path)
     # device = torch.device(f"cuda:{yaml_file['CUDA_DEVICE']}")
-    device = torch.cuda.device(yaml_file['CUDA_DEVICE'])
-    trained_lm.to(device)
+    # device = torch.cuda.device(yaml_file['CUDA_DEVICE'])
+    # trained_lm.to(device)
     print("model to CUDA!")
 
     # load classifier for the evaluation
@@ -111,7 +111,7 @@ def run_agent(args, yaml_file):
         evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],
                                                   classification_tools["classifier"],
                                                   classification_tools["label_map"],
-                                                  device)
+                                                  trained_lm.device.index)
 
         eval_valset, n_nan = evaluator.clean_evalset(eval_valset)
         evaluator.infer_predictions(eval_valset)

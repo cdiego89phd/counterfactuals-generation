@@ -24,6 +24,8 @@ class SentimentEvaluator:
             tokenizer=s_tokenizer,
             framework="pt",
             device=s_device)
+
+        # TODO put this to cuda
         self.predicted_labels = []
         self.score_labels = []
 

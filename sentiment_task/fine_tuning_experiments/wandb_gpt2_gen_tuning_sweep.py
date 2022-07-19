@@ -28,7 +28,7 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
     # prepare the data loader
     valset = generation.SentimentDataset(raw_dataframe=df_valset.copy(deep=True))
     valset.prepare_dataloader()
-    print("Valset prepared!")
+    print(f"{datetime.datetime.now()}: Valset prepared!")
 
     template_prompt = '{"placeholder":"text_a"}{"mask"}'
     prompt_template = ManualTemplate(text=template_prompt, tokenizer=tokenizer)
@@ -50,7 +50,7 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
                                                     valset,
                                                     cuda_device,
                                                     gen_params)
-    print("THERE")
+    print(f"{datetime.datetime.now()}: Begin of generation...")
     counter_generator.perform_generation(tokenizer, cuda_device)
 
     print("WHERE")
@@ -101,7 +101,7 @@ def run_agent(args, yaml_file):
 
 # load classifier for the evaluation
     classification_tools = utils.prepare_classifier(classifier_name)
-    print("Classifier prepared!")
+    print(f"{datetime.datetime.now()}: Classifier prepared!")
 
     # load the dataset (we only use the valset)
     _, df_valset, _ = utils.load_dataset(f"{dataset_path}/fold_{fold}/")
@@ -113,7 +113,7 @@ def run_agent(args, yaml_file):
         print(f"Running generation with run:{wandb.run.name}")
 
         gen_valset = generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_params)
-        print("Generation completed!")
+        print(f"{datetime.datetime.now()}: Generation completed!")
 
         eval_valset = dataframe_from_dataset(gen_valset)
         evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],

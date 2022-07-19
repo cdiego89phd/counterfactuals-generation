@@ -39,6 +39,7 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
         tokenizer_wrapper_class=tokenizer_wrapper
     )
 
+    print("HERE")
     cuda_device = yaml_file['CUDA_DEVICE']
     counter_generator = generation.CounterGenerator(prompt_template,
                                                     trained_lm,
@@ -46,8 +47,10 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
                                                     valset,
                                                     cuda_device,
                                                     gen_params)
-
+    print("THERE")
     counter_generator.perform_generation(tokenizer, yaml_file['CUDA_DEVICE'])
+
+    print("WHERE")
 
     # the generated counterfactuals are held inside the counter_generator object
     return counter_generator.dataset

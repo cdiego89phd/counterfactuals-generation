@@ -80,6 +80,7 @@ class SentimentEvaluator:
 
             blue_score.append(nltk.translate.bleu_score.sentence_bleu([reference],
                                                                       hypothesis,
+                                                                      weights=weights,
                                                                       smoothing_function=smoothing_function.method1))
         return np.mean(blue_score), np.var(blue_score)
 
@@ -102,5 +103,6 @@ class SentimentEvaluator:
 
         score = nltk.translate.bleu_score.corpus_bleu(references,
                                                       hypothesis,
+                                                      weights=weights,
                                                       smoothing_function=smoothing_function.method1)
         return score

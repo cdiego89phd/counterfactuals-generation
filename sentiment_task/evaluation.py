@@ -60,7 +60,8 @@ class SentimentEvaluator:
         return np.mean(self.score_labels)
 
     @staticmethod
-    def calculate_blue_score(eval_dataset) -> (float, float):
+    def calculate_blue_score(eval_dataset,
+                             weights=(0.25, 0.25, 0.25, 0.25)) -> (float, float):
         """Calculate the BLUE score for a pair of example-counter.
            Returns mean and variance of the BLUE scores.
         """
@@ -83,7 +84,8 @@ class SentimentEvaluator:
         return np.mean(blue_score), np.var(blue_score)
 
     @staticmethod
-    def calculate_blue_corpus(eval_dataset) -> float:
+    def calculate_blue_corpus(eval_dataset,
+                              weights=(0.25, 0.25, 0.25, 0.25)) -> float:
         """Calculate the corpus BLUE score for the entire set of reference-hypothesis pairs.
            Returns the BLUE score.
         """

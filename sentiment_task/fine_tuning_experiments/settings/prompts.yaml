@@ -1,0 +1,11 @@
+PROMPT_ID: "1"
+TEMPLATE_PROMPT: "<bos_token><label_ex> review:<sep><example_text><sep><label_counter> review:<sep><counter_text><eos_token>"
+GENERATION_PROMPT: "<bos_token><label_ex> review:<sep><example_text><sep><label_counter> review:<sep>"
+
+PROMPT_ID: "2"
+TEMPLATE_PROMPT: "<bos_token>The movie is <label_ex>.<sep><example_text><sep>The movie is <label_counter>.<sep> <counter_text><eos_token>"
+GENERATION_PROMPT: "<bos_token>The movie is <label_ex>.<sep><example_text><sep>The movie is <label_counter>.<sep>"
+
+PROMPT_ID: "3"
+TEMPLATE_PROMPT: "bos_token><label_ex> review:<sep>\n<example_text><sep><label_counter> review:<sep>\n<counter_text><eos_token>"
+GENERATION_PROMPT: "bos_token><label_ex> review:<sep>\n<example_text><sep><label_counter> review:<sep>\n"

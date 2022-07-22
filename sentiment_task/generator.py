@@ -30,7 +30,6 @@ def generate_counterfactuals(yaml_file,
                              trained_lm,
                              tokenizer,
                              gen_params,
-                             cuda_device=0,
                              n_to_generate=1) -> generation.CounterGenerator:
 
     special_tokens = yaml_file['SPECIAL_TOKENS']
@@ -61,10 +60,9 @@ def generate_counterfactuals(yaml_file,
                                                     trained_lm,
                                                     test_data_loader,
                                                     test_set,
-                                                    cuda_device,
                                                     gen_params)
 
-    counter_generator.perform_generation(tokenizer, cuda_device, n_to_generate)
+    counter_generator.perform_generation(tokenizer, n_to_generate)
 
     # the generated counterfactuals are held inside the counter_generator object
     return counter_generator
@@ -129,8 +127,8 @@ def main():
     lm_name = parsed_yaml_file['LM_NAME']
     base_lm_name = parsed_yaml_file['BASE_LM_NAME']
     special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
-    cuda_device = parsed_yaml_file['CUDA_DEVICE']
-    n_to_generate = parsed_yaml_file['N_TO_GENERATE']
+    # cuda_device = parsed_yaml_file['CUDA_DEVICE']
+    # n_to_generate = parsed_yaml_file['N_TO_GENERATE']
 
     print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
 
@@ -151,13 +149,14 @@ def main():
     # generate the counterfactuals
     gen_params = parsed_yaml_file['GEN_CFGS']
     gen_testset = generate_counterfactuals(parsed_yaml_file, df_testset, trained_lm, tokenizer,
-                                           gen_params, cuda_device, n_to_generate)
+                                           gen_params)
     df_gen_testset = gen_testset.dataframe_from_dataset()
     print("Generation completed!")
 
     # print test generation
     prompt_id = parsed_yaml_file['PROMPT_ID']
-    gen_filename = f"{lm_name}_prompt-{prompt_id}_fold-{fold}.csv"
+    # gen_filename = f"{lm_name}_prompt-{prompt_id}_fold-{fold}.csv"
+    gen_filename = f"{lm_name}.csv"
     df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
 
     print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")

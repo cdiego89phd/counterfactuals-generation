@@ -201,9 +201,13 @@ def train(args, train_cfgs, train_dataset, model, tokenizer):
     if args.local_rank in [-1, 0]:
         tb_writer = SummaryWriter()
 
+    print("NOT OK")
+
     args.train_batch_size = args.per_gpu_train_batch_size * max(1, args.n_gpu)
     train_sampler = RandomSampler(train_dataset) if args.local_rank == -1 else DistributedSampler(train_dataset)
     train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=args.train_batch_size)
+
+    print("OK")
 
     if args.max_steps > 0:
         t_total = args.max_steps

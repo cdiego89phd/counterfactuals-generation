@@ -490,7 +490,7 @@ def run_agent(args):
 
         # Diego
         tokenizer.add_special_tokens({"eos_token": '[EOS]'})
-
+        print(f"{datetime.datetime.now()}: Downloaded tokenizer")
         # tokenizer.add_special_tokens(["[EOS]"])
 
         if args.block_size <= 0:
@@ -505,15 +505,13 @@ def run_agent(args):
             cache_dir=args.cache_dir if args.cache_dir else None,
         )
         model.to(args.device)
+        print(f"{datetime.datetime.now()}: Model to device {args.device}")
 
         if args.local_rank == 0:
             torch.distributed.barrier()  # End of barrier to make sure only the first process in distributed training download model & vocab
 
         logger.info("Training/evaluation parameters %s", args)
-        print("Beginning of the training")
-        print(f"Total GPU memory available: {torch.cuda.get_device_properties(0).total_memory}")
-        print(f"Allocated GPU memory before generation: {torch.cuda.memory_allocated(0)}")
-        print(f"Allocated GPU memory reserved: {torch.cuda.memory_reserved(0)}")
+        print(f"{datetime.datetime.now()}:Beginning of the training")
 
         # Training
         if args.do_train:
@@ -521,6 +519,7 @@ def run_agent(args):
                 torch.distributed.barrier()  # Barrier to make sure only the first process in distributed training process the dataset, and the others will use the cache
 
             train_dataset = load_and_cache_examples(args, tokenizer, evaluate=False)
+            print(f"{datetime.datetime.now()}:Dataset loaded")
 
             if args.local_rank == 0:
                 torch.distributed.barrier()
@@ -764,7 +763,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-    # res = main()
-    # print(res)
-    # print("ciao")
-

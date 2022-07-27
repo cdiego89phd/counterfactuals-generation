@@ -35,6 +35,9 @@ import torch
 from torch.utils.data import DataLoader, Dataset, RandomSampler, SequentialSampler
 from torch.utils.data.distributed import DistributedSampler
 from tqdm import tqdm, trange
+import datetime
+import wandb
+import sys
 
 from transformers import (
     WEIGHTS_NAME,
@@ -204,22 +207,22 @@ def train(args, train_dataset, model, tokenizer):
 
     if args.max_steps > 0:
         t_total = args.max_steps
-        args.num_train_epochs = args.max_steps // (len(train_dataloader) // args.gradient_accumulation_steps) + 1
+        wandb.config.num_train_epochs = args.max_steps // (len(train_dataloader) // args.gradient_accumulation_steps) + 1
     else:
-        t_total = len(train_dataloader) // args.gradient_accumulation_steps * args.num_train_epochs
+        t_total = len(train_dataloader) // args.gradient_accumulation_steps * wandb.config.num_train_epochs
 
     # Prepare optimizer and schedule (linear warmup and decay)
     no_decay = ["bias", "LayerNorm.weight"]
     optimizer_grouped_parameters = [
         {
             "params": [p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)],
-            "weight_decay": args.weight_decay,
+            "weight_decay": wandb.config.weight_decay,
         },
         {"params": [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)], "weight_decay": 0.0},
     ]
-    optimizer = AdamW(optimizer_grouped_parameters, lr=args.learning_rate, eps=args.adam_epsilon)
+    optimizer = AdamW(optimizer_grouped_parameters, lr=wandb.config.learning_rate, eps=wandb.config.adam_epsilon)
     scheduler = get_linear_schedule_with_warmup(
-        optimizer, num_warmup_steps=args.warmup_steps, num_training_steps=t_total
+        optimizer, num_warmup_steps=wandb.config.warmup_steps, num_training_steps=t_total
     )
 
     # Check if saved optimizer or scheduler states exist
@@ -250,7 +253,7 @@ def train(args, train_dataset, model, tokenizer):
     # Train!
     logger.info("***** Running training *****")
     logger.info("  Num examples = %d", len(train_dataset))
-    logger.info("  Num Epochs = %d", args.num_train_epochs)
+    logger.info("  Num Epochs = %d", wandb.config.num_train_epochs)
     logger.info("  Instantaneous batch size per GPU = %d", args.per_gpu_train_batch_size)
     logger.info(
         "  Total train batch size (w. parallel, distributed & accumulation) = %d",
@@ -287,7 +290,7 @@ def train(args, train_dataset, model, tokenizer):
 
     model.zero_grad()
     train_iterator = trange(
-        epochs_trained, int(args.num_train_epochs), desc="Epoch", disable=args.local_rank not in [-1, 0]
+        epochs_trained, wandb.config.num_train_epochs, desc="Epoch", disable=args.local_rank not in [-1, 0]
     )
     set_seed(args)  # Added here for reproducibility
     for _ in train_iterator:
@@ -426,6 +429,156 @@ def evaluate(args, model, tokenizer, prefix=""):
             writer.write("%s = %s\n" % (key, str(result[key])))
 
     return result
+
+
+def run_agent(args):
+
+    with wandb.init(settings=wandb.Settings(console='off')):
+
+        # Setup distant debugging if needed
+        if args.server_ip and args.server_port:
+            # Distant debugging - see https://code.visualstudio.com/docs/python/debugging#_attach-to-a-local-script
+            import ptvsd
+
+            print("Waiting for debugger attach")
+            ptvsd.enable_attach(address=(args.server_ip, args.server_port), redirect_output=True)
+            ptvsd.wait_for_attach()
+
+        # Setup CUDA, GPU & distributed training
+        if args.local_rank == -1 or args.no_cuda:
+            device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
+            args.n_gpu = torch.cuda.device_count()
+        else:  # Initializes the distributed backend which will take care of sychronizing nodes/GPUs
+            torch.cuda.set_device(args.local_rank)
+            device = torch.device("cuda", args.local_rank)
+            torch.distributed.init_process_group(backend="nccl")
+            args.n_gpu = 1
+        args.device = device
+
+        # Setup logging
+        logging.basicConfig(
+            format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
+            datefmt="%m/%d/%Y %H:%M:%S",
+            level=logging.INFO if args.local_rank in [-1, 0] else logging.WARN,
+        )
+        logger.warning(
+            "Process rank: %s, device: %s, n_gpu: %s, distributed training: %s, 16-bits training: %s",
+            args.local_rank,
+            device,
+            args.n_gpu,
+            bool(args.local_rank != -1),
+            args.fp16,
+        )
+
+        # Set seed
+        set_seed(args)
+
+        # Load pretrained model and tokenizer
+        if args.local_rank not in [-1, 0]:
+            torch.distributed.barrier()  # Barrier to make sure only the first process in distributed training download model & vocab
+
+        config_class, model_class, tokenizer_class = MODEL_CLASSES[args.model_type]
+        config = config_class.from_pretrained(
+            args.config_name if args.config_name else args.model_name_or_path,
+            cache_dir=args.cache_dir if args.cache_dir else None,
+        )
+        tokenizer = tokenizer_class.from_pretrained(
+            args.tokenizer_name if args.tokenizer_name else args.model_name_or_path,
+            do_lower_case=args.do_lower_case,
+            cache_dir=args.cache_dir if args.cache_dir else None,
+        )
+
+        # Diego
+        tokenizer.add_special_tokens({"eos_token": '[EOS]'})
+
+        # tokenizer.add_special_tokens(["[EOS]"])
+
+        if args.block_size <= 0:
+            args.block_size = (
+                tokenizer.max_len_single_sentence
+            )  # Our input block size will be the max possible for the model
+        args.block_size = min(args.block_size, tokenizer.max_len_single_sentence)
+        model = model_class.from_pretrained(
+            args.model_name_or_path,
+            from_tf=bool(".ckpt" in args.model_name_or_path),
+            config=config,
+            cache_dir=args.cache_dir if args.cache_dir else None,
+        )
+        model.to(args.device)
+
+        if args.local_rank == 0:
+            torch.distributed.barrier()  # End of barrier to make sure only the first process in distributed training download model & vocab
+
+        logger.info("Training/evaluation parameters %s", args)
+        print("Beginning of the training")
+        print(f"Total GPU memory available: {torch.cuda.get_device_properties(0).total_memory}")
+        print(f"Allocated GPU memory before generation: {torch.cuda.memory_allocated(0)}")
+        print(f"Allocated GPU memory reserved: {torch.cuda.memory_reserved(0)}")
+
+        # Training
+        if args.do_train:
+            if args.local_rank not in [-1, 0]:
+                torch.distributed.barrier()  # Barrier to make sure only the first process in distributed training process the dataset, and the others will use the cache
+
+            train_dataset = load_and_cache_examples(args, tokenizer, evaluate=False)
+
+            if args.local_rank == 0:
+                torch.distributed.barrier()
+
+            global_step, tr_loss = train(args, train_dataset, model, tokenizer)
+            logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
+
+        # Saving best-practices: if you use save_pretrained for the model and tokenizer, you can reload them using from_pretrained()
+        if args.do_train and (args.local_rank == -1 or torch.distributed.get_rank() == 0):
+            # Create output directory if needed
+            if not os.path.exists(args.output_dir) and args.local_rank in [-1, 0]:
+                os.makedirs(args.output_dir)
+
+            logger.info("Saving model checkpoint to %s", args.output_dir)
+            # Save a trained model, configuration and tokenizer using `save_pretrained()`.
+            # They can then be reloaded using `from_pretrained()`
+            model_to_save = (
+                model.module if hasattr(model, "module") else model
+            )  # Take care of distributed/parallel training
+            model_to_save.save_pretrained(args.output_dir)
+            tokenizer.save_pretrained(args.output_dir)
+
+            # Good practice: save your training arguments together with the trained model
+            torch.save(args, os.path.join(args.output_dir, "training_args.bin"))
+
+            # Load a trained model and vocabulary that you have fine-tuned
+            model = model_class.from_pretrained(args.output_dir)
+            tokenizer = tokenizer_class.from_pretrained(args.output_dir, do_lower_case=args.do_lower_case)
+            model.to(args.device)
+
+        # Evaluation
+        results = {}
+        if args.do_eval and args.local_rank in [-1, 0]:
+            checkpoints = [args.output_dir]
+            if args.eval_all_checkpoints:
+                checkpoints = list(
+                    os.path.dirname(c) for c in sorted(glob.glob(args.output_dir + "/**/" + WEIGHTS_NAME, recursive=True))
+                )
+                logging.getLogger("transformers.modeling_utils").setLevel(logging.WARN)  # Reduce logging
+            logger.info("Evaluate the following checkpoints: %s", checkpoints)
+            for checkpoint in checkpoints:
+                global_step = checkpoint.split("-")[-1] if len(checkpoints) > 1 else ""
+                prefix = checkpoint.split("/")[-1] if checkpoint.find("checkpoint") != -1 else ""
+
+                model = model_class.from_pretrained(checkpoint)
+                model.to(args.device)
+                result = evaluate(args, model, tokenizer, prefix=prefix)
+                result = dict((k + "_{}".format(global_step), v) for k, v in result.items())
+                results.update(result)
+
+                wandb.log({"perplexity": result,
+                           "num_train_epochs": wandb.config.num_train_epochs,
+                           "learning_rate": wandb.config.learning_rate,
+                           "weight_decay": wandb.config.weight_decay,
+                           "adam_epsilon": wandb.config.adam_epsilon,
+                           "warmup_steps": wandb.config.warmup_steps})
+
+    return results
 
 
 def main():
@@ -588,144 +741,30 @@ def main():
             )
         )
 
-    # Setup distant debugging if needed
-    if args.server_ip and args.server_port:
-        # Distant debugging - see https://code.visualstudio.com/docs/python/debugging#_attach-to-a-local-script
-        import ptvsd
+    parser.add_argument("--wandb_project", type=str, default="", help="wandb project")
+    parser.add_argument("--sweep_id", type=str, default="", help="sweep id")
+    parser.add_argument("--n_sweep_runs", type=int, default=1, help="number of sweeps to run.")
 
-        print("Waiting for debugger attach")
-        ptvsd.enable_attach(address=(args.server_ip, args.server_port), redirect_output=True)
-        ptvsd.wait_for_attach()
+    args = parser.parse_args()
 
-    # Setup CUDA, GPU & distributed training
-    if args.local_rank == -1 or args.no_cuda:
-        device = torch.device("cuda" if torch.cuda.is_available() and not args.no_cuda else "cpu")
-        args.n_gpu = torch.cuda.device_count()
-    else:  # Initializes the distributed backend which will take care of sychronizing nodes/GPUs
-        torch.cuda.set_device(args.local_rank)
-        device = torch.device("cuda", args.local_rank)
-        torch.distributed.init_process_group(backend="nccl")
-        args.n_gpu = 1
-    args.device = device
+    print(f"{datetime.datetime.now()}: Begin of the sweep tuning")
+    # initialize WANDB logging system
+    wandb.login(relogin=True, key=args.wandb_key)
 
-    # Setup logging
-    logging.basicConfig(
-        format="%(asctime)s - %(levelname)s - %(name)s -   %(message)s",
-        datefmt="%m/%d/%Y %H:%M:%S",
-        level=logging.INFO if args.local_rank in [-1, 0] else logging.WARN,
-    )
-    logger.warning(
-        "Process rank: %s, device: %s, n_gpu: %s, distributed training: %s, 16-bits training: %s",
-        args.local_rank,
-        device,
-        args.n_gpu,
-        bool(args.local_rank != -1),
-        args.fp16,
-    )
+    sweep_id = f"cdiego89/{args.wandb_project}/{args.sweep_id}"
+    print(f"Sweep id:{sweep_id}")
 
-    # Set seed
-    set_seed(args)
+    try:
+        wandb.agent(sweep_id, function=lambda: run_agent(args), count=args.n_sweep_runs)
 
-    # Load pretrained model and tokenizer
-    if args.local_rank not in [-1, 0]:
-        torch.distributed.barrier()  # Barrier to make sure only the first process in distributed training download model & vocab
-
-    config_class, model_class, tokenizer_class = MODEL_CLASSES[args.model_type]
-    config = config_class.from_pretrained(
-        args.config_name if args.config_name else args.model_name_or_path,
-        cache_dir=args.cache_dir if args.cache_dir else None,
-    )
-    tokenizer = tokenizer_class.from_pretrained(
-        args.tokenizer_name if args.tokenizer_name else args.model_name_or_path,
-        do_lower_case=args.do_lower_case,
-        cache_dir=args.cache_dir if args.cache_dir else None,
-    )
-
-    # Diego
-    tokenizer.add_special_tokens({"eos_token": '[EOS]'})
-
-    # tokenizer.add_special_tokens(["[EOS]"])
-
-    if args.block_size <= 0:
-        args.block_size = (
-            tokenizer.max_len_single_sentence
-        )  # Our input block size will be the max possible for the model
-    args.block_size = min(args.block_size, tokenizer.max_len_single_sentence)
-    model = model_class.from_pretrained(
-        args.model_name_or_path,
-        from_tf=bool(".ckpt" in args.model_name_or_path),
-        config=config,
-        cache_dir=args.cache_dir if args.cache_dir else None,
-    )
-    model.to(args.device)
-
-    if args.local_rank == 0:
-        torch.distributed.barrier()  # End of barrier to make sure only the first process in distributed training download model & vocab
-
-    logger.info("Training/evaluation parameters %s", args)
-    print("Beginning of the training")
-    print(f"Total GPU memory available: {torch.cuda.get_device_properties(0).total_memory}")
-    print(f"Allocated GPU memory before generation: {torch.cuda.memory_allocated(0)}")
-    print(f"Allocated GPU memory reserved: {torch.cuda.memory_reserved(0)}")
-
-    # Training
-    if args.do_train:
-        if args.local_rank not in [-1, 0]:
-            torch.distributed.barrier()  # Barrier to make sure only the first process in distributed training process the dataset, and the others will use the cache
-
-        train_dataset = load_and_cache_examples(args, tokenizer, evaluate=False)
-
-        if args.local_rank == 0:
-            torch.distributed.barrier()
-
-        global_step, tr_loss = train(args, train_dataset, model, tokenizer)
-        logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
-
-    # Saving best-practices: if you use save_pretrained for the model and tokenizer, you can reload them using from_pretrained()
-    if args.do_train and (args.local_rank == -1 or torch.distributed.get_rank() == 0):
-        # Create output directory if needed
-        if not os.path.exists(args.output_dir) and args.local_rank in [-1, 0]:
-            os.makedirs(args.output_dir)
-
-        logger.info("Saving model checkpoint to %s", args.output_dir)
-        # Save a trained model, configuration and tokenizer using `save_pretrained()`.
-        # They can then be reloaded using `from_pretrained()`
-        model_to_save = (
-            model.module if hasattr(model, "module") else model
-        )  # Take care of distributed/parallel training
-        model_to_save.save_pretrained(args.output_dir)
-        tokenizer.save_pretrained(args.output_dir)
-
-        # Good practice: save your training arguments together with the trained model
-        torch.save(args, os.path.join(args.output_dir, "training_args.bin"))
-
-        # Load a trained model and vocabulary that you have fine-tuned
-        model = model_class.from_pretrained(args.output_dir)
-        tokenizer = tokenizer_class.from_pretrained(args.output_dir, do_lower_case=args.do_lower_case)
-        model.to(args.device)
-
-    # Evaluation
-    results = {}
-    if args.do_eval and args.local_rank in [-1, 0]:
-        checkpoints = [args.output_dir]
-        if args.eval_all_checkpoints:
-            checkpoints = list(
-                os.path.dirname(c) for c in sorted(glob.glob(args.output_dir + "/**/" + WEIGHTS_NAME, recursive=True))
-            )
-            logging.getLogger("transformers.modeling_utils").setLevel(logging.WARN)  # Reduce logging
-        logger.info("Evaluate the following checkpoints: %s", checkpoints)
-        for checkpoint in checkpoints:
-            global_step = checkpoint.split("-")[-1] if len(checkpoints) > 1 else ""
-            prefix = checkpoint.split("/")[-1] if checkpoint.find("checkpoint") != -1 else ""
-
-            model = model_class.from_pretrained(checkpoint)
-            model.to(args.device)
-            result = evaluate(args, model, tokenizer, prefix=prefix)
-            result = dict((k + "_{}".format(global_step), v) for k, v in result.items())
-            results.update(result)
-
-    return results
+    except wandb.errors.CommError:
+        print(f"wandb.errors.CommError: could not find sweep: {sweep_id}")
+        sys.exit()
 
 
 if __name__ == "__main__":
     main()
+    # res = main()
+    # print(res)
+    # print("ciao")
+

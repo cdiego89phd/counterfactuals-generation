@@ -155,8 +155,10 @@ def main():
 
     # print test generation
     prompt_id = parsed_yaml_file['PROMPT_ID']
-    # gen_filename = f"{lm_name}_prompt-{prompt_id}_fold-{fold}.csv"
-    gen_filename = f"{lm_name}.csv"
+    if parsed_yaml_file['MODEL_FROM_LOCAL']:
+        gen_filename = f"{lm_name}_prompt-{prompt_id}_fold-{fold}.csv"
+    else:
+        gen_filename = f"{lm_name}.csv"
     df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
 
     print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")

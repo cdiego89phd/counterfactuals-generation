@@ -716,6 +716,11 @@ def main():
     parser.add_argument("--local_rank", type=int, default=-1, help="For distributed training: local_rank")
     parser.add_argument("--server_ip", type=str, default="", help="For distant debugging.")
     parser.add_argument("--server_port", type=str, default="", help="For distant debugging.")
+
+    parser.add_argument("--wandb_project", type=str, default="", help="wandb project")
+    parser.add_argument("--sweep_id", type=str, default="", help="sweep id")
+    parser.add_argument("--n_sweep_runs", type=int, default=1, help="number of sweeps to run.")
+
     args = parser.parse_args()
 
     if args.model_type in ["bert", "roberta", "distilbert", "camembert"] and not args.mlm:
@@ -740,12 +745,6 @@ def main():
                 args.output_dir
             )
         )
-
-    parser.add_argument("--wandb_project", type=str, default="", help="wandb project")
-    parser.add_argument("--sweep_id", type=str, default="", help="sweep id")
-    parser.add_argument("--n_sweep_runs", type=int, default=1, help="number of sweeps to run.")
-
-    args = parser.parse_args()
 
     print(f"{datetime.datetime.now()}: Begin of the sweep tuning")
     # initialize WANDB logging system

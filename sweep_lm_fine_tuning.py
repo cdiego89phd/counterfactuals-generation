@@ -524,10 +524,9 @@ def run_agent(args):
                 torch.distributed.barrier()  # Barrier to make sure only the first process in distributed training process the dataset, and the others will use the cache
             try:
                 train_dataset = load_and_cache_examples(args, tokenizer, evaluate=False)
+                print(f"{datetime.datetime.now()}:Dataset loaded")
             except:
                 print("ERROR")
-
-            print(f"{datetime.datetime.now()}:Dataset loaded")
 
             if args.local_rank == 0:
                 torch.distributed.barrier()
@@ -586,7 +585,7 @@ def run_agent(args):
                            "adam_epsilon": wandb.config.adam_epsilon,
                            "warmup_steps": wandb.config.warmup_steps})
 
-    return results
+        return results
 
 
 def main():

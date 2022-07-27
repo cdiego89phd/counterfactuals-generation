@@ -124,12 +124,12 @@ class TextDataset(Dataset):
         return torch.tensor(self.examples[item])
 
 
-def load_and_cache_examples(args, tokenizer, evalu=False):
+def load_and_cache_examples(args, tokenizer, evaluate=False):
     print("BY")
     dataset = TextDataset(
         tokenizer,
         args,
-        file_path=args.eval_data_file if evalu else args.train_data_file,
+        file_path=args.eval_data_file if evaluate else args.train_data_file,
         block_size=args.block_size,
     )
     return dataset

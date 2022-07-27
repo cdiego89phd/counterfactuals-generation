@@ -525,15 +525,15 @@ def run_agent(args):
             try:
                 train_dataset = load_and_cache_examples(args, tokenizer, evaluate=False)
                 print(f"{datetime.datetime.now()}:Dataset loaded")
+
+                if args.local_rank == 0:
+                    torch.distributed.barrier()
+
+                global_step, tr_loss = train(args, wandb.config, train_dataset, model, tokenizer)
+                logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
+                print(f"{datetime.datetime.now()}:Training completed!")
             except:
                 print("ERROR")
-
-            if args.local_rank == 0:
-                torch.distributed.barrier()
-
-            global_step, tr_loss = train(args, wandb.config, train_dataset, model, tokenizer)
-            logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
-            print(f"{datetime.datetime.now()}:Training completed!")
 
         # Saving best-practices: if you use save_pretrained for the model and tokenizer, you can reload them using from_pretrained()
         if args.do_train and (args.local_rank == -1 or torch.distributed.get_rank() == 0):

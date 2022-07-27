@@ -87,12 +87,14 @@ MODEL_CLASSES = {
 
 class TextDataset(Dataset):
     def __init__(self, tokenizer, args, file_path="train", block_size=512):
+        print("A")
         assert os.path.isfile(file_path)
+        print("B")
         directory, filename = os.path.split(file_path)
         cached_features_file = os.path.join(
             directory, args.model_name_or_path + "_cached_lm_" + str(block_size) + "_" + filename
         )
-
+        print("C")
         if os.path.exists(cached_features_file) and not args.overwrite_cache:
             logger.info("Loading features from cached file %s", cached_features_file)
             with open(cached_features_file, "rb") as handle:

@@ -205,10 +205,13 @@ def train(args, train_dataset, model, tokenizer):
     train_sampler = RandomSampler(train_dataset) if args.local_rank == -1 else DistributedSampler(train_dataset)
     train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=args.train_batch_size)
 
+    print(wandb.config)
+
     if args.max_steps > 0:
         t_total = args.max_steps
         wandb.config.num_train_epochs = args.max_steps // (len(train_dataloader) // args.gradient_accumulation_steps) + 1
     else:
+        print("HEREEEEEEE")
         t_total = len(train_dataloader) // args.gradient_accumulation_steps * wandb.config.num_train_epochs
 
     # Prepare optimizer and schedule (linear warmup and decay)

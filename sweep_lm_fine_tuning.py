@@ -196,7 +196,7 @@ def mask_tokens(inputs: torch.Tensor, tokenizer: PreTrainedTokenizer, args) -> T
     return inputs, labels
 
 
-def train(args, train_dataset, model, tokenizer):
+def train(args, train_cfgs, train_dataset, model, tokenizer):
     """ Train the model """
     if args.local_rank in [-1, 0]:
         tb_writer = SummaryWriter()
@@ -209,23 +209,23 @@ def train(args, train_dataset, model, tokenizer):
 
     if args.max_steps > 0:
         t_total = args.max_steps
-        wandb.config.num_train_epochs = args.max_steps // (len(train_dataloader) // args.gradient_accumulation_steps) + 1
+        train_cfgs.num_train_epochs = args.max_steps // (len(train_dataloader) // args.gradient_accumulation_steps) + 1
     else:
         print("HEREEEEEEE")
-        t_total = len(train_dataloader) // args.gradient_accumulation_steps * wandb.config.num_train_epochs
+        t_total = len(train_dataloader) // args.gradient_accumulation_steps * train_cfgs.num_train_epochs
 
     # Prepare optimizer and schedule (linear warmup and decay)
     no_decay = ["bias", "LayerNorm.weight"]
     optimizer_grouped_parameters = [
         {
             "params": [p for n, p in model.named_parameters() if not any(nd in n for nd in no_decay)],
-            "weight_decay": wandb.config.weight_decay,
+            "weight_decay": train_cfgs.weight_decay,
         },
         {"params": [p for n, p in model.named_parameters() if any(nd in n for nd in no_decay)], "weight_decay": 0.0},
     ]
-    optimizer = AdamW(optimizer_grouped_parameters, lr=wandb.config.learning_rate, eps=wandb.config.adam_epsilon)
+    optimizer = AdamW(optimizer_grouped_parameters, lr=train_cfgs.learning_rate, eps=train_cfgs.adam_epsilon)
     scheduler = get_linear_schedule_with_warmup(
-        optimizer, num_warmup_steps=wandb.config.warmup_steps, num_training_steps=t_total
+        optimizer, num_warmup_steps=train_cfgs.warmup_steps, num_training_steps=t_total
     )
 
     # Check if saved optimizer or scheduler states exist
@@ -256,7 +256,7 @@ def train(args, train_dataset, model, tokenizer):
     # Train!
     logger.info("***** Running training *****")
     logger.info("  Num examples = %d", len(train_dataset))
-    logger.info("  Num Epochs = %d", wandb.config.num_train_epochs)
+    logger.info("  Num Epochs = %d", train_cfgs.num_train_epochs)
     logger.info("  Instantaneous batch size per GPU = %d", args.per_gpu_train_batch_size)
     logger.info(
         "  Total train batch size (w. parallel, distributed & accumulation) = %d",
@@ -293,7 +293,7 @@ def train(args, train_dataset, model, tokenizer):
 
     model.zero_grad()
     train_iterator = trange(
-        epochs_trained, wandb.config.num_train_epochs, desc="Epoch", disable=args.local_rank not in [-1, 0]
+        epochs_trained, train_cfgs.num_train_epochs, desc="Epoch", disable=args.local_rank not in [-1, 0]
     )
     set_seed(args)  # Added here for reproducibility
     for _ in train_iterator:
@@ -527,7 +527,7 @@ def run_agent(args):
             if args.local_rank == 0:
                 torch.distributed.barrier()
 
-            global_step, tr_loss = train(args, train_dataset, model, tokenizer)
+            global_step, tr_loss = train(args, wandb.config, train_dataset, model, tokenizer)
             logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
             print(f"{datetime.datetime.now()}:Training completed!")
 

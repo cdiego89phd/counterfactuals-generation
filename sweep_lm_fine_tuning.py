@@ -522,8 +522,11 @@ def run_agent(args):
         if args.do_train:
             if args.local_rank not in [-1, 0]:
                 torch.distributed.barrier()  # Barrier to make sure only the first process in distributed training process the dataset, and the others will use the cache
+            try:
+                train_dataset = load_and_cache_examples(args, tokenizer, evaluate=False)
+            except:
+                print("ERROR")
 
-            train_dataset = load_and_cache_examples(args, tokenizer, evaluate=False)
             print(f"{datetime.datetime.now()}:Dataset loaded")
 
             if args.local_rank == 0:

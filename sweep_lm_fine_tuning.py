@@ -571,9 +571,9 @@ def run_agent(args):
                 result = dict((k + "_{}".format(global_step), v) for k, v in result.items())
                 results.update(result)
 
-                print(result)
-                print(type(result))
-                wandb.log({"perplexity": result['perplexity'].item(),
+                print(f"perplexity:{result['perplexity_'].item()}")
+
+                wandb.log({"perplexity": result['perplexity_'].item(),
                            "num_train_epochs": wandb.config.num_train_epochs,
                            "learning_rate": wandb.config.learning_rate,
                            "weight_decay": wandb.config.weight_decay,

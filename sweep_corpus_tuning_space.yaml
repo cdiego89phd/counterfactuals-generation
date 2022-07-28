@@ -1,6 +1,6 @@
 method: random # type of tuning
 metric:
-  name: perprexity
+  name: perplexity
   goal: minimize
 parameters:
   num_train_epochs:

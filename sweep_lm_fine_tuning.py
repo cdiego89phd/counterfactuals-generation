@@ -580,6 +580,8 @@ def run_agent(args):
                            "adam_epsilon": wandb.config.adam_epsilon,
                            "warmup_steps": wandb.config.warmup_steps})
 
+        shutil.rmtree(args.output_dir)
+
         return results
 
 

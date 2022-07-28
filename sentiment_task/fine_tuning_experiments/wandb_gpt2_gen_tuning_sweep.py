@@ -74,6 +74,7 @@ def run_agent(args, yaml_file):
 
     fold = yaml_file['FOLD']
     lm_name = yaml_file['LM_NAME']
+    base_model = yaml_file['BASE_MODEL']
     task_name = yaml_file['TASK_NAME']
     prompt_id = yaml_file['PROMPT_ID']
     dataset_path = yaml_file['DATASET_PATH']
@@ -81,7 +82,7 @@ def run_agent(args, yaml_file):
     classifier_name = yaml_file['CLASSIFIER_NAME']
     run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@{task_name}"
 
-    tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
+    tokenizer, _, _ = utils.load_gpt2_objects(base_model, special_tokens)
     model_local_path = f"{yaml_file['MODEL_DIR']}/{run_name}"
     trained_lm = utils.load_gpt2_from_local(model_local_path)
 

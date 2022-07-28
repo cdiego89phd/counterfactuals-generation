@@ -87,9 +87,7 @@ MODEL_CLASSES = {
 
 class TextDataset(Dataset):
     def __init__(self, tokenizer, args, file_path="train", block_size=512):
-        print("A")
         assert os.path.isfile(file_path)
-        print("B")
         directory, filename = os.path.split(file_path)
         cached_features_file = os.path.join(
             directory, args.model_name_or_path + "_cached_lm_" + str(block_size) + "_" + filename
@@ -127,7 +125,6 @@ class TextDataset(Dataset):
 
 
 def load_and_cache_examples(args, tokenizer, evaluate=False):
-    print("BY")
     dataset = TextDataset(
         tokenizer,
         args,
@@ -204,19 +201,14 @@ def train(args, train_cfgs, train_dataset, model, tokenizer):
     if args.local_rank in [-1, 0]:
         tb_writer = SummaryWriter()
 
-    print("NOT OK")
-
     args.train_batch_size = args.per_gpu_train_batch_size * max(1, args.n_gpu)
     train_sampler = RandomSampler(train_dataset) if args.local_rank == -1 else DistributedSampler(train_dataset)
     train_dataloader = DataLoader(train_dataset, sampler=train_sampler, batch_size=args.train_batch_size)
-
-    print("OK")
 
     if args.max_steps > 0:
         t_total = args.max_steps
         train_cfgs.num_train_epochs = args.max_steps // (len(train_dataloader) // args.gradient_accumulation_steps) + 1
     else:
-        print("HEREEEEEEE")
         t_total = len(train_dataloader) // args.gradient_accumulation_steps * train_cfgs.num_train_epochs
 
     # Prepare optimizer and schedule (linear warmup and decay)
@@ -525,19 +517,16 @@ def run_agent(args):
         if args.do_train:
             if args.local_rank not in [-1, 0]:
                 torch.distributed.barrier()  # Barrier to make sure only the first process in distributed training process the dataset, and the others will use the cache
-            try:
-                train_dataset = load_and_cache_examples(args, tokenizer, evaluate=False)
-                print(f"{datetime.datetime.now()}:Dataset loaded")
 
-                if args.local_rank == 0:
-                    torch.distributed.barrier()
+            train_dataset = load_and_cache_examples(args, tokenizer, evaluate=False)
+            print(f"{datetime.datetime.now()}:Dataset loaded")
 
-                print("ciao")
-                global_step, tr_loss = train(args, wandb.config, train_dataset, model, tokenizer)
-                logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
-                print(f"{datetime.datetime.now()}:Training completed!")
-            except:
-                print("ERROR")
+            if args.local_rank == 0:
+                torch.distributed.barrier()
+
+            global_step, tr_loss = train(args, wandb.config, train_dataset, model, tokenizer)
+            logger.info(" global_step = %s, average loss = %s", global_step, tr_loss)
+            print(f"{datetime.datetime.now()}:Training completed!")
 
         # Saving best-practices: if you use save_pretrained for the model and tokenizer, you can reload them using from_pretrained()
         if args.do_train and (args.local_rank == -1 or torch.distributed.get_rank() == 0):
@@ -582,7 +571,7 @@ def run_agent(args):
                 result = dict((k + "_{}".format(global_step), v) for k, v in result.items())
                 results.update(result)
 
-                wandb.log({"perplexity": result,
+                wandb.log({"perplexity": result['perplexity'].item(),
                            "num_train_epochs": wandb.config.num_train_epochs,
                            "learning_rate": wandb.config.learning_rate,
                            "weight_decay": wandb.config.weight_decay,

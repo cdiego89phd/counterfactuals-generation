@@ -28,14 +28,19 @@ def run_agent(args, data_fold, wandb_project, yaml_file):
     print(f"# of samples for training:{len(df_trainset)}")
     print(f"# of samples for validation:{len(df_valset)}")
 
+    tokenizer, _, _ = utils.load_gpt2_objects(yaml_file['BASE_MODEL'], special_tokens)
+
     # load the language model
     if yaml_file['MODEL_FROM_LOCAL']:
         model_local_path = f"{yaml_file['MODEL_DIR']}/{lm_name}"
         lm = utils.load_gpt2_from_local(model_local_path)
+
+        # add new, random embeddings for the new tokens
+        # this might be needed if the model has been pre-trained with a different tokenizer (of different lenght)
+        lm.resize_token_embeddings(len(tokenizer))
     else:
         _, lm, _ = utils.load_gpt2_objects(lm_name, special_tokens)
 
-    tokenizer, _, _ = utils.load_gpt2_objects(yaml_file['BASE_MODEL'], special_tokens)
     print("Downloaded tokenizer, model and cfg!")
 
     # wrap the datasets with the prompt template

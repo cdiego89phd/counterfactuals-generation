@@ -82,8 +82,18 @@ def main():
     print(f"# of samples for training:{len(df_trainset)}")
     print(f"# of samples for validation:{len(df_valset)}")
 
+    tokenizer, _, _ = utils.load_gpt2_objects(parsed_yaml_file['BASE_MODEL'], special_tokens)
+
     # load the language model
-    tokenizer, lm, lm_config_class = utils.load_gpt2_objects(lm_name, special_tokens)
+    if parsed_yaml_file['MODEL_FROM_LOCAL']:
+        model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{lm_name}"
+        lm = utils.load_gpt2_from_local(model_local_path)
+
+        # add new, random embeddings for the new tokens
+        # this might be needed if the model has been pre-trained with a different tokenizer (of different lenght)
+        lm.resize_token_embeddings(len(tokenizer))
+    else:
+        _, lm, _ = utils.load_gpt2_objects(lm_name, special_tokens)
     print("Downloaded tokenizer, model and cfg!")
 
     # wrap the datasets with the prompt template

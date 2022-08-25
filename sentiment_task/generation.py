@@ -106,21 +106,22 @@ class CounterGenerator:
                 "num_beams": self.gen_cfgs["num_beams"],
                 "repetition_penalty": float(self.gen_cfgs["repetition_penalty"]),
                 "temperature": float(self.gen_cfgs["temperature"]),
-                "do_sample": False,
-                "num_return_sequences": n_to_generate,
-                "top_k": 10,
-                "top_p": 0,
+                "do_sample": self.gen_cfgs["do_sample"],
+                "num_return_sequences": 1,
+                "top_k": self.gen_cfgs["top_k"],
+                "top_p": self.gen_cfgs["top_p"],
             }
 
             try:
                 if torch.cuda.is_available():
                     inputs = inputs.cuda()
-                _, generated_counter = self.generator.generate(inputs,
-                                                               verbose=False,
-                                                               **generation_arguments)
 
-                # insert the generated counterfactual
-                instance_to_update.meta["generated_counter"] = generated_counter[0]
+                instance_to_update.meta["generated_counter"] = []
+                for i in range(n_to_generate):
+                    _, generated_counter = self.generator.generate(inputs,
+                                                                   verbose=False,
+                                                                   **generation_arguments)
+                    instance_to_update.meta["generated_counter"].append(generated_counter[0])
 
             except Exception as e:
                 instance_to_update.meta["generated_counter"] = None
@@ -130,7 +131,7 @@ class CounterGenerator:
             if (step % 100) == 0 and (step > 0):
                 print(f"{datetime.datetime.now()}, Step:{step}: 100 counterfactuals generated")
 
-    def dataframe_from_dataset(self):
+    def dataframe_from_dataset(self, n_to_generate):
         """Build a dataframe from dataset"""
 
         paired_ids = [idx for idx in self.dataset]
@@ -144,8 +145,14 @@ class CounterGenerator:
              "example": examples,
              "label_counter": labels_counter,
              "counterfactual": counterfactuals,
-             "generated_counter": generated_counters
              }
+        for idx in range(n_to_generate):
+            d[f"generated_counter_{idx}"] = []
+
+        for item in generated_counters:
+            for idx in range(len(item)):
+                d[f"generated_counter_{idx}"].append(item[idx])
+
         return pd.DataFrame(data=d)
 
     # TODO

@@ -45,29 +45,12 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
                                                     valset,
                                                     gen_params)
     print(f"{datetime.datetime.now()}: Begin of generation...")
-    counter_generator.perform_generation(tokenizer)
 
     # the generated counterfactuals are held inside the counter_generator object
-    return counter_generator.dataset
+    counter_generator.perform_generation(tokenizer)
+    generated = counter_generator.dataframe_from_dataset(1)
 
-
-def dataframe_from_dataset(gen_valset):
-    """Build a dataframe from dataset"""
-
-    paired_ids = [idx for idx in gen_valset]
-    labels_ex = [gen_valset.__getitem__(idx).meta["label_ex"] for idx in gen_valset]
-    examples = [gen_valset.__getitem__(idx).meta["example"] for idx in gen_valset]
-    labels_counter = [gen_valset.__getitem__(idx).meta["label_counter"] for idx in gen_valset]
-    counterfactuals = [gen_valset.__getitem__(idx).meta["counterfactual"] for idx in gen_valset]
-    generated_counters = [gen_valset.__getitem__(idx).meta["generated_counter"] for idx in gen_valset]
-    d = {"paired_id": paired_ids,
-         "label_ex": labels_ex,
-         "example": examples,
-         "label_counter": labels_counter,
-         "counterfactual": counterfactuals,
-         "generated_counter": generated_counters
-         }
-    return pd.DataFrame(data=d)
+    return generated
 
 
 def run_agent(args, yaml_file):
@@ -80,6 +63,7 @@ def run_agent(args, yaml_file):
     dataset_path = yaml_file['DATASET_PATH']
     special_tokens = yaml_file['SPECIAL_TOKENS']
     classifier_name = yaml_file['CLASSIFIER_NAME']
+    n_to_generate = yaml_file['N_TO_GENERATE']
     run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@{task_name}"
 
     tokenizer, _, _ = utils.load_gpt2_objects(base_model, special_tokens)
@@ -102,7 +86,7 @@ def run_agent(args, yaml_file):
         gen_valset = generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_params)
         print(f"{datetime.datetime.now()}: Generation completed!")
 
-        eval_valset = dataframe_from_dataset(gen_valset)
+        # eval_valset = dataframe_from_dataset(gen_valset, n_to_generate)
         evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],
                                                   classification_tools["classifier"],
                                                   classification_tools["label_map"])
@@ -184,15 +168,6 @@ def main():
     n_sweep_runs = parsed_yaml_file['N_SWEEP_RUNS']
 
     print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
-
-    # run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@cad_fine_tuning"
-
-    # tokenizer, _, _ = utils.load_gpt2_objects(lm_name, special_tokens)
-    # model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{run_name}"
-    # trained_lm = utils.load_gpt2_from_local(model_local_path)
-    #
-    # # load classifier for the evaluation
-    # classification_tools = utils.prepare_classifier(classifier_name)
 
     # initialize WANDB logging system
     wandb.login(relogin=True, key=args.wandb_key)

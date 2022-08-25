@@ -8,7 +8,7 @@ from sentiment_task import generation, utils
 from openprompt.prompts import ManualTemplate
 from openprompt.plms.lm import LMTokenizerWrapper
 
-
+# TODO
 def generate_single_counterfactual(yaml_file,
                                    prompt,
                                    seed_review,
@@ -68,23 +68,31 @@ def generate_counterfactuals(yaml_file,
     return counter_generator
 
 
-def dataframe_from_dataset(gen_valset) -> pd.DataFrame:
-    """Build a dataframe from dataset"""
+def append_prompt(parsed_yaml_file, gen_testset, n_to_generate) -> pd.DataFrame:
+    generation_prompt = parsed_yaml_file['GENERATION_PROMPT']
 
-    paired_ids = [idx for idx in gen_valset]
-    labels_ex = [gen_valset.__getitem__(idx).meta["label_ex"] for idx in gen_valset]
-    examples = [gen_valset.__getitem__(idx).meta["example"] for idx in gen_valset]
-    labels_counter = [gen_valset.__getitem__(idx).meta["label_counter"] for idx in gen_valset]
-    counterfactuals = [gen_valset.__getitem__(idx).meta["counterfactual"] for idx in gen_valset]
-    generated_counters = [gen_valset.__getitem__(idx).meta["generated_counter"] for idx in gen_valset]
-    d = {"paired_id": paired_ids,
-         "label_ex": labels_ex,
-         "example": examples,
-         "label_counter": labels_counter,
-         "counterfactual": counterfactuals,
-         "generated_counter": generated_counters
-         }
-    return pd.DataFrame(data=d)
+    # parse the prompt
+    generation_prompt = generation_prompt.replace("<", "")
+    generation_prompt = generation_prompt.replace(">", "")
+    parsed_prompt = generation_prompt.split(" ")
+    indexes = [eval(i) for i in parsed_prompt]
+
+    # append the words to the counterfactual
+    for idx in range(n_to_generate):
+        gen_testset[f"generated_counter{idx}"] = gen_testset.apply(
+            lambda row: append_to_counter(row, indexes), axis=1)
+
+    return gen_testset
+
+
+def append_to_counter(row, idxs) -> str:
+    example = row['example'].split(" ")
+    to_add = ""
+    for idx in idxs:
+        to_add += example[idx] + " "
+    to_return = to_add + row['generated_counter']
+
+    return to_return
 
 
 def main():
@@ -127,8 +135,7 @@ def main():
     lm_name = parsed_yaml_file['LM_NAME']
     base_lm_name = parsed_yaml_file['BASE_LM_NAME']
     special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
-    # cuda_device = parsed_yaml_file['CUDA_DEVICE']
-    # n_to_generate = parsed_yaml_file['N_TO_GENERATE']
+    n_to_generate = parsed_yaml_file['N_TO_GENERATE']
 
     print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
 
@@ -148,17 +155,18 @@ def main():
 
     # generate the counterfactuals
     gen_params = parsed_yaml_file['GEN_CFGS']
+
+    # we generate n_to_generate counterfactuals
     gen_testset = generate_counterfactuals(parsed_yaml_file, df_testset, trained_lm, tokenizer,
-                                           gen_params)
-    df_gen_testset = gen_testset.dataframe_from_dataset()
+                                           gen_params, n_to_generate)
+    df_gen_testset = gen_testset.dataframe_from_dataset(n_to_generate)
+
+    if parsed_yaml_file['VANILLA_GENERATION']:
+        df_gen_testset = append_prompt(parsed_yaml_file, df_gen_testset, n_to_generate)
     print("Generation completed!")
 
     # print test generation
-    prompt_id = parsed_yaml_file['PROMPT_ID']
-    if parsed_yaml_file['MODEL_FROM_LOCAL']:
-        gen_filename = f"{lm_name}.csv"
-    else:
-        gen_filename = f"{lm_name}.csv"
+    gen_filename = f"{lm_name}{parsed_yaml_file['OUT_LABEL']}.csv"
     df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
 
     print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")

@@ -126,12 +126,13 @@ class CounterGenerator:
             except Exception as e:
                 instance_to_update.meta["generated_counter"] = None
                 print(f"Instance that generated the exception:{instance_guid}")
+                print(f"Step:{step}")
                 print(e)
 
             if (step % 100) == 0 and (step > 0):
                 print(f"{datetime.datetime.now()}, Step:{step}: 100 counterfactuals generated")
 
-    def dataframe_from_dataset(self, n_to_generate):
+    def dataframe_from_dataset(self, n_to_generate) -> pd.DataFrame:
         """Build a dataframe from dataset"""
 
         paired_ids = [idx for idx in self.dataset]

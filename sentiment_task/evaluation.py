@@ -54,7 +54,7 @@ class SentimentEvaluator:
             .apply(lambda row: SentimentEvaluator.counter_sizes(row, n_counter_generated), axis=1)
         return eval_dataset
 
-    def infer_predictions(self, eval_dataset, n_generated):
+    def infer_predictions(self, eval_dataset, n_generated=1):
         """Infer the labels for the counterfactuals"""
 
         for idx in range(n_generated):

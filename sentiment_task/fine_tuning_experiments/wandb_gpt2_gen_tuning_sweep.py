@@ -1,4 +1,6 @@
+import numpy as np
 import pandas as pd
+import torch
 import argparse
 import datetime
 import yaml
@@ -12,7 +14,12 @@ from openprompt.plms.lm import LMTokenizerWrapper
 import os
 
 
-def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_params):
+def generate_counterfactuals(yaml_file,
+                             df_valset,
+                             trained_lm,
+                             tokenizer,
+                             gen_params,
+                             n_to_generate) -> pd.DataFrame:
 
     special_tokens = yaml_file['SPECIAL_TOKENS']
     map_labels = yaml_file['MAP_LABELS']
@@ -39,6 +46,10 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
         tokenizer_wrapper_class=tokenizer_wrapper
     )
 
+    # set Random seed
+    torch.manual_seed(yaml_file["SEED"])
+    np.random.seed(yaml_file["SEED"])
+
     counter_generator = generation.CounterGenerator(prompt_template,
                                                     trained_lm,
                                                     val_data_loader,
@@ -48,7 +59,7 @@ def generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_pa
 
     # the generated counterfactuals are held inside the counter_generator object
     counter_generator.perform_generation(tokenizer)
-    generated = counter_generator.dataframe_from_dataset(1)
+    generated = counter_generator.dataframe_from_dataset(n_to_generate=n_to_generate)
 
     return generated
 
@@ -83,20 +94,24 @@ def run_agent(args, yaml_file):
         gen_params = wandb.config
         print(f"Running generation with run:{wandb.run.name}")
 
-        gen_valset = generate_counterfactuals(yaml_file, df_valset, trained_lm, tokenizer, gen_params)
+        gen_valset = generate_counterfactuals(yaml_file,
+                                              df_valset,
+                                              trained_lm,
+                                              tokenizer,
+                                              gen_params,
+                                              n_to_generate)
         print(f"{datetime.datetime.now()}: Generation completed!")
 
-        # eval_valset = dataframe_from_dataset(gen_valset, n_to_generate)
         evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],
                                                   classification_tools["classifier"],
                                                   classification_tools["label_map"])
 
-        eval_valset, n_nan = evaluator.clean_evalset(eval_valset)
-        evaluator.infer_predictions(eval_valset)
+        eval_valset, n_nan = evaluator.clean_evalset(gen_valset)
+        evaluator.infer_predictions(eval_valset, n_generated=n_to_generate)
         lf_score = evaluator.calculate_lf_score(eval_valset)
         conf_score = evaluator.get_conf_score_pred()
-        blue_mean, blue_var = evaluator.calculate_blue_score(eval_valset)
-        blue_corpus = evaluator.calculate_blue_corpus(eval_valset)
+        blue_mean, blue_var = evaluator.calculate_bleu_score(eval_valset, n_to_generate)
+        blue_corpus = evaluator.calculate_bleu_corpus(eval_valset, n_to_generate)
 
         wandb.log({"lf_score": lf_score,
                    "conf_score": conf_score,
@@ -105,6 +120,8 @@ def run_agent(args, yaml_file):
                    "blue_corpus": blue_corpus,
                    "n_nan": n_nan})
         print(f"{datetime.datetime.now()}: Evaluation completed!")
+
+        return
 
 
 def main():

@@ -1,12 +1,15 @@
 import pandas as pd
+import numpy as np
 import argparse
 import datetime
 import yaml
+import torch
 import openprompt
 from sentiment_task import generation, utils
 
 from openprompt.prompts import ManualTemplate
 from openprompt.plms.lm import LMTokenizerWrapper
+
 
 # TODO
 def generate_single_counterfactual(yaml_file,
@@ -137,13 +140,17 @@ def main():
     special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
     n_to_generate = parsed_yaml_file['N_TO_GENERATE']
 
+    # set Random seed
+    torch.manual_seed(parsed_yaml_file["SEED"])
+    np.random.seed(parsed_yaml_file["SEED"])
+
     print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
 
     # load the dataset
     dataset_path = parsed_yaml_file['DATASET_PATH']
     _, _, df_testset = utils.load_dataset(f"{dataset_path}/fold_{fold}/")
     if args.debug_mode:
-        df_testset = df_testset[:10]
+        df_testset = df_testset[:len(df_testset)]
     print(f"{datetime.datetime.now()}: Test set loaded for fold:{fold}")
     print(f"# of samples for test:{len(df_testset)}")
 
@@ -170,6 +177,8 @@ def main():
     df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
 
     print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")
+
+    return
 
 
 if __name__ == "__main__":

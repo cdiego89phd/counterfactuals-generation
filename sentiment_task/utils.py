@@ -66,5 +66,3 @@ def prepare_classifier(classifier_name):
                             "label_map": classifier_label_map}
 
     return classification_tools
-
-#%%

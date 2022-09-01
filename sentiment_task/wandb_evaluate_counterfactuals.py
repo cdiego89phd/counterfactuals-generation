@@ -89,8 +89,13 @@ def main():
 
     # extract cfg from filename
     cfgs = args.results_filename.split('@')
-    prompt_template = cfgs[1].split("-")[1]
-    fold = cfgs[2].split("-")[1]
+
+    if len(cfgs) > 1:
+        prompt_template = cfgs[1].split("-")[1]
+        fold = cfgs[2].split("-")[1]
+    else:
+        prompt_template = "None"
+        fold = "0"
 
     print(f"{datetime.datetime.now()}: Beginning of evaluation with filename:{args.generation_path}")
 

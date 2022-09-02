@@ -86,6 +86,7 @@ class CounterGenerator:
         print(f"The counterfactual generator is placed on cuda device:{self.generator.device.index}")
 
     def perform_generation(self, tokenizer, n_to_generate=1):
+        print(f"# to generate:{n_to_generate}")
         self.generator.eval()
 
         for (step, inputs) in enumerate(self.dataloader):

@@ -58,7 +58,7 @@ def generate_counterfactuals(yaml_file,
     print(f"{datetime.datetime.now()}: Begin of generation...")
 
     # the generated counterfactuals are held inside the counter_generator object
-    counter_generator.perform_generation(tokenizer)
+    counter_generator.perform_generation(tokenizer, n_to_generate=n_to_generate)
     generated = counter_generator.dataframe_from_dataset(n_to_generate=n_to_generate)
 
     return generated
@@ -89,6 +89,7 @@ def run_agent(args, yaml_file):
     _, df_valset, _ = utils.load_dataset(f"{dataset_path}/fold_{fold}/")
     if args.debug_mode:
         df_valset = df_valset[:10]
+    print(f"# of instances in the valset:{len(df_valset)}")
 
     with wandb.init(settings=wandb.Settings(console='off')):
         gen_params = wandb.config
@@ -193,8 +194,6 @@ def main():
     print(f"Sweep id:{sweep_id}")
 
     try:
-        # wandb.agent(sweep_id, function=lambda: run_agent(args, parsed_yaml_file, trained_lm, tokenizer,
-        #                                                  classification_tools), count=n_sweep_runs)
         wandb.agent(sweep_id, function=lambda: run_agent(args, parsed_yaml_file), count=n_sweep_runs)
 
     except wandb.errors.CommError:

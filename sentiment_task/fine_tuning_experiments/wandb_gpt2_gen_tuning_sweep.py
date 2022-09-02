@@ -92,6 +92,7 @@ def run_agent(args, yaml_file):
 
     with wandb.init(settings=wandb.Settings(console='off')):
         gen_params = wandb.config
+        gen_params["do_sample"] = True
         print(f"Running generation with run:{wandb.run.name}")
 
         gen_valset = generate_counterfactuals(yaml_file,

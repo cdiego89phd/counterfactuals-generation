@@ -111,7 +111,7 @@ def run_agent(args, yaml_file):
         evaluator.infer_predictions(eval_valset, n_generated=n_to_generate)
         lf_score = evaluator.calculate_lf_score(eval_valset)
         conf_score = evaluator.get_conf_score_pred()
-        blue_mean, blue_var = evaluator.calculate_bleu_score(eval_valset, n_to_generate)
+        blue_mean, blue_var, _, _ = evaluator.calculate_bleu_score(eval_valset, n_to_generate)
         blue_corpus = evaluator.calculate_bleu_corpus(eval_valset, n_to_generate)
 
         wandb.log({"lf_score": lf_score,

@@ -75,10 +75,10 @@ def run_agent(args, yaml_file):
     special_tokens = yaml_file['SPECIAL_TOKENS']
     classifier_name = yaml_file['CLASSIFIER_NAME']
     n_to_generate = yaml_file['N_TO_GENERATE']
-    run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@{task_name}"
+    # run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@{task_name}"
 
     tokenizer, _, _ = utils.load_gpt2_objects(base_model, special_tokens)
-    model_local_path = f"{yaml_file['MODEL_DIR']}/{run_name}"
+    model_local_path = f"{yaml_file['MODEL_DIR']}/{lm_name}"
     trained_lm = utils.load_gpt2_from_local(model_local_path)
 
     # load classifier for the evaluation

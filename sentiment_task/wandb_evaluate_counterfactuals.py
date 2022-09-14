@@ -90,7 +90,8 @@ def main():
         default=None,
         type=str,
         required=True,
-        help="The metrics to compute. Include in the string g for goal-orientdness; c for closeness; d for diversity"
+        help="The metrics to compute. Include in the string g for goal-orientdness; b for BLEU; c for closeness; "
+             "d for diversity."
     )
 
     args = parser.parse_args()
@@ -142,7 +143,7 @@ def main():
         metrics_dict["conf_score"] = conf_score
 
     # BLEU metrics
-    if "r" in args.metrics:
+    if "b" in args.metrics:
         bleu_corpus = evaluator.calculate_bleu_corpus(eval_set, n_counter_generated)
         bleu_corpus_1 = evaluator.calculate_bleu_corpus(eval_set, n_counter_generated, weights=(1, 0, 0, 0))
         bleu_corpus_2 = evaluator.calculate_bleu_corpus(eval_set, n_counter_generated, weights=(0, 1, 0, 0))

@@ -3,7 +3,7 @@ import transformers
 import numpy as np
 import sklearn
 import nltk
-import Levenshtein
+# import Levenshtein
 import stanza
 import zss
 import scipy.stats
@@ -42,14 +42,20 @@ class SentimentEvaluator:
         return eval_dataset.dropna(), n_nan
 
     @staticmethod
+    def text_size_words(text):
+        return len(nltk.tokenize.word_tokenize(text))
+
+    @staticmethod
     def counter_sizes(row, n):
-        return np.mean([len(row[f"generated_counter_{i}"]) for i in range(n)])
+        return np.mean([SentimentEvaluator.text_size_words(row[f"generated_counter_{i}"]) for i in range(n)])
 
     @staticmethod
     def retrieve_sizes(eval_dataset, n_counter_generated) -> pd.DataFrame:
         """Calculate the avg sizes of the counterfactual reviews"""
 
-        eval_dataset["counter_size"] = [len(row) for row in eval_dataset['counterfactual'].values]
+        # jdsjdl
+        eval_dataset["counter_size"] = [SentimentEvaluator.text_size_words(row) for row in
+                                        eval_dataset['counterfactual'].values]
         eval_dataset["generated_counter_size"] = eval_dataset\
             .apply(lambda row: SentimentEvaluator.counter_sizes(row, n_counter_generated), axis=1)
         return eval_dataset
@@ -205,8 +211,13 @@ class SentimentEvaluator:
         spear_scores = []
         pears_scores = []
         for idx in range(n_generated):
-            distances = [Levenshtein.distance(str_1, str_2) for (str_1, str_2) in
-                         zip(eval_dataset["counterfactual"].values, eval_dataset[f"generated_counter_{idx}"].values)]
+            # nltk.edit_distance(tokenized_original, tokenized_edited)
+            distances = [nltk.edit_distance(nltk.tokenize.word_tokenize(str_1),
+                                            nltk.tokenize.word_tokenize(str_2))/len(nltk.tokenize.word_tokenize(str_1))
+                         for (str_1, str_2) in zip(eval_dataset["example"].values,
+                                                   eval_dataset[f"generated_counter_{idx}"].values)]
+            # distances = [Levenshtein.distance(str_1, str_2)/len(str_1) for (str_1, str_2) in
+            #              zip(eval_dataset["example"].values, eval_dataset[f"generated_counter_{idx}"].values)]
             mean_scores.append(np.mean(distances))
             var_scores.append(np.var(distances))
 
@@ -249,7 +260,7 @@ class SentimentEvaluator:
         pipeline = stanza.Pipeline(lang='en', processors='tokenize,pos,constituency')
 
         # parse reviews into constituency trees
-        parsed_references = [pipeline(review) for review in eval_dataset["counterfactual"].values]
+        parsed_references = [pipeline(review) for review in eval_dataset["example"].values]
 
         mean_scores = []
         var_scores = []

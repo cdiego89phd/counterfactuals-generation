@@ -82,18 +82,18 @@ def append_prompt(parsed_yaml_file, gen_testset, n_to_generate) -> pd.DataFrame:
 
     # append the words to the counterfactual
     for idx in range(n_to_generate):
-        gen_testset[f"generated_counter{idx}"] = gen_testset.apply(
-            lambda row: append_to_counter(row, indexes), axis=1)
+        gen_testset[f"generated_counter_{idx}"] = gen_testset.apply(
+            lambda row: append_to_counter(row, indexes, idx), axis=1)
 
     return gen_testset
 
 
-def append_to_counter(row, idxs) -> str:
+def append_to_counter(row, idxs, idx) -> str:
     example = row['example'].split(" ")
     to_add = ""
-    for idx in idxs:
-        to_add += example[idx] + " "
-    to_return = to_add + row['generated_counter']
+    for i in idxs:
+        to_add += example[i] + " "
+    to_return = to_add + row[f"generated_counter_{idx}"]
 
     return to_return
 
@@ -150,7 +150,7 @@ def main():
     dataset_path = parsed_yaml_file['DATASET_PATH']
     _, _, df_testset = utils.load_dataset(f"{dataset_path}/fold_{fold}/")
     if args.debug_mode:
-        df_testset = df_testset[:len(df_testset)]
+        df_testset = df_testset[:10]
     print(f"{datetime.datetime.now()}: Test set loaded for fold:{fold}")
     print(f"# of samples for test:{len(df_testset)}")
 

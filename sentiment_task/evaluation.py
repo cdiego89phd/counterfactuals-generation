@@ -160,7 +160,7 @@ class SentimentEvaluator:
 
             # need to tokenize sentences
             # the reference is the true counterfactual
-            references = [nltk.tokenize.word_tokenize(sentence) for sentence in true_counters]
+            references = [[nltk.tokenize.word_tokenize(sentence)] for sentence in true_counters]
 
             # the hypothesis is the generated counterfactual
             hypothesis = [nltk.tokenize.word_tokenize(sentence) for sentence in gen_counters]

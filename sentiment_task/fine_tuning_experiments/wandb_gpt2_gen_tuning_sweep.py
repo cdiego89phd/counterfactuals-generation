@@ -117,9 +117,9 @@ def run_agent(args, yaml_file):
 
         wandb.log({"lf_score": lf_score,
                    "conf_score": conf_score,
-                   "blue_mean": blue_mean,
-                   "blue_var": blue_var,
-                   "blue_corpus": blue_corpus,
+                   "bleu_mean": blue_mean,
+                   "bleu_var": blue_var,
+                   "bleu_corpus": blue_corpus,
                    "n_nan": n_nan})
         print(f"{datetime.datetime.now()}: Evaluation completed!")
 

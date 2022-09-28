@@ -35,6 +35,7 @@ def evaluate(args, results_filename):
         evaluator.infer_predictions(eval_set, n_counter_generated)
         lf_score = evaluator.calculate_lf_score(eval_set)
         conf_score = evaluator.get_conf_score_pred()
+        print(f"{lf_score};{conf_score};")
         print(f"{datetime.datetime.now()}: LF score calculated!\n")
 
         # update dict
@@ -165,7 +166,7 @@ def main():
     args = parser.parse_args()
 
     files = args.results_filename.split(";")
-    if len(files) != "":
+    if args.results_filename == "":
         # read all files from folder
         files = [f for f in os.listdir(args.generation_path)
                  if os.path.isfile(os.path.join(args.generation_path, f))]

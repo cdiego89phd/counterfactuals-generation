@@ -99,19 +99,21 @@ class CounterGenerator:
             # context, i.e. the example
             max_length_example = len(tokenizer.encode(instance_to_update.text_a))
             max_length_output = int(2 * max_length_example)
+            if max_length_output > 1024:
+                max_length_output = 1024
 
             generation_arguments = {
-                "max_length": max_length_output,
-                "min_length": 5,
-                "no_repeat_ngram_size": self.gen_cfgs["no_repeat_ngram_size"],
-                "num_beams": self.gen_cfgs["num_beams"],
-                "repetition_penalty": float(self.gen_cfgs["repetition_penalty"]),
-                "temperature": float(self.gen_cfgs["temperature"]),
-                "do_sample": self.gen_cfgs["do_sample"],
-                "num_return_sequences": 1,
-                "top_k": self.gen_cfgs["top_k"],
-                "top_p": self.gen_cfgs["top_p"],
-            }
+                    "max_length": max_length_output,
+                    "min_length": 5,
+                    "no_repeat_ngram_size": self.gen_cfgs["no_repeat_ngram_size"],
+                    "num_beams": self.gen_cfgs["num_beams"],
+                    "repetition_penalty": float(self.gen_cfgs["repetition_penalty"]),
+                    "temperature": float(self.gen_cfgs["temperature"]),
+                    "do_sample": self.gen_cfgs["do_sample"],
+                    "num_return_sequences": 1,
+                    "top_k": self.gen_cfgs["top_k"],
+                    "top_p": self.gen_cfgs["top_p"],
+                }
 
             try:
                 if torch.cuda.is_available():

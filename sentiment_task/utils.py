@@ -13,7 +13,8 @@ def wrap_dataset_with_prompt(df_row, template, mapping_labels, spec_tokens):
     final_text = template.replace("<label_ex>", mapping_labels[df_row["label_ex"]])
     final_text = final_text.replace("<example_text>", df_row["example"])
     final_text = final_text.replace("<label_counter>", mapping_labels[df_row["label_counter"]])
-    final_text = final_text.replace("<counter_text>", df_row["counterfactual"])
+    if "<counter_text>" in final_text:
+        final_text = final_text.replace("<counter_text>", df_row["counterfactual"])
     final_text = final_text.replace("<sep>", spec_tokens["sep_token"])
     final_text = final_text.replace("<bos_token>", spec_tokens["bos_token"])
     final_text = final_text.replace("<eos_token>", spec_tokens["eos_token"])
@@ -23,6 +24,7 @@ def wrap_dataset_with_prompt(df_row, template, mapping_labels, spec_tokens):
     words = df_row["example"].split(" ")
     final_text = final_text.replace("<0>", words[0])
     final_text = final_text.replace("<1>", words[1])
+    final_text = final_text.replace("<2>", words[2])
 
     return final_text
 

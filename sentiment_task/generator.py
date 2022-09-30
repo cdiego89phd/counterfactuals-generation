@@ -169,8 +169,8 @@ def main():
                                            gen_params, n_to_generate)
     df_gen_testset = gen_testset.dataframe_from_dataset(n_to_generate)
 
-    if parsed_yaml_file['VANILLA_GENERATION']:
-        df_gen_testset = append_prompt(parsed_yaml_file, df_gen_testset, n_to_generate)
+    # if parsed_yaml_file['VANILLA_GENERATION']:
+    #     df_gen_testset = append_prompt(parsed_yaml_file, df_gen_testset, n_to_generate)
     print("Generation completed!")
 
     # print test generation

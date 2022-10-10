@@ -69,13 +69,10 @@ def run_agent(args, yaml_file):
     fold = yaml_file['FOLD']
     lm_name = yaml_file['LM_NAME']
     base_model = yaml_file['BASE_MODEL']
-    task_name = yaml_file['TASK_NAME']
-    prompt_id = yaml_file['PROMPT_ID']
     dataset_path = yaml_file['DATASET_PATH']
     special_tokens = yaml_file['SPECIAL_TOKENS']
     classifier_name = yaml_file['CLASSIFIER_NAME']
     n_to_generate = yaml_file['N_TO_GENERATE']
-    # run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@{task_name}"
 
     tokenizer, _, _ = utils.load_gpt2_objects(base_model, special_tokens)
     model_local_path = f"{yaml_file['MODEL_DIR']}/{lm_name}"
@@ -130,7 +127,6 @@ def main():
 
     # read params from command line
     parser = argparse.ArgumentParser()
-    # SETTINGS_PATH = "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/settings/"
     parser.add_argument(
         "--setting_path",
         default=None,
@@ -157,6 +153,14 @@ def main():
     )
 
     parser.add_argument(
+        "--wandb_project",
+        default=None,
+        type=str,
+        required=True,
+        help="The project path in wandb."
+    )
+
+    parser.add_argument(
         "--sweep_id",
         default=None,
         type=str,
@@ -179,10 +183,6 @@ def main():
     parsed_yaml_file = yaml.load(setting_yaml_file, Loader=yaml.FullLoader)
 
     fold = parsed_yaml_file['FOLD']
-    # lm_name = parsed_yaml_file['LM_NAME']
-    # prompt_id = parsed_yaml_file['PROMPT_ID']
-    # special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
-    # classifier_name = parsed_yaml_file['CLASSIFIER_NAME']
 
     n_sweep_runs = parsed_yaml_file['N_SWEEP_RUNS']
 
@@ -190,7 +190,7 @@ def main():
 
     # initialize WANDB logging system
     wandb.login(relogin=True, key=args.wandb_key)
-    sweep_id = f"cdiego89/counterfactuals-generation/{args.sweep_id}"
+    sweep_id = f"{args.wandb_project}/{args.sweep_id}"
     print(f"Sweep id:{sweep_id}")
 
     try:

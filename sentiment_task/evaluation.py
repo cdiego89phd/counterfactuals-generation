@@ -3,7 +3,6 @@ import transformers
 import numpy as np
 import sklearn
 import nltk
-# import Levenshtein
 import stanza
 import zss
 import scipy.stats
@@ -211,13 +210,10 @@ class SentimentEvaluator:
         spear_scores = []
         pears_scores = []
         for idx in range(n_generated):
-            # nltk.edit_distance(tokenized_original, tokenized_edited)
             distances = [nltk.edit_distance(nltk.tokenize.word_tokenize(str_1),
                                             nltk.tokenize.word_tokenize(str_2))/len(nltk.tokenize.word_tokenize(str_1))
                          for (str_1, str_2) in zip(eval_dataset["example"].values,
                                                    eval_dataset[f"generated_counter_{idx}"].values)]
-            # distances = [Levenshtein.distance(str_1, str_2)/len(str_1) for (str_1, str_2) in
-            #              zip(eval_dataset["example"].values, eval_dataset[f"generated_counter_{idx}"].values)]
             mean_scores.append(np.mean(distances))
             var_scores.append(np.var(distances))
 

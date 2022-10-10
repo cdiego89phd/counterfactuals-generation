@@ -158,7 +158,3 @@ class CounterGenerator:
                 d[f"generated_counter_{idx}"].append(item[idx])
 
         return pd.DataFrame(data=d)
-
-    # TODO
-    def perform_single_generation(self):
-        pass

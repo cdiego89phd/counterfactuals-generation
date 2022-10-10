@@ -27,7 +27,6 @@ def freeze_layers_lm(to_freeze, n_to_unfreeze, model):
     return model
 
 
-# TODO is this method general or specific to gpt2? Let's see
 def prepare_training(df_trainset,
                      df_valset,
                      tokenizer,

@@ -52,33 +52,6 @@ def evaluate(args, results_filename):
         print(f"{bleu_corpus};{bleu_corpus_1};{bleu_corpus_2};{bleu_corpus_3};{bleu_corpus_4}")
         print(f"{datetime.datetime.now()}: BLEU corpus score calculated!\n")
 
-        # bleu_mean, bleu_var, bleu_spear, bleu_pears = evaluator.calculate_bleu_score(
-        #     eval_set, n_counter_generated, calculate_corr=calculate_corr)
-        # bleu_mean_1, bleu_var_1, _, _ = evaluator.calculate_bleu_score(eval_set, n_counter_generated, weights=(1, 0, 0, 0))
-        # bleu_mean_2, bleu_var_2, _, _ = evaluator.calculate_bleu_score(eval_set, n_counter_generated, weights=(0, 1, 0, 0))
-        # bleu_mean_3, bleu_var_3, _, _ = evaluator.calculate_bleu_score(eval_set, n_counter_generated, weights=(0, 0, 1, 0))
-        # bleu_mean_4, bleu_var_4, _, _ = evaluator.calculate_bleu_score(eval_set, n_counter_generated, weights=(0, 0, 0, 1))
-        # print(f"{datetime.datetime.now()}: BLEU score calculated!\n")
-
-        # # update dict
-        # metrics_dict["bleu_corpus"] = bleu_corpus
-        # metrics_dict["bleu_corpus@1"] = bleu_corpus_1
-        # metrics_dict["bleu_corpus@2"] = bleu_corpus_2
-        # metrics_dict["bleu_corpus@3"] = bleu_corpus_3
-        # metrics_dict["bleu_corpus@4"] = bleu_corpus_4
-        # metrics_dict["bleu_mean"] = bleu_mean
-        # metrics_dict["bleu_mean@1"] = bleu_mean_1
-        # metrics_dict["bleu_mean@2"] = bleu_mean_2
-        # metrics_dict["bleu_mean@3"] = bleu_mean_3
-        # metrics_dict["bleu_mean@4"] = bleu_mean_4
-        # metrics_dict["bleu_spear"] = bleu_spear
-        # metrics_dict["bleu_pears"] = bleu_pears
-        # metrics_dict["bleu_var"] = bleu_var
-        # metrics_dict["bleu_var@1"] = bleu_var_1
-        # metrics_dict["bleu_var@2"] = bleu_var_2
-        # metrics_dict["bleu_var@3"] = bleu_var_3
-        # metrics_dict["bleu_var@4"] = bleu_var_4
-
     # closeness metrics
     if "c" in args.metrics:
         lev_dist_mean, lev_dist_var, lev_spear, lev_pears = evaluator.calculate_lev_dist(eval_set, n_counter_generated,
@@ -113,7 +86,6 @@ def main():
 
     # read params from command line
     parser = argparse.ArgumentParser()
-    # SETTINGS_PATH = "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/generation/"
     parser.add_argument(
         "--generation_path",
         default=None,

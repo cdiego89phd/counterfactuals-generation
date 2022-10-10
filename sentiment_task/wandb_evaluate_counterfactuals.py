@@ -12,7 +12,6 @@ def main():
 
     # read params from command line
     parser = argparse.ArgumentParser()
-    # SETTINGS_PATH = "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/generation/"
     parser.add_argument(
         "--generation_path",
         default=None,

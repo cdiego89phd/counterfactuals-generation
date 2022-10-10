@@ -70,7 +70,6 @@ def main():
 
     # read params from command line
     parser = argparse.ArgumentParser()
-    # SETTINGS_PATH = "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/settings/"
     parser.add_argument(
         "--setting_path",
         default=None,
@@ -101,7 +100,7 @@ def main():
         default=None,
         type=str,
         required=True,
-        help="The name of the wandb project."
+        help="The project path in wandb."
     )
 
     parser.add_argument(
@@ -134,7 +133,7 @@ def main():
     # initialize WANDB logging system
     wandb.login(relogin=True, key=args.wandb_key)
 
-    sweep_id = f"cdiego89/{args.wandb_project}/{args.sweep_id}"
+    sweep_id = f"{args.wandb_project}/{args.sweep_id}"
     print(f"Sweep id:{sweep_id}")
 
     try:

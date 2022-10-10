@@ -57,7 +57,7 @@ def generate_counterfactuals(yaml_file,
         tokenizer=tokenizer,
         template=prompt_template,
         tokenizer_wrapper_class=tokenizer_wrapper,
-        truncate_method="tail",
+        # truncate_method="tail",
     )
 
     counter_generator = generation.CounterGenerator(prompt_template,

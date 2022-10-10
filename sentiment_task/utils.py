@@ -15,9 +15,11 @@ def wrap_dataset_with_prompt(df_row, template, mapping_labels, spec_tokens):
     final_text = final_text.replace("<label_counter>", mapping_labels[df_row["label_counter"]])
     if "<counter_text>" in final_text:
         final_text = final_text.replace("<counter_text>", df_row["counterfactual"])
-    final_text = final_text.replace("<sep>", spec_tokens["sep_token"])
-    final_text = final_text.replace("<bos_token>", spec_tokens["bos_token"])
-    final_text = final_text.replace("<eos_token>", spec_tokens["eos_token"])
+
+    if spec_tokens != "None":
+        final_text = final_text.replace("<sep>", spec_tokens["sep_token"])
+        final_text = final_text.replace("<bos_token>", spec_tokens["bos_token"])
+        final_text = final_text.replace("<eos_token>", spec_tokens["eos_token"])
 
     # this is for vanilla generation
     # we create a prompt with some words from the seed review
@@ -33,7 +35,7 @@ def load_gpt2_objects(model_name, spec_tokens):
     # Load language gpt2 objects
     tok = transformers.GPT2Tokenizer.from_pretrained(model_name)
     print("Downloaded tokenizer!")
-    if spec_tokens is not None:
+    if spec_tokens != "None":
         print(f"Len of tokenizer before adding tokens:{len(tok)}")
         tok.add_special_tokens(spec_tokens)  # add special tokens
         print("Added special tokens to tokenizer!")
@@ -42,7 +44,7 @@ def load_gpt2_objects(model_name, spec_tokens):
     model_config_class = transformers.GPT2Config.from_pretrained(model_name)
     model = transformers.GPT2LMHeadModel.from_pretrained(model_name, config=model_config_class)
     print("Downloaded model and cfg!")
-    if spec_tokens is not None:
+    if spec_tokens != "None":
         # special tokens added, model needs to be resized accordingly
         model.resize_token_embeddings(len(tok))
 

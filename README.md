@@ -8,3 +8,4 @@ In this paper, we present CouRGe, a language model that, given a movie review (i
 
 Experiments show that CouRGe's generation is effective at flipping the seed sentiment and produces counterfactuals reasonably close to the seed review. This proves once again the great flexibility of language models towards downstream tasks as hard as counterfactual reasoning and opens up the use of CouRGe's generated counterfactuals for the applications mentioned above."
 
+## TODO

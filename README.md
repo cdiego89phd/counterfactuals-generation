@@ -12,4 +12,9 @@ Experiments show that CouRGe's generation is effective at flipping the seed sent
 
 - the root contains scripts for finr-tuning a language model (with a specific dataset such as Rotten Tomatoes used in this paper) 
 - **sentimen_task** contains the resources to generate counterfacuals for the Sentiment Analysis task
+    - **notebooks** stores notebooks to prepare the datasets for the experiments  
+    - **cad_imdb**, **imdb_pang**, **yelp** are folders that store different sentiment analysis datasets;
+    - **fine_tuning_experiments** runs and store results for fine-tuning GPT2 with the cad_imdb dataset 
+    - **zero_shot_experiments**
+    - **ood_experiments** runs and store results of the Out-Of-Distribution experiments on yelp and imdb_pang
  

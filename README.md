@@ -8,4 +8,8 @@ In this paper, we present CouRGe, a language model that, given a movie review (i
 
 Experiments show that CouRGe's generation is effective at flipping the seed sentiment and produces counterfactuals reasonably close to the seed review. This proves once again the great flexibility of language models towards downstream tasks as hard as counterfactual reasoning and opens up the use of CouRGe's generated counterfactuals for the applications mentioned above."
 
-## TODO
+## Project's structure
+
+- the root contains scripts for finr-tuning a language model (with a specific dataset such as Rotten Tomatoes used in this paper) 
+- **sentimen_task** contains the resources to generate counterfacuals for the Sentiment Analysis task
+ 

@@ -31,9 +31,6 @@ Example script: python gpt2_cad_fine_tuning_trainer.py
 --wandb_project <project_name>
 --debug_mode 0
 
-
-Similarly, wandb_gpt2_cad_fine_tuning_sweep can be used (with similar params) to tune the training hyperparameters with the wandb sweep.
-Similarly, wandb_gpt2_gen_tuning_sweep can be used (with similar params) to tune the generation hyperparameters with the wandb sweep.
     
 ### Generate counterfactuals
 Example script: python generator.py 
@@ -42,7 +39,27 @@ Example script: python generator.py
 --debug_mode 1
 
 ### Tune hyperparameters with wandb sweep
-Example script: python wandb_gpt2_cad_fine_tuning_sweep.py TODO
+Firstly, you need to set a sweep in wandb with a proper hyperparameter space (see fine_tuning_experiments/settings/example_sweep_cad_tuning.yaml)
+    
+Example script: python wandb_gpt2_cad_fine_tuning_sweep.py --setting_path /sentiment_task/fine_tuning_experiments/settings/
+--setting_name example_sweep_cad_tuning.yaml
+--wandb_key <key>
+--wandb_project <project_name>
+--sweep_id <id>
+--debug_mode 1
+    
+Similarly, wandb_gpt2_gen_tuning_sweep can be used (with similar params) to tune the generation hyperparameters with the wandb sweep.
 
 ### Evaluate generated counterfactuals
-Example script: python wandb_evaluate_counterfactuals.py TODO
+Takes in the generated counterfactuals and perform the evaluation (logging metrics on wandb)
+    
+Example script: python wandb_evaluate_counterfactuals.py --generation_path /sentiment_task/fine_tuning_experiments/generation/
+--results_filename <filename>
+--classifier_name distilbert-base-uncased-finetuned-sst-2-english
+--n_counter_generated 3
+--calculate_corr True
+--wandb_key <key>
+--wandb_project <project_name>
+--lm_name <name>
+--eval_task_name cad_fine_tuning
+--metrics gbcd

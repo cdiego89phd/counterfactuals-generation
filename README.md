@@ -24,10 +24,22 @@ Experiments show that CouRGe's generation is effective at flipping the seed sent
 Most of the code is also integrated with the Weights & Biases logging system.
 
 ### Fine-tune the generator (on GPT2)
-Example script: python gpt2_cad_fine_tuning_trainer.py TODO
+Example script: python gpt2_cad_fine_tuning_trainer.py 
+--setting_path /sentiment_task/fine_tuning_experiments/settings/
+--setting_name example_cad_tuning.yaml
+--wandb_key <key>
+--wandb_project <project_name>
+--debug_mode 0
 
+
+Similarly, wandb_gpt2_cad_fine_tuning_sweep can be used (with similar params) to tune the training hyperparameters with the wandb sweep.
+Similarly, wandb_gpt2_gen_tuning_sweep can be used (with similar params) to tune the generation hyperparameters with the wandb sweep.
+    
 ### Generate counterfactuals
-Example script: python generator.py TODO
+Example script: python generator.py 
+--setting_path /sentiment_task/fine_tuning_experiments/settings/
+--setting_name example_generation.yaml
+--debug_mode 1
 
 ### Tune hyperparameters with wandb sweep
 Example script: python wandb_gpt2_cad_fine_tuning_sweep.py TODO

@@ -51,7 +51,7 @@ Example script: python wandb_gpt2_cad_fine_tuning_sweep.py --setting_path /senti
 Similarly, wandb_gpt2_gen_tuning_sweep can be used (with similar params) to tune the generation hyperparameters with the wandb sweep.
 
 ### Evaluate generated counterfactuals
-Takes in the generated counterfactuals and perform the evaluation (logging metrics on wandb)
+Takes in the generated counterfactuals and perform the evaluation (logging metrics on wandb).
     
 Example script: python wandb_evaluate_counterfactuals.py --generation_path /sentiment_task/fine_tuning_experiments/generation/
 --results_filename <filename>

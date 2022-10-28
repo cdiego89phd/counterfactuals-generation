@@ -16,3 +16,6 @@ torch==1.10.1
 tqdm==4.62.3
 transformers==4.14.1
 zss==1.2.0
+yacs==0.1.8
+rouge==1.0.1
+lxml==4.7.1

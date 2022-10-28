@@ -3,6 +3,7 @@ import datetime
 import yaml
 from sentiment_task.fine_tuning_experiments import cad_fine_tuning_trainer
 from sentiment_task import utils
+from kernl.model_optimization import optimize_model  # TODO remove
 
 
 def main():
@@ -93,6 +94,8 @@ def main():
         lm.resize_token_embeddings(len(tokenizer))
     else:
         _, lm, _ = utils.load_gpt2_objects(lm_name, special_tokens)
+
+    lm = optimize_model(lm)  # TODO remove
     print("Downloaded tokenizer, model and cfg!")
 
     # wrap the datasets with the prompt template

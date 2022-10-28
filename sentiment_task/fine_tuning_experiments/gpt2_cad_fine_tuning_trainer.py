@@ -124,7 +124,7 @@ def main():
     out_name = f"{out_dir}/{run_name}"
 
     cad_fine_tuning_trainer.train(out_name, lm, tokenized_train, tokenized_val,
-                                  no_cuda, training_cfgs, args.wandb_project, run_name)
+                                  no_cuda, training_cfgs, args.wandb_project, run_name, False)
 
     print(f"{datetime.datetime.now()}: End of experiments for fold:{fold}")
 

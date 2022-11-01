@@ -27,6 +27,15 @@ def main():
         help="The name of yaml file where to load the setting from."
     )
 
+    # e.g. SETTING_NAME = "tuning_cad_prompt_1.yaml"
+    parser.add_argument(
+        "--save_model",
+        default=True,
+        type=bool,
+        required=False,
+        help="Whether to save the model on a dir."
+    )
+
     parser.add_argument(
         "--wandb_key",
         default=None,

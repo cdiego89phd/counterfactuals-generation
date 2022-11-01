@@ -31,7 +31,7 @@ def main():
     parser.add_argument(
         "--save_model",
         default=True,
-        type=bool,
+        type=int,
         required=False,
         help="Whether to save the model on a dir."
     )
@@ -63,7 +63,7 @@ def main():
     parser.add_argument(
         "--run_kernl",
         default=0,
-        type=bool,
+        type=int,
         required=False,
         help="TODO."
     )

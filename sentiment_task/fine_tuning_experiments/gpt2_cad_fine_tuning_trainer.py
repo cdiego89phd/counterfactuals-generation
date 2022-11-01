@@ -32,7 +32,7 @@ def main():
         "--save_model",
         default=True,
         type=bool,
-        required=False,
+        required=True,
         help="Whether to save the model on a dir."
     )
 
@@ -142,7 +142,7 @@ def main():
     out_name = f"{out_dir}/{run_name}"
 
     cad_fine_tuning_trainer.train(out_name, lm, tokenized_train, tokenized_val,
-                                  no_cuda, training_cfgs, args.wandb_project, run_name, False)
+                                  no_cuda, training_cfgs, args.wandb_project, run_name, args.save_model)
 
     print(f"{datetime.datetime.now()}: End of experiments for fold:{fold}")
 

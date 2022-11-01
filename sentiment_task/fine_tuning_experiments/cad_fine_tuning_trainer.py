@@ -62,7 +62,7 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, r
         training_args = transformers.TrainingArguments(
             output_dir=out_dir,
             overwrite_output_dir=True,
-            no_cuda=no_cuda,
+            no_cuda=True, # TODO put back no_cuda
             num_train_epochs=training_cfgs['MAX_EPOCHS'],
             per_device_train_batch_size=training_cfgs['TRAIN_BATCHSIZE'],
             per_device_eval_batch_size=training_cfgs['EVAL_BATCHSIZE'],
@@ -79,6 +79,7 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, r
             metric_for_best_model='eval_loss'
         )
 
+        lm = lm.cuda()
         trainer = transformers.Trainer(
             model=lm,
             args=training_args,

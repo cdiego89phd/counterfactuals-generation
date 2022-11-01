@@ -32,7 +32,7 @@ def main():
         "--save_model",
         default=True,
         type=bool,
-        required=True,
+        required=False,
         help="Whether to save the model on a dir."
     )
 
@@ -113,6 +113,7 @@ def main():
         _, lm, _ = utils.load_gpt2_objects(lm_name, special_tokens)
 
     if args.run_kernl:
+        print("Runnning Kernel optimization!!")
         lm = optimize_model(lm)  # TODO remove
     print("Downloaded tokenizer, model and cfg!")
 

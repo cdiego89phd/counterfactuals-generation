@@ -51,6 +51,14 @@ def main():
         help="Whether to run the script in debug mode. The script will run with a reduced dataset size."
     )
 
+    parser.add_argument(
+        "--run_kernl",
+        default=0,
+        type=bool,
+        required=False,
+        help="TODO."
+    )
+
     args = parser.parse_args()
 
     # read params from yaml file
@@ -95,7 +103,8 @@ def main():
     else:
         _, lm, _ = utils.load_gpt2_objects(lm_name, special_tokens)
 
-    lm = optimize_model(lm)  # TODO remove
+    if args.run_kernl:
+        lm = optimize_model(lm)  # TODO remove
     print("Downloaded tokenizer, model and cfg!")
 
     # wrap the datasets with the prompt template

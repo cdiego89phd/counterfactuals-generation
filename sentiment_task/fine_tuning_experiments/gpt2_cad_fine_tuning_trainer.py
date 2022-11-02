@@ -114,7 +114,7 @@ def main():
 
     if args.run_kernl:
         print("Runnning Kernel optimization!!")
-        lm = optimize_model(lm)  # TODO remove
+        optimize_model(lm)  # TODO remove
     print("Downloaded tokenizer, model and cfg!")
 
     # wrap the datasets with the prompt template

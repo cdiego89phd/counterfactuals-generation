@@ -9,6 +9,8 @@ import openprompt
 from openprompt.prompts import ManualTemplate
 from openprompt.data_utils import InputExample
 
+import traceback
+
 
 @dataclass
 class SentimentDataset(Dataset):
@@ -131,6 +133,7 @@ class CounterGenerator:
                 print(f"Instance that generated the exception:{instance_guid}")
                 print(f"Step:{step}")
                 print(e)
+                print(traceback.format_exc())
 
             if (step % 100) == 0 and (step > 0):
                 print(f"{datetime.datetime.now()}, Step:{step}: 100 counterfactuals generated")

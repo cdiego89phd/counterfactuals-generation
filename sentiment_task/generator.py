@@ -177,20 +177,22 @@ def main():
         trained_lm = utils.load_gpt2_from_local(model_local_path)
     print(f"{datetime.datetime.now()}: Language model loaded from local:{parsed_yaml_file['MODEL_FROM_LOCAL']}")
 
+    input_ids = tokenizer(
+        "translate English to French: The house in the woods is wonderful, can we buy it ?",
+        return_tensors="pt",
+    ).to("cuda")
+
     if args.run_kernl and kernl_imported:
         trained_lm.eval().cuda()
         optimize_model(trained_lm)
-        input_ids = tokenizer(
-            "translate English to French: The house in the woods is wonderful, can we buy it ?",
-            return_tensors="pt",
-        ).to("cuda")
 
         print("Trying to generate")
-        output = trained_lm.generate(
-            inputs=input_ids["input_ids"],
-            min_length=22,
-            max_length=100,
-        )
+        output = trained_lm(**input_ids)
+        # output = trained_lm.generate(
+        #     inputs=input_ids["input_ids"],
+        #     min_length=22,
+        #     max_length=100,
+        # )
 
         print(output)
         print("Runnning Kernel optimization!!")

@@ -5,7 +5,8 @@ from sentiment_task.fine_tuning_experiments import cad_fine_tuning_trainer
 from sentiment_task import utils
 
 try:
-    from kernl.model_optimization import optimize_model  # TODO remove
+    from kernl.model_optimization import optimize_model
+    kernl_imported = True
 except ImportError:
     kernl_imported = False
     print("Kernl module not found! GPU optimization not available for training")
@@ -117,7 +118,7 @@ def main():
     else:
         _, lm, _ = utils.load_gpt2_objects(lm_name, special_tokens)
 
-    if args.run_kernl and not kernl_imported:  # TODO future development for training with fast kernl library
+    if args.run_kernl and kernl_imported:  # TODO future development for training with fast kernl library
         optimize_model(lm)
         print("Runnning Kernel optimization!!")
 

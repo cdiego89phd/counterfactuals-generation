@@ -177,32 +177,9 @@ def main():
         trained_lm = utils.load_gpt2_from_local(model_local_path)
     print(f"{datetime.datetime.now()}: Language model loaded from local:{parsed_yaml_file['MODEL_FROM_LOCAL']}")
 
-    input_ids = tokenizer(
-        "translate English to French: The house in the woods is wonderful, can we buy it ?",
-        return_tensors="pt",
-    ).to("cuda")
-
     if args.run_kernl and kernl_imported:
         trained_lm.eval().cuda()
         optimize_model(trained_lm)
-
-        print("Trying to generate")
-        shapes = [(1, w) for w in range(8, 128 + 8, 8)]
-        with torch.inference_mode(), torch.cuda.amp.autocast(enabled=True, dtype=torch.float32, cache_enabled=True):
-            for s in shapes:
-                inputs = {
-                    "input_ids": torch.ones(s, device="cuda", dtype=torch.long),
-                    "attention_mask": torch.ones(s, device="cuda", dtype=torch.long),
-                }
-                _ = trained_lm(**inputs)
-        # output = trained_lm(**input_ids)
-        # output = trained_lm.generate(
-        #     inputs=input_ids["input_ids"],
-        #     min_length=22,
-        #     max_length=100,
-        # )
-
-        print(output)
         print("Runnning Kernel optimization!!")
 
     # generate the counterfactuals

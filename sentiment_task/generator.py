@@ -183,14 +183,13 @@ def main():
         input_ids = tokenizer(
             "translate English to French: The house in the woods is wonderful, can we buy it ?",
             return_tensors="pt",
-            pad_to_multiple_of=8,
-            padding=True,
         ).to("cuda")
 
+        print("Trying to generate")
         output = trained_lm.generate(
             inputs=input_ids["input_ids"],
             min_length=22,
-            max_length=22,
+            max_length=100,
         )
 
         print(output)

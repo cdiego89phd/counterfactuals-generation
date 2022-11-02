@@ -188,7 +188,7 @@ def main():
 
         print("Trying to generate")
         shapes = [(1, w) for w in range(8, 128 + 8, 8)]
-        with torch.inference_mode(), torch.cuda.amp.autocast(enabled=True, dtype=torch.float16, cache_enabled=True):
+        with torch.inference_mode(), torch.cuda.amp.autocast(enabled=True, dtype=torch.float32, cache_enabled=True):
             for s in shapes:
                 inputs = {
                     "input_ids": torch.ones(s, device="cuda", dtype=torch.long),

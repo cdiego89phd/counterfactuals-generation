@@ -178,6 +178,7 @@ def main():
     print(f"{datetime.datetime.now()}: Language model loaded from local:{parsed_yaml_file['MODEL_FROM_LOCAL']}")
 
     if args.run_kernl and kernl_imported:
+        trained_lm.cuda()
         optimize_model(trained_lm)
         print("Runnning Kernel optimization!!")
 

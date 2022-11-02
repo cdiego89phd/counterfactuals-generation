@@ -10,6 +10,12 @@ from sentiment_task import generation, utils
 from openprompt.prompts import ManualTemplate
 from openprompt.plms.lm import LMTokenizerWrapper
 
+try:
+    from kernl.model_optimization import optimize_model  # TODO remove
+except ImportError:
+    kernl_imported = False
+    print("Kernl module not found! GPU optimization not available for inference")
+
 
 # TODO: this method is used in "interactive_console.py";
 # But the implementation is not complete
@@ -130,6 +136,14 @@ def main():
         help="Whether to run the script in debug mode. The script will run with a reduced dataset size."
     )
 
+    parser.add_argument(
+        "--run_kernl",
+        default=0,
+        type=int,
+        required=False,
+        help="Whether to speed up training with kernl library."
+    )
+
     args = parser.parse_args()
 
     # read params from yaml file
@@ -161,6 +175,10 @@ def main():
         model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{parsed_yaml_file['LM_NAME']}"
         trained_lm = utils.load_gpt2_from_local(model_local_path)
     print(f"{datetime.datetime.now()}: Language model loaded from local:{parsed_yaml_file['MODEL_FROM_LOCAL']}")
+
+    if args.run_kernl and not kernl_imported:
+        optimize_model(trained_lm)
+        print("Runnning Kernel optimization!!")
 
     # generate the counterfactuals
     gen_params = parsed_yaml_file['GEN_CFGS']

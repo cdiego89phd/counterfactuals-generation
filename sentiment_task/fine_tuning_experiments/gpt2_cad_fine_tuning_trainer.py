@@ -3,7 +3,12 @@ import datetime
 import yaml
 from sentiment_task.fine_tuning_experiments import cad_fine_tuning_trainer
 from sentiment_task import utils
-from kernl.model_optimization import optimize_model  # TODO remove
+
+try:
+    from kernl.model_optimization import optimize_model  # TODO remove
+except ImportError:
+    kernl_imported = False
+    print("Kernl module not found! GPU optimization not available for training")
 
 
 def main():
@@ -65,7 +70,7 @@ def main():
         default=0,
         type=int,
         required=False,
-        help="TODO."
+        help="Whether to speed up training with kernl library."
     )
 
     args = parser.parse_args()
@@ -112,9 +117,10 @@ def main():
     else:
         _, lm, _ = utils.load_gpt2_objects(lm_name, special_tokens)
 
-    if args.run_kernl:
+    if args.run_kernl and not kernl_imported:  # TODO future development for training with fast kernl library
+        optimize_model(lm)
         print("Runnning Kernel optimization!!")
-        optimize_model(lm)  # TODO remove
+
     print("Downloaded tokenizer, model and cfg!")
 
     # wrap the datasets with the prompt template

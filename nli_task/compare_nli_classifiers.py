@@ -26,6 +26,13 @@ def extract_hyps(row):
         return row["original_hyp"]
 
 
+def generate_batches(data, n):
+    batch_size = len(data)//n
+    for i in range(0, len(data), batch_size):
+        yield data[i:i + batch_size]
+    return data
+
+
 def evaluate_classifier(preds, labels, eval_m):
     # evaluates a classifier
     metrics = {"precision": eval_m["precision"].compute(predictions=preds, references=labels,
@@ -37,7 +44,11 @@ def evaluate_classifier(preds, labels, eval_m):
     return metrics
 
 
-def run_classifier(model_name: str, eval_data: pd.DataFrame, eval_batch: list, eval_metrics: dict) -> None:
+def run_classifier(model_name: str,
+                   eval_data: pd.DataFrame,
+                   eval_batch: list,
+                   eval_metrics: dict,
+                   n_batches: int) -> None:
 
     if model_name == "roberta.large.mnli":
         class_map = {"contradiction": 0,
@@ -49,10 +60,13 @@ def run_classifier(model_name: str, eval_data: pd.DataFrame, eval_batch: list, e
         model = torch.hub.load('pytorch/fairseq', model_name)
         model.cuda()
         model.eval()
-        batch = collate_tokens(
+        data = collate_tokens(
             [model.encode(pair[0], pair[1]) for pair in eval_batch], pad_idx=1
         )
-        predictions = model.predict('mnli', batch).argmax(dim=1)
+        batches = generate_batches(data, n_batches)
+        predictions = []
+        for batch in batches:
+            predictions += model.predict('mnli', batch).argmax(dim=1)
     else:
         class_map = {"contradiction": 0,
                      "entailment": 1,
@@ -62,15 +76,18 @@ def run_classifier(model_name: str, eval_data: pd.DataFrame, eval_batch: list, e
 
         model = transformers.AutoModelForSequenceClassification.from_pretrained(model_name)
         tokenizer = transformers.AutoTokenizer.from_pretrained(model_name)
-        features = tokenizer(eval_batch,  padding=True, truncation=True, return_tensors="pt")
+        batches = generate_batches(eval_batch, n_batches)
 
         model.cuda()
-        features = features.to('cuda')
         model.eval()
+        predictions = []
         with torch.no_grad():
-            scores = model(**features).logits
-            predictions = [score_max for score_max in scores.argmax(dim=1)]
+            for batch in batches:
+                tokenized_batch = tokenizer(batch,  padding=True, truncation=True, return_tensors="pt")
+                scores = model(**tokenized_batch.to('cuda')).logits
+                predictions += [score_max for score_max in scores.argmax(dim=1)]
 
+    print(f"Evaluating {len(predictions)} predictions...")
     model_result = evaluate_classifier(predictions, gold_labels, eval_metrics)
     print(f"{datetime.datetime.now()} RESULTS FOR MODEL:{model_name}")
     print(model_result)
@@ -95,10 +112,18 @@ def main():
 
     parser.add_argument(
         "--n_to_debug",
-        default=10,
+        default=12,
         type=int,
         required=False,
         help="The number of dataset instance to classify in debug mode."
+    )
+
+    parser.add_argument(
+        "--n_batches",
+        default=1,
+        type=int,
+        required=True,
+        help="The number of batches to use."
     )
 
     args = parser.parse_args()
@@ -126,7 +151,7 @@ def main():
 
     for model_name in MODELS:
         print(f"{datetime.datetime.now()}: Begin evaluation for model:{model_name}")
-        run_classifier(model_name, eval_data, eval_batch, eval_metrics)
+        run_classifier(model_name, eval_data, eval_batch, eval_metrics, args.n_batches)
         print("##############################################################")
 
 

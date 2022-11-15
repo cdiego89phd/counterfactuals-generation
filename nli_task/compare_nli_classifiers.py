@@ -87,8 +87,8 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "--to_debug",
-        default=None,
-        type=str,
+        default=0,
+        type=int,
         required=True,
         help="Whether to run script in debug mode."
     )

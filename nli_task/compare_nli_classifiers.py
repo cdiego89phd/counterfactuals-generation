@@ -12,7 +12,9 @@ MODELS = ["roberta.large.mnli",
           "facebook/bart-large-mnli",
           "microsoft/deberta-v3-base",
           "microsoft/deberta-v3-large",
-          "microsoft/deberta-large-mnli"
+          "microsoft/deberta-large-mnli",
+          "cross-encoder/nli-deberta-v3-base",
+          "cross-encoder/nli-deberta-v3-large"
           ]
 
 

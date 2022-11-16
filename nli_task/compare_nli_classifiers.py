@@ -9,7 +9,11 @@ from fairseq.data.data_utils import collate_tokens
 
 MODELS = ["roberta.large.mnli",
           "cross-encoder/nli-distilroberta-base",
-          "facebook/bart-large-mnli"]
+          "facebook/bart-large-mnli",
+          "microsoft/deberta-v3-base",
+          "microsoft/deberta-v3-large",
+          "microsoft/deberta-large-mnli"
+          ]
 
 
 def extract_prems(row):

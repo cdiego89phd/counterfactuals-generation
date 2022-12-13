@@ -1,5 +1,6 @@
 import transformers
 import pandas as pd
+import datasets
 
 
 def load_dataset(loading_path):
@@ -7,6 +8,19 @@ def load_dataset(loading_path):
     val = pd.read_csv(loading_path + "val_set", sep='\t')
     test = pd.read_csv(loading_path + "test_set", sep='\t')
     return train, val, test
+
+
+def load_dataset_with_val(seed, val_prop, loading_path):
+    data = pd.read_csv(loading_path, sep='\t')
+
+    # split into train val
+    valset = data.sample(frac=val_prop, replace=False, random_state=seed)
+    trainset = data[~data.index.isin(valset.index)]
+
+    # trainset = datasets.Dataset.from_pandas(train)
+    # valset = datasets.Dataset.from_pandas(val)
+
+    return trainset, valset
 
 
 def wrap_dataset_with_prompt(df_row, template, mapping_labels, spec_tokens):

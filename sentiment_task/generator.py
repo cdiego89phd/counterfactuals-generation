@@ -10,12 +10,12 @@ from sentiment_task import generation, utils
 from openprompt.prompts import ManualTemplate
 from openprompt.plms.lm import LMTokenizerWrapper
 
-try:
-    from kernl.model_optimization import optimize_model
-    kernl_imported = True
-except ImportError:
-    kernl_imported = False
-    print("Kernl module not found! GPU optimization not available for inference")
+# try:
+#     from kernl.model_optimization import optimize_model
+#     kernl_imported = True
+# except ImportError:
+#     kernl_imported = False
+#     print("Kernl module not found! GPU optimization not available for inference")
 
 
 # TODO: this method is used in "interactive_console.py";
@@ -177,10 +177,10 @@ def main():
         trained_lm = utils.load_gpt2_from_local(model_local_path)
     print(f"{datetime.datetime.now()}: Language model loaded from local:{parsed_yaml_file['MODEL_FROM_LOCAL']}")
 
-    if args.run_kernl and kernl_imported:
-        trained_lm.eval().cuda()
-        optimize_model(trained_lm)
-        print("Runnning Kernel optimization!!")
+    # if args.run_kernl and kernl_imported:
+    #     trained_lm.eval().cuda()
+    #     optimize_model(trained_lm)
+    #     print("Runnning Kernel optimization!!")
 
     # generate the counterfactuals
     gen_params = parsed_yaml_file['GEN_CFGS']

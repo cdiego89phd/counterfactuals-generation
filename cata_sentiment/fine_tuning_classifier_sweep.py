@@ -47,8 +47,7 @@ def run_agent(args, wandb_project, yaml_file):
     print(f"# of samples for training:{len(df_trainset)}")
     print(f"# of samples for validation:{len(df_valset)}")
 
-    # load the language model
-    # TODO check on the lenght of tokenizer and model
+    # roberta-base\distilroberta-base have a model_max_length of 512
     tokenizer = transformers.AutoTokenizer.from_pretrained(lm_name)
     lm = transformers.AutoModelForSequenceClassification.from_pretrained(lm_name)
 
@@ -164,9 +163,11 @@ def main():
 
     except wandb.errors.CommError:
         print(f"wandb.errors.CommError: could not find sweep: {sweep_id}")
+        wandb.finish()
         sys.exit()
 
     print(f"{datetime.datetime.now()}: End of experiments for dataset:{args.dataset_name}")
+    wandb.finish()
     sys.exit()
 
 

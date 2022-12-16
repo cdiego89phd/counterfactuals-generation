@@ -1,0 +1,19 @@
+TASK_NAME: "cata_sentiment"
+
+N_SWEEP_RUNS: 2
+OUT_DIR: "/home/diego/counterfactuals-generation/cata_sentiment/sweep_files"
+
+LM_NAME: "distilroberta-base" # roberta-base
+#LM_NAME: "roberta-base" # roberta-base
+
+TOKENIZE_IN_BATCH: True
+NO_CUDA: 0
+
+RANDOM_SEED: 2023
+VAL_PROP: 0.15
+
+#MAP_LABELS:
+#  0: "Negative"
+#  1: "Positive"
+
+

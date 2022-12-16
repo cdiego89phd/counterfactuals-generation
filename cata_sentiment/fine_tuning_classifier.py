@@ -1,8 +1,6 @@
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import transformers
 import wandb
-# import datasets
-# from scipy.special import softmax
 
 
 def compute_metrics(pred):
@@ -29,46 +27,49 @@ def train(out_dir,
           save_model=True
           ) -> None:
 
-    with wandb.init(project=project_name, name=run_name):
-        if training_cfgs is None:
-            # use wandb sweep config dict
-            training_cfgs = wandb.config
+    # with wandb.init(project=project_name, name=run_name):
+    wandb.init(project=project_name, name=run_name)
 
-        early_stopping = transformers.EarlyStoppingCallback(early_stopping_patience=training_cfgs['STOPPING_PATIENCE'])
+    if training_cfgs is None:
+        # use wandb sweep config dict
+        training_cfgs = wandb.config
 
-        training_args = transformers.TrainingArguments(
-            output_dir=out_dir,
-            overwrite_output_dir=True,
-            no_cuda=no_cuda,
-            num_train_epochs=training_cfgs['MAX_EPOCHS'],
-            per_device_train_batch_size=training_cfgs['TRAIN_BATCHSIZE'],
-            per_device_eval_batch_size=training_cfgs['EVAL_BATCHSIZE'],
-            gradient_accumulation_steps=training_cfgs['BATCH_UPDATE'],
-            do_eval=True,
-            evaluation_strategy=transformers.IntervalStrategy.EPOCH,
-            learning_rate=training_cfgs['LR'],
-            adam_epsilon=training_cfgs['ADAM_EPS'],
-            weight_decay=training_cfgs['WEIGHT_DECAY'],
-            save_total_limit=1,
-            save_strategy=transformers.IntervalStrategy.EPOCH,
-            load_best_model_at_end=True,
-            metric_for_best_model=compute_metrics
-        )
+    early_stopping = transformers.EarlyStoppingCallback(early_stopping_patience=training_cfgs['STOPPING_PATIENCE'])
 
-        trainer = transformers.Trainer(
-            model=lm,
-            args=training_args,
-            train_dataset=trainset,
-            eval_dataset=valset,
-            callbacks=[early_stopping]
-        )
+    training_args = transformers.TrainingArguments(
+        output_dir=out_dir,
+        overwrite_output_dir=True,
+        no_cuda=no_cuda,
+        num_train_epochs=training_cfgs['MAX_EPOCHS'],
+        per_device_train_batch_size=training_cfgs['TRAIN_BATCHSIZE'],
+        per_device_eval_batch_size=training_cfgs['EVAL_BATCHSIZE'],
+        gradient_accumulation_steps=training_cfgs['BATCH_UPDATE'],
+        do_eval=True,
+        evaluation_strategy=transformers.IntervalStrategy.EPOCH,
+        learning_rate=training_cfgs['LR'],
+        adam_epsilon=training_cfgs['ADAM_EPS'],
+        weight_decay=training_cfgs['WEIGHT_DECAY'],
+        save_total_limit=1,
+        save_strategy=transformers.IntervalStrategy.EPOCH,
+        load_best_model_at_end=True,
+        metric_for_best_model='eval_accuracy'
+    )
 
-        trainer.train()
+    trainer = transformers.Trainer(
+        model=lm,
+        args=training_args,
+        train_dataset=trainset,
+        eval_dataset=valset,
+        compute_metrics=compute_metrics,
+        callbacks=[early_stopping]
+    )
 
-        if save_model:
-            trainer.save_model()
+    trainer.train()
 
+    if save_model:
+        trainer.save_model()
 
+    print(trainer.evaluate())
 
 # def main():
 #

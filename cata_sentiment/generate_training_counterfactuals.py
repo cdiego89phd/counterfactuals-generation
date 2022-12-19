@@ -4,11 +4,8 @@ import argparse
 import datetime
 import yaml
 import torch
-import openprompt
-from sentiment_task import generation, generator, utils
+from sentiment_task import generator, utils
 
-from openprompt.prompts import ManualTemplate
-from openprompt.plms.lm import LMTokenizerWrapper
 
 # TODO
 # Generate $m$ corresponding counterfactuals from $D_{seed}$. We use CouRGe*(CouRGe with GPT2 fine-tuned on SFT*).
@@ -100,7 +97,7 @@ def main():
     print(f"# of samples in seed data:{len(df_seed)}")
 
     tokenizer, _, _ = utils.load_gpt2_objects(base_lm_name, special_tokens)
-    model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{parsed_yaml_file['LM_NAME']}"
+    model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{lm_name}"
     generator_lm = utils.load_gpt2_from_local(model_local_path)
     print(f"{datetime.datetime.now()}: Language model loaded from local")
 
@@ -116,11 +113,16 @@ def main():
     print(f"{datetime.datetime.now()}: Generation completed!")
 
     print(f"{datetime.datetime.now()}: Creating CATA data...")
-
     # load the n_data dataset
     n_data = pd.read_csv(f"{dataset_path}n_data.csv", sep='\t')
+    n_data.drop(columns=["sentiment_ex", "review_len", "label_counter", "sentiment_counter"])
+    df_gen.rename(columns={"label_counter": "label", "counterfactual": "text"}, inplace=True)
 
     # produce training dataset
+    df_gen.drop(columns=["paired_id", "label_ex", "example"])
+    df_gen.rename(columns={"label_counter": "label", "counterfactual": "text"}, inplace=True)
+
+    assert df_gen.columns == n_data.columns
     training_data = pd.concat([n_data, df_gen])
 
     # print training data

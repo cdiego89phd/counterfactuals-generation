@@ -1,0 +1,30 @@
+DATASET_PATH: "~/counterfactuals-generation/cata_sentiment/yelp/"
+
+MODEL_DIR: "~/counterfactuals-generation/sentiment_task/fine_tuning_experiments/saved_models/"
+LM_NAME: "gpt2@prompt-1@fold-0@cad_fine_tuning"
+
+SPECIAL_TOKENS: # or set it to None
+  "bos_token": "<|BOS|>"
+  "eos_token": "<|EOS|>"
+  "unk_token": "<|UNK|>"
+  "pad_token": "<|PAD|>"
+  "sep_token": "<|SEP|>"
+TOKENIZE_IN_BATCH: False
+
+PROMPT_ID: "1"
+SEED: 2023
+TEMPLATE_PROMPT: "<bos_token><label_ex> review:<sep><example_text><sep><label_counter> review:<sep><counter_text><eos_token>"
+GENERATION_PROMPT: "<bos_token><label_ex> review:<sep><example_text><sep><label_counter> review:<sep>"
+MAP_LABELS:
+  0: "Negative"
+  1: "Positive"
+N_TO_GENERATE: 1
+
+GEN_CFGS:
+  "do_sample": True
+  "num_beams": 5
+  "no_repeat_ngram_size": 7
+  "repetition_penalty": 2.0
+  "temperature": 1.0
+  "top_k": 20
+  "top_p": 0.7

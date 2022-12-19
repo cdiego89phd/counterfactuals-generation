@@ -5,7 +5,7 @@ import datetime
 import yaml
 import torch
 import openprompt
-from sentiment_task import generation, utils
+from sentiment_task import generation, generator, utils
 
 from openprompt.prompts import ManualTemplate
 from openprompt.plms.lm import LMTokenizerWrapper
@@ -14,50 +14,6 @@ from openprompt.plms.lm import LMTokenizerWrapper
 # Generate $m$ corresponding counterfactuals from $D_{seed}$. We use CouRGe*(CouRGe with GPT2 fine-tuned on SFT*).
 # We produce only one counterfactual per data point, and at the end of the generation, we check the LFS, LEV and TED
 # (just to check the quality of the new points).
-
-
-def generate_counterfactuals(yaml_file,
-                             df_testset,
-                             trained_lm,
-                             tokenizer,
-                             gen_params,
-                             n_to_generate=1) -> generation.CounterGenerator:
-
-    special_tokens = yaml_file['SPECIAL_TOKENS']
-    map_labels = yaml_file['MAP_LABELS']
-    generation_prompt = yaml_file['GENERATION_PROMPT']
-
-    # wrap the datasets with the prompt template
-    df_testset["wrapped_input"] = df_testset.apply(lambda row: utils.wrap_dataset_with_prompt(row,
-                                                                                              generation_prompt,
-                                                                                              map_labels,
-                                                                                              special_tokens), axis=1)
-
-    # prepare the data loader
-    test_set = generation.SentimentDataset(raw_dataframe=df_testset.copy(deep=True))
-    test_set.prepare_dataloader()
-
-    template_prompt = '{"placeholder":"text_a"}{"mask"}'
-    prompt_template = ManualTemplate(text=template_prompt, tokenizer=tokenizer)
-    tokenizer_wrapper = LMTokenizerWrapper
-    test_data_loader = openprompt.PromptDataLoader(
-        dataset=list(test_set.get_dataset().values()),
-        tokenizer=tokenizer,
-        template=prompt_template,
-        tokenizer_wrapper_class=tokenizer_wrapper,
-        # truncate_method="tail",
-    )
-
-    counter_generator = generation.CounterGenerator(prompt_template,
-                                                    trained_lm,
-                                                    test_data_loader,
-                                                    test_set,
-                                                    gen_params)
-
-    counter_generator.perform_generation(tokenizer, n_to_generate)
-
-    # the generated counterfactuals are held inside the counter_generator object
-    return counter_generator
 
 
 def append_prompt(parsed_yaml_file, gen_testset, n_to_generate) -> pd.DataFrame:
@@ -125,8 +81,10 @@ def main():
 
     dataset_path = parsed_yaml_file['DATASET_PATH']
     lm_name = parsed_yaml_file['LM_NAME']
+    base_lm_name = parsed_yaml_file['BASE_MODEL']
     special_tokens = parsed_yaml_file['SPECIAL_TOKENS']
     n_to_generate = parsed_yaml_file['N_TO_GENERATE']
+    gen_params = parsed_yaml_file['GEN_CFGS']
 
     # set Random seed
     torch.manual_seed(parsed_yaml_file["SEED"])
@@ -141,41 +99,34 @@ def main():
     print(f"{datetime.datetime.now()}: Seed data loaded")
     print(f"# of samples in seed data:{len(df_seed)}")
 
+    tokenizer, _, _ = utils.load_gpt2_objects(base_lm_name, special_tokens)
+    model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{parsed_yaml_file['LM_NAME']}"
+    generator_lm = utils.load_gpt2_from_local(model_local_path)
+    print(f"{datetime.datetime.now()}: Language model loaded from local")
+
     # generate counterfactuals from the seed dataset
-    # gen_data = generate()
-    gen_data = df_seed
-
-    # load the n_data dataset
-    # n_data = pd.read_csv(f"{dataset_path}n_data.csv", sep='\t')
-    n_data = df_seed
-
-    # produce training dataset
-    training_data = pd.concat([n_data, gen_data])
-
+    gen_data = generator.generate_counterfactuals(parsed_yaml_file,
+                                                  df_seed,
+                                                  generator_lm,
+                                                  tokenizer,
+                                                  gen_params,
+                                                  n_to_generate)
+    df_gen = gen_data.dataframe_from_dataset(n_to_generate)
+    df_gen.to_csv(f"{dataset_path}counterfactuals_data.csv", sep='\t', header=True, index=False)
     print(f"{datetime.datetime.now()}: Generation completed!")
 
-    tokenizer, trained_lm, _ = utils.load_gpt2_objects(base_lm_name, special_tokens)
-    if parsed_yaml_file['MODEL_FROM_LOCAL']:
-        model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{parsed_yaml_file['LM_NAME']}"
-        trained_lm = utils.load_gpt2_from_local(model_local_path)
-    print(f"{datetime.datetime.now()}: Language model loaded from local:{parsed_yaml_file['MODEL_FROM_LOCAL']}")
+    print(f"{datetime.datetime.now()}: Creating CATA data...")
 
+    # load the n_data dataset
+    n_data = pd.read_csv(f"{dataset_path}n_data.csv", sep='\t')
 
-    # generate the counterfactuals
-    gen_params = parsed_yaml_file['GEN_CFGS']
+    # produce training dataset
+    training_data = pd.concat([n_data, df_gen])
 
-    # we generate n_to_generate counterfactuals
-    gen_testset = generate_counterfactuals(parsed_yaml_file, df_testset, trained_lm, tokenizer,
-                                           gen_params, n_to_generate)
-    df_gen_testset = gen_testset.dataframe_from_dataset(n_to_generate)
+    # print training data
+    training_data.to_csv(f"{dataset_path}training_data.csv", sep='\t', header=True, index=False)
 
-    print("Generation completed!")
-
-    # print test generation
-    gen_filename = f"{lm_name}{parsed_yaml_file['OUT_LABEL']}.csv"
-    df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
-
-    print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")
+    print(f"{datetime.datetime.now()}: End generation!")
 
     return
 

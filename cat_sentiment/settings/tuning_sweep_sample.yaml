@@ -1,7 +1,7 @@
 TASK_NAME: "cata_sentiment"
 
 N_SWEEP_RUNS: 2
-OUT_DIR: "/home/diego/counterfactuals-generation/cata_sentiment/sweep_files"
+OUT_DIR: "/home/diego/counterfactuals-generation/cat_sentiment/sweep_files"
 
 LM_NAME: "distilroberta-base" # roberta-base
 #LM_NAME: "roberta-base" # roberta-base

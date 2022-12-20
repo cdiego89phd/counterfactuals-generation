@@ -116,7 +116,6 @@ def main():
     df_gen.drop(columns=["paired_id", "label_ex", "example", "counterfactual"], inplace=True)
     df_gen.rename(columns={"label_counter": "label", "generated_counter_0": "text"}, inplace=True)
 
-    # assert df_gen.columns == n_data.columns
     training_data = pd.concat([n_data, df_gen])
 
     # print training data

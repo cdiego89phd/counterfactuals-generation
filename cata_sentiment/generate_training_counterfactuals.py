@@ -109,12 +109,12 @@ def main():
     print(f"{datetime.datetime.now()}: Creating CATA data...")
     # load the n_data dataset
     n_data = pd.read_csv(f"{dataset_path}n_data.csv", sep='\t')
-    n_data.drop(columns=["sentiment_ex", "review_len", "label_counter", "sentiment_counter"])
-    df_gen.rename(columns={"label_counter": "label", "counterfactual": "text"}, inplace=True)
+    n_data.drop(columns=["sentiment_ex", "review_len", "label_counter", "sentiment_counter"], inplace=True)
+    n_data.rename(columns={"label_ex": "label", "example": "text"}, inplace=True)
 
     # produce training dataset
-    df_gen.drop(columns=["paired_id", "label_ex", "example"])
-    df_gen.rename(columns={"label_counter": "label", "counterfactual": "text"}, inplace=True)
+    df_gen.drop(columns=["paired_id", "label_ex", "example", "counterfactual"])
+    df_gen.rename(columns={"label_counter": "label", "generated_counter_0": "text"}, inplace=True)
 
     # assert df_gen.columns == n_data.columns
     training_data = pd.concat([n_data, df_gen])

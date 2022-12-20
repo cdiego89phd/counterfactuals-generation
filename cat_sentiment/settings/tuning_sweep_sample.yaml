@@ -1,4 +1,4 @@
-TASK_NAME: "cata_sentiment"
+TASK_NAME: "cat_sentiment"
 
 N_SWEEP_RUNS: 2
 OUT_DIR: "/home/diego/counterfactuals-generation/cat_sentiment/sweep_files"

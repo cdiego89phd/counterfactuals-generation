@@ -6,7 +6,7 @@ import sys
 import datasets
 import transformers
 from sentiment_task import utils
-from cata_sentiment import fine_tuning_classifier
+from cat_sentiment import fine_tuning_classifier
 
 
 def prepare_training(df_train, df_val, tokenizer, batch_tokens) -> (datasets.Dataset, datasets.Dataset):

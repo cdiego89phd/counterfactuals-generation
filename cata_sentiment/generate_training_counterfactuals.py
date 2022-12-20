@@ -113,7 +113,7 @@ def main():
     n_data.rename(columns={"label_ex": "label", "example": "text"}, inplace=True)
 
     # produce training dataset
-    df_gen.drop(columns=["paired_id", "label_ex", "example", "counterfactual"])
+    df_gen.drop(columns=["paired_id", "label_ex", "example", "counterfactual"], inplace=True)
     df_gen.rename(columns={"label_counter": "label", "generated_counter_0": "text"}, inplace=True)
 
     # assert df_gen.columns == n_data.columns

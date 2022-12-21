@@ -38,7 +38,6 @@ def main():
 
     # read params from command line
     parser = argparse.ArgumentParser()
-    # SETTINGS_PATH = "/home/diego/counterfactuals-generation/cata_sentiment/settings/"
     parser.add_argument(
         "--setting_path",
         default=None,
@@ -109,8 +108,7 @@ def main():
     print(f"{datetime.datetime.now()}: Creating CATA data...")
     # load the n_data dataset
     n_data = pd.read_csv(f"{dataset_path}n_data.csv", sep='\t')
-    n_data.drop(columns=["sentiment_ex", "review_len", "label_counter", "sentiment_counter"], inplace=True)
-    n_data.rename(columns={"label_ex": "label", "example": "text"}, inplace=True)
+    n_data.drop(columns=["sentiment", "review_len"], inplace=True)
 
     # produce training dataset
     df_gen.drop(columns=["paired_id", "label_ex", "example", "counterfactual"], inplace=True)

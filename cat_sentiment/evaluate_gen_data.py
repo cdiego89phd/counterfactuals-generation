@@ -23,7 +23,6 @@ def evaluate(args, results_filename):
     results_table.rename(columns={"label": "label_counter", "text": "generated_counter_0"}, inplace=True)
     eval_set, n_nan = evaluator.clean_evalset(results_table)  # remove the Nan counterfactuals
     print(f"Removed {n_nan} null counterfactuals!")
-    metrics_dict = {"n_nan": n_nan}
 
     # measures the label flip score
     evaluator.infer_predictions(eval_set, 1)

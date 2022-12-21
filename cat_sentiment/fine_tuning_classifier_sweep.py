@@ -40,6 +40,14 @@ def run_agent(args, wandb_project, yaml_file):
                                                          val_prop,
                                                          f"{args.dataset_path}/{args.dataset_name}.csv"
                                                          )
+    # remove the null values (if any)
+    n_nan = df_trainset['text'].isna().sum()
+    print(f"# of nan values removed in trainset:{n_nan}")
+    df_trainset.dropna(inplace=True)
+    n_nan = df_valset['text'].isna().sum()
+    print(f"# of nan values removed in trainset:{n_nan}")
+    df_valset.dropna(inplace=True)
+
     if args.debug_mode:
         df_trainset = df_trainset[:10]
         df_valset = df_valset[:10]
@@ -48,12 +56,9 @@ def run_agent(args, wandb_project, yaml_file):
 
     # roberta-base\distilroberta-base have a model_max_length of 512
     tokenizer = transformers.AutoTokenizer.from_pretrained(lm_name)
-    id2label = {0: "NEGATIVE", 1: "POSITIVE"}
-
-    label2id = {"NEGATIVE": 0, "POSITIVE": 1}
     lm = transformers.AutoModelForSequenceClassification.from_pretrained(lm_name,
-                                                                         num_labels=2,
-                                                                         id2label=id2label, label2id=label2id)
+                                                                         num_labels=2
+                                                                         )
 
     print("Downloaded tokenizer, model and cfg!")
 

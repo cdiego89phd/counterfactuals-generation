@@ -117,6 +117,8 @@ def main():
     df_gen.rename(columns={"label_counter": "labels", "generated_counter_0": "text"}, inplace=True)
 
     training_data = pd.concat([n_data, df_gen])
+    n_nan = training_data['text'].isna().sum()
+    print(f"# of nan values removed in trainset:{n_nan}")
 
     # print training data
     training_data.to_csv(f"{dataset_path}training_data.csv", sep='\t', header=True, index=False)

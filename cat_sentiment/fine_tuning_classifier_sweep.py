@@ -3,35 +3,17 @@ import datetime
 import yaml
 import wandb
 import sys
-import datasets
 import transformers
 from sentiment_task import utils
 from cat_sentiment import fine_tuning_classifier
 
 
-def prepare_training(df_train, df_val, tokenizer, batch_tokens) -> (datasets.Dataset, datasets.Dataset):
-    trainset = datasets.Dataset.from_pandas(df_train)
-    valset = datasets.Dataset.from_pandas(df_val)
-
-    tokenized_train = trainset.map(lambda examples: tokenizer(examples["text"],
-                                                              padding="max_length",
-                                                              truncation=True), batched=batch_tokens)
-    tokenized_val = valset.map(lambda examples: tokenizer(examples["text"],
-                                                          padding="max_length",
-                                                          truncation=True), batched=batch_tokens)
-
-    return tokenized_train, tokenized_val
-
-
 def run_agent(args, wandb_project, yaml_file):
     val_prop = yaml_file['VAL_PROP']
-    out_dir = yaml_file['OUT_DIR']
-
     lm_name = yaml_file['LM_NAME']
     tokenize_in_batch = yaml_file['TOKENIZE_IN_BATCH']
     no_cuda = yaml_file['NO_CUDA']
 
-    # map_labels = yaml_file['MAP_LABELS']
     random_seed = yaml_file['RANDOM_SEED']
     print("Tuning params read from yaml file")
 
@@ -40,13 +22,9 @@ def run_agent(args, wandb_project, yaml_file):
                                                          val_prop,
                                                          f"{args.dataset_path}/{args.dataset_name}.csv"
                                                          )
-    # remove the null values (if any)
-    n_nan = df_trainset['text'].isna().sum()
-    print(f"# of nan values removed in trainset:{n_nan}")
-    df_trainset.dropna(inplace=True)
-    n_nan = df_valset['text'].isna().sum()
-    print(f"# of nan values removed in trainset:{n_nan}")
-    df_valset.dropna(inplace=True)
+
+    df_trainset = fine_tuning_classifier.clean_dataset(df_trainset, "trainset")
+    df_valset = fine_tuning_classifier.clean_dataset(df_valset, "trainset")
 
     if args.debug_mode:
         df_trainset = df_trainset[:10]
@@ -62,13 +40,13 @@ def run_agent(args, wandb_project, yaml_file):
 
     print("Downloaded tokenizer, model and cfg!")
 
-    tokenized_train, tokenized_val = prepare_training(df_trainset,
-                                                      df_valset,
-                                                      tokenizer,
-                                                      tokenize_in_batch)
+    tokenized_train, tokenized_val = fine_tuning_classifier.prepare_training(df_trainset,
+                                                                             df_valset,
+                                                                             tokenizer,
+                                                                             tokenize_in_batch)
     print("Datasets have been tokenized successfully!")
 
-    fine_tuning_classifier.train(out_dir,
+    fine_tuning_classifier.train(args.out_dir,
                                  lm,
                                  tokenized_train,
                                  tokenized_val,
@@ -139,6 +117,14 @@ def main():
         type=str,
         required=True,
         help="The id of the sweep."
+    )
+
+    parser.add_argument(
+        "--out_dir",
+        default=None,
+        type=str,
+        required=True,
+        help="The path of the dir to use to save sweep files."
     )
 
     parser.add_argument(

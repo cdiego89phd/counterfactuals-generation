@@ -1,6 +1,33 @@
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import transformers
 import wandb
+import yaml
+import argparse
+import datetime
+import datasets
+from sentiment_task import utils
+
+
+def clean_dataset(df, name):
+    # remove the null values (if any)
+    n_nan = df['text'].isna().sum()
+    print(f"# of nan values removed in {name}:{n_nan}")
+    df.dropna(inplace=True)
+    return df
+
+
+def prepare_training(df_train, df_val, tokenizer, batch_tokens) -> (datasets.Dataset, datasets.Dataset):
+    trainset = datasets.Dataset.from_pandas(df_train)
+    valset = datasets.Dataset.from_pandas(df_val)
+
+    tokenized_train = trainset.map(lambda examples: tokenizer(examples["text"],
+                                                              padding="max_length",
+                                                              truncation=True), batched=batch_tokens)
+    tokenized_val = valset.map(lambda examples: tokenizer(examples["text"],
+                                                          padding="max_length",
+                                                          truncation=True), batched=batch_tokens)
+
+    return tokenized_train, tokenized_val
 
 
 def compute_metrics(pred):
@@ -70,6 +97,139 @@ def train(out_dir,
         trainer.save_model()
 
     print(trainer.evaluate())
+
+
+def main():
+    # read params from command line
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--setting_path",
+        default=None,
+        type=str,
+        required=True,
+        help="The absolute path of the file settings."
+    )
+
+    parser.add_argument(
+        "--setting_name",
+        default=None,
+        type=str,
+        required=True,
+        help="The name of yaml file where to load the setting from."
+    )
+
+    parser.add_argument(
+        "--dataset_path",
+        default=None,
+        type=str,
+        required=True,
+        help="The path of the dataset to use."
+    )
+
+    parser.add_argument(
+        "--dataset_name",
+        default=None,
+        type=str,
+        required=True,
+        help="The name of the dataset to use."
+    )
+
+    parser.add_argument(
+        "--wandb_key",
+        default=None,
+        type=str,
+        required=True,
+        help="The API key of wandb used to login."
+    )
+
+    parser.add_argument(
+        "--wandb_project",
+        default=None,
+        type=str,
+        required=True,
+        help="The project path in wandb."
+    )
+
+    parser.add_argument(
+        "--debug_mode",
+        default=None,
+        type=int,
+        required=True,
+        help="Whether to run the script in debug mode. The script will run with a reduced dataset size."
+    )
+
+    args = parser.parse_args()
+
+    # read params from yaml file
+    setting_yaml_file = open(f"{args.setting_path}{args.setting_name}")
+    parsed_yaml_file = yaml.load(setting_yaml_file, Loader=yaml.FullLoader)
+
+    print(f"{datetime.datetime.now()}: Begin tuning for dataset:{args.dataset_name}")
+
+    val_prop = parsed_yaml_file['VAL_PROP']
+    out_dir = parsed_yaml_file['OUT_DIR']
+
+    lm_name = parsed_yaml_file['LM_NAME']
+    tokenize_in_batch = parsed_yaml_file['TOKENIZE_IN_BATCH']
+    no_cuda = parsed_yaml_file['NO_CUDA']
+
+    random_seed = parsed_yaml_file['RANDOM_SEED']
+    print("Tuning params read from yaml file")
+
+    # load the dataset
+    df_trainset, df_valset = utils.load_dataset_with_val(random_seed,
+                                                         val_prop,
+                                                         f"{args.dataset_path}/{args.dataset_name}.csv"
+                                                         )
+
+    # remove the null values (if any)
+    df_trainset = clean_dataset(df_trainset, "trainset")
+    df_valset = clean_dataset(df_valset, "valset")
+
+    if args.debug_mode:
+        df_trainset = df_trainset[:10]
+        df_valset = df_valset[:10]
+    print(f"# of samples for training:{len(df_trainset)}")
+    print(f"# of samples for validation:{len(df_valset)}")
+
+    # roberta-base\distilroberta-base have a model_max_length of 512
+    tokenizer = transformers.AutoTokenizer.from_pretrained(lm_name)
+    lm = transformers.AutoModelForSequenceClassification.from_pretrained(lm_name,
+                                                                         num_labels=2
+                                                                         )
+
+    print("Downloaded tokenizer, model and cfg!")
+
+    tokenized_train, tokenized_val = prepare_training(df_trainset,
+                                                      df_valset,
+                                                      tokenizer,
+                                                      tokenize_in_batch)
+    print("Datasets have been tokenized successfully!")
+
+    # # initialize WANDB logging system
+    # wandb.login(relogin=True, key=args.wandb_key)
+    #
+    # training_cfgs = parsed_yaml_file['TRAINING_CFGS']
+    #
+    # run_name = f"{lm_name}@{task_name}@fine_tuning"
+    # out_name = f"{out_dir}/{run_name}"
+    #
+    # train(out_dir,
+    #       lm,
+    #       tokenized_train,
+    #       tokenized_val,
+    #       no_cuda,
+    #       training_cfgs,  # training cfgs
+    #       args.wandb_project,
+    #       run_name,  # run_name
+    #       True  # save_model
+    #       )
+    #
+    # wandb.finish()
+
+
+if __name__ == "__main__":
+    main()
 
 # def main():
 #

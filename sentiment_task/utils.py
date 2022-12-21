@@ -17,9 +17,6 @@ def load_dataset_with_val(seed, val_prop, loading_path):
     valset = data.sample(frac=val_prop, replace=False, random_state=seed)
     trainset = data[~data.index.isin(valset.index)]
 
-    # trainset = datasets.Dataset.from_pandas(train)
-    # valset = datasets.Dataset.from_pandas(val)
-
     return trainset, valset
 
 

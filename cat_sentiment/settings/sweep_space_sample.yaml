@@ -1,7 +1,7 @@
 method: random
 metric:
   goal: maximize
-  name: eval_accuracy
+  name: eval/accuracy
 parameters:
   MAX_EPOCHS:
     value: 30

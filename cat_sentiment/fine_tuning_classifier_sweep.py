@@ -33,7 +33,6 @@ def run_agent(args, wandb_project, yaml_file):
 
     # map_labels = yaml_file['MAP_LABELS']
     random_seed = yaml_file['RANDOM_SEED']
-    # out_name = yaml_file['OUT_DIR']
     print("Tuning params read from yaml file")
 
     # load the dataset
@@ -49,7 +48,12 @@ def run_agent(args, wandb_project, yaml_file):
 
     # roberta-base\distilroberta-base have a model_max_length of 512
     tokenizer = transformers.AutoTokenizer.from_pretrained(lm_name)
-    lm = transformers.AutoModelForSequenceClassification.from_pretrained(lm_name)
+    id2label = {0: "NEGATIVE", 1: "POSITIVE"}
+
+    label2id = {"NEGATIVE": 0, "POSITIVE": 1}
+    lm = transformers.AutoModelForSequenceClassification.from_pretrained(lm_name,
+                                                                         num_labels=2,
+                                                                         id2label=id2label, label2id=label2id)
 
     print("Downloaded tokenizer, model and cfg!")
 

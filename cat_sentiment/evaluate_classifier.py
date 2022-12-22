@@ -39,11 +39,15 @@ def evaluate(args):
                                                                                  local_files_only=True,
                                                                                  )
     tokenizer = transformers.AutoTokenizer.from_pretrained(args.base_classifier_name)
+    tokenizer_kwargs = {'padding': True,
+                        'truncation': True,
+                        'max_length': tokenizer.model_max_length}
     pipeline_classifier = transformers.pipeline("text-classification",
                                                 model=classifier,
                                                 tokenizer=tokenizer,
-                                                )
-    print(f"{datetime.datetime.now()}: Classifier pipiline built!")
+                                                device=0,
+                                                **tokenizer_kwargs)
+    print(f"{datetime.datetime.now()}: Classifier pipeline built!")
 
     raw_preds = pipeline_classifier(list(test_data["text"].values))
     pred_labels = [label2id[el['label']] for el in raw_preds]

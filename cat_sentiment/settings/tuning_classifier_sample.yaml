@@ -1,0 +1,20 @@
+OUT_DIR: "/home/diego/counterfactuals-generation/cat_sentiment/saved_models/"
+
+LM_NAME: "distilroberta-base"
+TOKENIZE_IN_BATCH: True
+NO_CUDA: False
+
+DATASET_NAME: "yelp"
+OUT_LABEL: "sample_tr1_origin"
+RANDOM_SEED: 2023
+VAL_PROP: 0.15
+
+TRAINING_CFGS:
+  MAX_EPOCHS: 30
+  TRAIN_BATCHSIZE: 4
+  EVAL_BATCHSIZE: 4
+  BATCH_UPDATE: 4
+  LR: 0.00025
+  ADAM_EPS: 0.000000001
+  WEIGHT_DECAY: 0.0
+  STOPPING_PATIENCE: 3

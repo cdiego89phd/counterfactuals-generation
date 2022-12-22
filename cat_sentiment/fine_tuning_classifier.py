@@ -79,7 +79,7 @@ def train(out_dir,
         save_total_limit=1,
         save_strategy=transformers.IntervalStrategy.EPOCH,
         load_best_model_at_end=True,
-        metric_for_best_model='eval_accuracy'
+        metric_for_best_model='accuracy'
     )
 
     trainer = transformers.Trainer(
@@ -94,7 +94,7 @@ def train(out_dir,
     trainer.train()
 
     if save_model:
-        trainer.save_model()
+        trainer.save_model(out_dir)
 
     print(trainer.evaluate())
 
@@ -206,26 +206,28 @@ def main():
                                                       tokenize_in_batch)
     print("Datasets have been tokenized successfully!")
 
-    # # initialize WANDB logging system
-    # wandb.login(relogin=True, key=args.wandb_key)
-    #
-    # training_cfgs = parsed_yaml_file['TRAINING_CFGS']
-    #
-    # run_name = f"{lm_name}@{task_name}@fine_tuning"
-    # out_name = f"{out_dir}/{run_name}"
-    #
-    # train(out_dir,
-    #       lm,
-    #       tokenized_train,
-    #       tokenized_val,
-    #       no_cuda,
-    #       training_cfgs,  # training cfgs
-    #       args.wandb_project,
-    #       run_name,  # run_name
-    #       True  # save_model
-    #       )
-    #
-    # wandb.finish()
+    # initialize WANDB logging system
+    wandb.login(relogin=True, key=args.wandb_key)
+
+    training_cfgs = parsed_yaml_file['TRAINING_CFGS']
+    dataset_name = parsed_yaml_file['DATASET_NAME']
+    out_label = parsed_yaml_file['OUT_LABEL']
+
+    out_name = f"{lm_name}@{dataset_name}@{out_label}"
+    out_path = f"{out_dir}/{out_name}"
+
+    train(out_path,
+          lm,
+          tokenized_train,
+          tokenized_val,
+          no_cuda,
+          training_cfgs,  # training cfgs
+          args.wandb_project,
+          out_name,  # run_name
+          True  # save_model
+          )
+
+    wandb.finish()
 
 
 if __name__ == "__main__":

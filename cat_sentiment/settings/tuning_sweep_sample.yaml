@@ -11,9 +11,3 @@ NO_CUDA: 0
 
 RANDOM_SEED: 2023
 VAL_PROP: 0.15
-
-#MAP_LABELS:
-#  0: "Negative"
-#  1: "Positive"
-
-

@@ -124,7 +124,7 @@ def main():
     print(f"# of nan values removed in trainset:{n_nan}")
 
     # print training data
-    training_data.to_csv(f"{dataset_path}training_data.csv", sep='\t', header=True, index=False)
+    training_data.to_csv(f"{dataset_path}training_data_{base_lm_name}.csv", sep='\t', header=True, index=False)
 
     print(f"{datetime.datetime.now()}: End generation!")
 

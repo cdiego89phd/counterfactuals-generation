@@ -6,7 +6,6 @@ import numpy as np
 import transformers
 import wandb
 import sys
-import os
 
 
 def compute_metrics(true_labels, pred_labels):

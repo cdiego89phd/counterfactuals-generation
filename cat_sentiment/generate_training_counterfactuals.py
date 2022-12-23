@@ -114,6 +114,11 @@ def main():
     df_gen.drop(columns=["paired_id", "label_ex", "example", "counterfactual"], inplace=True)
     df_gen.rename(columns={"label_counter": "labels", "generated_counter_0": "text"}, inplace=True)
 
+    # training data only allows for one generated counterfactual per seed.
+    if n_to_generate > 1:
+        for i in range(1, n_to_generate):
+            df_gen.drop(columns=[f"generated_counter_{1}"], inplace=True)
+
     training_data = pd.concat([n_data, df_gen])
     n_nan = training_data['text'].isna().sum()
     print(f"# of nan values removed in trainset:{n_nan}")

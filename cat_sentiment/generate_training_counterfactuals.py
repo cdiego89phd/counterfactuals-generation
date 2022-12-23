@@ -102,7 +102,7 @@ def main():
                                                   gen_params,
                                                   n_to_generate)
     df_gen = gen_data.dataframe_from_dataset(n_to_generate)
-    df_gen.to_csv(f"{dataset_path}counterfactuals_data.csv", sep='\t', header=True, index=False)
+    df_gen.to_csv(f"{dataset_path}counterfactuals_data_{base_lm_name}.csv", sep='\t', header=True, index=False)
     print(f"{datetime.datetime.now()}: Generation completed!")
 
     print(f"{datetime.datetime.now()}: Creating CATA data...")
@@ -117,7 +117,7 @@ def main():
     # training data only allows for one generated counterfactual per seed.
     if n_to_generate > 1:
         for i in range(1, n_to_generate):
-            df_gen.drop(columns=[f"generated_counter_{1}"], inplace=True)
+            df_gen.drop(columns=[f"generated_counter_{i}"], inplace=True)
 
     training_data = pd.concat([n_data, df_gen])
     n_nan = training_data['text'].isna().sum()

@@ -142,6 +142,8 @@ def main():
     setting_yaml_file = open(f"{args.setting_path}{args.setting_name}")
     parsed_yaml_file = yaml.load(setting_yaml_file, Loader=yaml.FullLoader)
 
+    print("parsed YAML file!")
+
     n_sweep_runs = parsed_yaml_file['N_SWEEP_RUNS']
 
     print(f"{datetime.datetime.now()}: Begin of the experiments for dataset:{args.dataset_name}")

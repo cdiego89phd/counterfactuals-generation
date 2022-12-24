@@ -2,6 +2,7 @@ from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 import transformers
 import wandb
 import yaml
+import os
 import argparse
 import datetime
 import datasets
@@ -231,6 +232,7 @@ def main():
 
 
 if __name__ == "__main__":
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
     main()
 
 # def main():

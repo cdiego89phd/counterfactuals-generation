@@ -1,11 +1,7 @@
-import datetime
 import argparse
 import pandas as pd
 import transformers
-import numpy as np
-import sys
-import os
-from sentiment_task import evaluation, utils
+from sentiment_task import utils
 
 
 def classify_text(text_to_classify, model, label_map):
@@ -15,18 +11,18 @@ def classify_text(text_to_classify, model, label_map):
         return label_map[model(text_to_classify)[0]['label']]
 
 
-def evaluate(args, results_filename):
+def evaluate(args):
     # open the file with the results
-    counter_data = pd.read_csv(f"{args.generation_path}{results_filename}", sep='\t')
+    counter_data = pd.read_csv(f"{args.generation_path}{args.results_filename}", sep='\t')
     n_nan = counter_data['generated_counter_0'].isna().sum()
     print(f"# of nan values removed in generated counterfactuals:{n_nan}")
     counter_data.dropna(inplace=True)
 
     if args.debug_mode:
-        counter_data = counter_data[:10]
-        # # TODO remove this
-        # counter_data["generated_counter_1"] = counter_data["generated_counter_0"].values
-        # counter_data["generated_counter_2"] = counter_data["generated_counter_0"].values
+        counter_data = counter_data[:3]
+        # TODO remove this
+        counter_data["generated_counter_1"] = counter_data["generated_counter_0"].values
+        counter_data["generated_counter_2"] = counter_data["generated_counter_0"].values
 
     # load classifier
     classification_tools = utils.prepare_classifier(args.classifier_name)
@@ -46,12 +42,12 @@ def evaluate(args, results_filename):
     for _, row in counter_data.iterrows():
         target_label = row['label_counter']
         filtered_text = row['generated_counter_0']
-        pred_label = classify_text(filtered_text, classifier, label_map)
+        pred_label = int(classify_text(filtered_text, classifier, label_map))
 
         if pred_label != target_label:
             # look for the following generated counterfactuals
             for i in range(1, args.n_generated):
-                pred = classify_text(row[f'generated_counter_{i}'], classifier, label_map)
+                pred = int(classify_text(row[f'generated_counter_{i}'], classifier, label_map))
                 if pred == target_label:
                     filtered_text = row[f'generated_counter_{i}']
                     pred_label = pred
@@ -60,19 +56,29 @@ def evaluate(args, results_filename):
         texts.append(filtered_text)
         labels.append(pred_label)
 
+    out_label = args.results_filename.split("@")[1].split(".")[0]
     # print filtered counterfactuals
-    d = {"text": texts, "label": labels}
-    filtered_to_print = pd.DataFrame(data=d)
-    filtered_to_print.to_csv(f"{args.generation_path}filtered_counterfactuals_data.csv",
-                             sep='\t', header=True, index=False)
+    d = {"paired_id": counter_data["paired_id"].values,
+         "example": counter_data["example"].values,
+         "label_ex": counter_data["label_ex"].values,
+         "counterfactual": [None for i in range(len(counter_data))],
+         "generated_counter_0": texts,
+         "label_counter": labels}
 
-    # print filtered training data
+    # print filtered counterfactuals
+    pd.DataFrame(data=d).to_csv(f"{args.generation_path}filtered_counterfactual_{out_label}.csv",
+                                sep='\t', header=True, index=False)
+
+    # print filtered cat data
+    d = {"text": texts, "labels": labels}
+    filtered = pd.DataFrame(data=d)
     n_data = pd.read_csv(f"{args.generation_path}n_data.csv", sep='\t')
     n_data.drop(columns=["sentiment", "review_len"], inplace=True)
-    training_data = pd.concat([n_data, filtered_to_print])
+    training_data = pd.concat([n_data, filtered])
     n_nan = training_data['text'].isna().sum()
     print(f"# of nan values removed in trainset:{n_nan}")
-    training_data.to_csv(f"{args.generation_path}filtered_training_data.csv", sep='\t', header=True, index=False)
+    training_data.to_csv(f"{args.generation_path}filtered_cat_data_{out_label}.csv",
+                         sep='\t', header=True, index=False)
 
 
 def main():
@@ -121,7 +127,7 @@ def main():
 
     args = parser.parse_args()
 
-    evaluate(args, args.results_filename)
+    evaluate(args)
 
 
 if __name__ == "__main__":

@@ -102,7 +102,7 @@ def main():
                                                   gen_params,
                                                   n_to_generate)
     df_gen = gen_data.dataframe_from_dataset(n_to_generate)
-    df_gen.to_csv(f"{dataset_path}counterfactuals_data_{base_lm_name}.csv", sep='\t', header=True, index=False)
+    df_gen.to_csv(f"{dataset_path}counterfactuals@{base_lm_name}.csv", sep='\t', header=True, index=False)
     print(f"{datetime.datetime.now()}: Generation completed!")
 
     print(f"{datetime.datetime.now()}: Creating CATA data...")
@@ -124,7 +124,7 @@ def main():
     print(f"# of nan values removed in trainset:{n_nan}")
 
     # print training data
-    training_data.to_csv(f"{dataset_path}training_data_{base_lm_name}.csv", sep='\t', header=True, index=False)
+    training_data.to_csv(f"{dataset_path}cat_data@{base_lm_name}.csv", sep='\t', header=True, index=False)
 
     print(f"{datetime.datetime.now()}: End generation!")
 

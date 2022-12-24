@@ -3,6 +3,7 @@ import datetime
 import yaml
 import wandb
 import sys
+import os
 import transformers
 from sentiment_task import utils
 from cat_sentiment import fine_tuning_classifier
@@ -167,4 +168,5 @@ def main():
 
 
 if __name__ == "__main__":
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
     main()

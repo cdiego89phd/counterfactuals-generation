@@ -1,5 +1,3 @@
-DATASET_PATH: "/home/diego/counterfactuals-generation/cat_sentiment/yelp/n_2k-m_1k/"
-
 MODEL_DIR: "/home/diego/counterfactuals-generation/sentiment_task/fine_tuning_experiments/saved_models"
 LM_NAME: "rotten"
 BASE_MODEL: "gpt2"

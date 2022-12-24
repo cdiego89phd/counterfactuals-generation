@@ -1,0 +1,31 @@
+method: random
+metric:
+  goal: maximize
+  name: eval/accuracy
+parameters:
+  MAX_EPOCHS:
+    value: 30
+  BATCH_UPDATE:
+    values:
+      - 16
+  EVAL_BATCHSIZE:
+    value: 4
+  LR:
+    values:
+      - 0.0001
+      - 0.001
+      - 0.01
+      - 0.1
+  TRAIN_BATCHSIZE:
+    value: 4
+  WEIGHT_DECAY:
+    values:
+      - 0.0001
+      - 0.001
+      - 0.01
+      - 0.1
+  ADAM_EPS:
+    values:
+      - 0.00001
+  STOPPING_PATIENCE:
+    value: 3

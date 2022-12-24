@@ -56,6 +56,14 @@ def main():
     )
 
     parser.add_argument(
+        "--dataset_path",
+        default=None,
+        type=str,
+        required=True,
+        help="The absolute path of the dataset."
+    )
+
+    parser.add_argument(
         "--debug_mode",
         default=None,
         type=int,
@@ -69,7 +77,7 @@ def main():
     setting_yaml_file = open(f"{args.setting_path}{args.setting_name}")
     parsed_yaml_file = yaml.load(setting_yaml_file, Loader=yaml.FullLoader)
 
-    dataset_path = parsed_yaml_file['DATASET_PATH']
+    dataset_path = args.dataset_path
     lm_name = parsed_yaml_file['LM_NAME']
     base_lm_name = parsed_yaml_file['BASE_MODEL']
     special_tokens = parsed_yaml_file['SPECIAL_TOKENS']

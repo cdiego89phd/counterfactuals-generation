@@ -61,6 +61,10 @@ def evaluate(args):
     with wandb.init(settings=wandb.Settings(console='off'),
                     project=args.wandb_project):
         wandb.run.name = f"{args.classifier_name}"
+
+        # todo
+        # print labels and name the file with run.id
+
         wandb.log(metrics_dict)
         wandb.finish
     sys.exit()

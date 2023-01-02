@@ -1,12 +1,11 @@
 import transformers
 import pandas as pd
-import datasets
 
 
 def load_dataset(loading_path):
-    train = pd.read_csv(loading_path + "training_set", sep='\t')
-    val = pd.read_csv(loading_path + "val_set", sep='\t')
-    test = pd.read_csv(loading_path + "test_set", sep='\t')
+    train = pd.read_csv(loading_path + "training_set.tsv", sep='\t')
+    val = pd.read_csv(loading_path + "val_set.tsv", sep='\t')
+    test = pd.read_csv(loading_path + "test_set.tsv", sep='\t')
     return train, val, test
 
 
@@ -38,6 +37,27 @@ def wrap_dataset_with_prompt(df_row, template, mapping_labels, spec_tokens):
     final_text = final_text.replace("<0>", words[0])
     final_text = final_text.replace("<1>", words[1])
     final_text = final_text.replace("<2>", words[2])
+
+    return final_text
+
+
+def wrap_nli_dataset_with_prompt(df_row, template, spec_tokens):
+    final_text = template.replace("<original_label>", df_row["original_label"])
+    final_text = final_text.replace("<P>", df_row["original_prem"])
+    final_text = final_text.replace("<H>", df_row["original_hyp"])
+    final_text = final_text.replace("<counter_label>", df_row["counter_label"])
+    final_text = final_text.replace("<TC>", df_row["task"])
+
+    if df_row["task"] == "RP":
+        counter_text = df_row["counter_prem"]
+    else:
+        counter_text = df_row["counter_hyp"]
+    final_text = final_text.replace("<counter_text>", counter_text)
+
+    if spec_tokens != "None":
+        final_text = final_text.replace("<sep>", spec_tokens["sep_token"])
+        final_text = final_text.replace("<bos_token>", spec_tokens["bos_token"])
+        final_text = final_text.replace("<eos_token>", spec_tokens["eos_token"])
 
     return final_text
 

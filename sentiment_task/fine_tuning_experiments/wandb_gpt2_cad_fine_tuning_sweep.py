@@ -4,7 +4,7 @@ import yaml
 import wandb
 import sys
 from sentiment_task import utils
-from sentiment_task.fine_tuning_experiments import cad_fine_tuning_trainer
+import cad_fine_tuning_trainer
 
 
 def run_agent(args, data_fold, wandb_project, yaml_file):

@@ -66,7 +66,7 @@ def evaluate(args):
          "label_counter": labels}
 
     # print filtered counterfactuals
-    pd.DataFrame(data=d).to_csv(f"{args.generation_path}filtered_counterfactual_{out_label}.csv",
+    pd.DataFrame(data=d).to_csv(f"{args.generation_path}filtered_counterfactual@{out_label}.csv",
                                 sep='\t', header=True, index=False)
 
     # print filtered cat data

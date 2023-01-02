@@ -4,13 +4,6 @@ import yaml
 import cad_fine_tuning_trainer
 from sentiment_task import utils
 
-try:
-    from kernl.model_optimization import optimize_model
-    kernl_imported = True
-except ImportError:
-    kernl_imported = False
-    print("Kernl module not found! GPU optimization not available for training")
-
 
 def main():
 
@@ -66,14 +59,6 @@ def main():
         help="Whether to run the script in debug mode. The script will run with a reduced dataset size."
     )
 
-    parser.add_argument(
-        "--run_kernl",
-        default=0,
-        type=int,
-        required=False,
-        help="Whether to speed up training with kernl library."
-    )
-
     args = parser.parse_args()
 
     # read params from yaml file
@@ -92,7 +77,6 @@ def main():
     no_cuda = parsed_yaml_file['NO_CUDA']
 
     template_prompt = parsed_yaml_file['TEMPLATE_PROMPT']
-    map_labels = parsed_yaml_file['MAP_LABELS']
 
     print("Training's params read from yaml file")
     print(f"{datetime.datetime.now()}: TUNING BEGINS for fold {fold}")
@@ -100,8 +84,8 @@ def main():
     # load the dataset
     df_trainset, df_valset, _ = utils.load_dataset(f"{dataset_path}/fold_{fold}/")
     if args.debug_mode:
-        df_trainset = df_trainset[:10]
-        df_valset = df_valset[:10]
+        df_trainset = df_trainset[:1]
+        df_valset = df_valset[:1]
     print(f"# of samples for training:{len(df_trainset)}")
     print(f"# of samples for validation:{len(df_valset)}")
 
@@ -118,22 +102,17 @@ def main():
     else:
         _, lm, _ = utils.load_gpt2_objects(lm_name, special_tokens)
 
-    if args.run_kernl and kernl_imported:  # TODO future development for training with fast kernl library
-        optimize_model(lm)
-        print("Runnning Kernel optimization!!")
-
     print("Downloaded tokenizer, model and cfg!")
 
     # wrap the datasets with the prompt template
-    df_trainset["wrapped_input"] = df_trainset.apply(lambda row: utils.wrap_dataset_with_prompt(row,
-                                                                                                template_prompt,
-                                                                                                map_labels,
-                                                                                                special_tokens), axis=1)
+    df_trainset["wrapped_input"] = df_trainset.apply(lambda row: utils.wrap_nli_dataset_with_prompt(row,
+                                                                                                    template_prompt,
+                                                                                                    special_tokens),
+                                                     axis=1)
     print("Training set wrapped!")
-    df_valset["wrapped_input"] = df_valset.apply(lambda row: utils.wrap_dataset_with_prompt(row,
-                                                                                            template_prompt,
-                                                                                            map_labels,
-                                                                                            special_tokens), axis=1)
+    df_valset["wrapped_input"] = df_valset.apply(lambda row: utils.wrap_nli_dataset_with_prompt(row,
+                                                                                                template_prompt,
+                                                                                                special_tokens), axis=1)
     print("Validation set wrapped!")
 
     tokenized_train, tokenized_val = cad_fine_tuning_trainer.prepare_training(df_trainset,
@@ -146,7 +125,7 @@ def main():
     if not parsed_yaml_file['IS_SWEEP']:
         training_cfgs = parsed_yaml_file['TRAINING_CFGS']
 
-    run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@cad_fine_tuning"
+    run_name = f"{lm_name}@prompt-{prompt_id}@cad_fine_tuning"
     out_name = f"{out_dir}/{run_name}"
 
     cad_fine_tuning_trainer.train(out_name, lm, tokenized_train, tokenized_val,

@@ -38,7 +38,7 @@ class SentimentEvaluator:
 
         n_nan = eval_dataset['generated_counter_0'].isna().sum()
         print(f"# of nan values removed in generated counterfactuals:{n_nan}")
-        return eval_dataset.dropna(), n_nan
+        return eval_dataset.dropna(subset=['generated_counter_0']), n_nan
 
     @staticmethod
     def text_size_words(text):

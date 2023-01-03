@@ -1,0 +1,33 @@
+DATASET_PATH: "~/counterfactuals-generation/nli_task/cad_flickr_nli/"
+OUT_DIR: "~/counterfactuals-generation/nli_task/fine_tuning_experiments/generation/"
+FOLD: "0"
+
+MODEL_FROM_LOCAL: False
+BASE_LM_NAME: "sshleifer/tiny-gpt2"
+MODEL_DIR: "~/counterfactuals-generation/nli_task/fine_tuning_experiments/saved_models/"
+LM_NAME: "sshleifer/tiny-gpt2"
+
+SPECIAL_TOKENS: # or set it to None
+  "bos_token": "<|BOS|>"
+  "eos_token": "<|EOS|>"
+  "unk_token": "<|UNK|>"
+  "pad_token": "<|PAD|>"
+  "sep_token": "<|SEP|>"
+TOKENIZE_IN_BATCH: False
+
+PROMPT_ID: "1"
+SEED: 2023
+VANILLA_GENERATION: False
+OUT_LABEL: ""
+TEMPLATE_PROMPT: "<bos_token>Label: <original_label>\n<sep>P: <P>\n<sep>H: <H>\n<sep>Counterfactual Label: <counter_label>\n<sep><TC>: <counter_text><eos_token>"
+GENERATION_PROMPT: "<bos_token>Label: <original_label>\n<sep>P: <P>\n<sep>H: <H>\n<sep>Counterfactual Label: <counter_label>\n<sep><TC>: "
+N_TO_GENERATE: 2
+
+GEN_CFGS:
+  "do_sample": True
+  "num_beams": 5
+  "no_repeat_ngram_size": 7
+  "repetition_penalty": 2.0
+  "temperature": 1.0
+  "top_k": 20
+  "top_p": 0.7

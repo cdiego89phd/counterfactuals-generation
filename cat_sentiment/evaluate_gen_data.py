@@ -4,7 +4,8 @@ import pandas as pd
 import numpy as np
 import sys
 import os
-from sentiment_task import evaluation, utils
+from sentiment_task import evaluation
+import utils
 
 
 def evaluate(args, results_filename):
@@ -12,7 +13,7 @@ def evaluate(args, results_filename):
     results_table = pd.read_csv(f"{args.generation_path}{results_filename}", sep='\t')
 
     # load classifier
-    classification_tools = utils.prepare_classifier(args.classifier_name)
+    classification_tools = utils.prepare_sentiment_classifier(args.classifier_name)
 
     # prepare the evaluator
     evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],

@@ -3,7 +3,8 @@ import argparse
 import pandas as pd
 import sys
 import os
-from sentiment_task import evaluation, utils
+from sentiment_task import evaluation
+import utils
 
 
 def evaluate(args, results_filename):
@@ -11,7 +12,7 @@ def evaluate(args, results_filename):
     results_table = pd.read_csv(f"{args.generation_path}{results_filename}", sep='\t')
 
     # load classifier
-    classification_tools = utils.prepare_classifier(args.classifier_name)
+    classification_tools = utils.prepare_sentiment_classifier(args.classifier_name)
 
     # Whether to calculate correlation for all the reported metrics
     calculate_corr = args.calculate_corr

@@ -2,7 +2,7 @@ import pandas as pd
 import argparse
 import datetime
 import yaml
-from sentiment_task import utils
+import utils
 from sentiment_task import generator
 
 

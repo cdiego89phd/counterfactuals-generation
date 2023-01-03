@@ -6,7 +6,7 @@ import os
 import argparse
 import datetime
 import datasets
-from sentiment_task import utils
+import utils
 
 
 def clean_dataset(df, name):

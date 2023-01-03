@@ -4,37 +4,8 @@ import argparse
 import datetime
 import yaml
 import torch
-import openprompt
-from sentiment_task import generation
 import utils
-
-from openprompt.prompts import ManualTemplate
-from openprompt.plms.lm import LMTokenizerWrapper
-
-# try:
-#     from kernl.model_optimization import optimize_model
-#     kernl_imported = True
-# except ImportError:
-#     kernl_imported = False
-#     print("Kernl module not found! GPU optimization not available for inference")
-
-
-# TODO: this method is used in "interactive_console.py";
-# But the implementation is not complete
-def generate_single_counterfactual(yaml_file,
-                                   prompt,
-                                   seed_review,
-                                   seed_class,
-                                   trained_lm,
-                                   tokenizer,
-                                   cuda_device=0,
-                                   n_to_generate=1) -> str:
-
-    special_tokens = yaml_file['SPECIAL_TOKENS']
-    map_labels = yaml_file['MAP_LABELS']
-    gen_params = yaml_file['GEN_PARAMS']
-
-    return "None"
+from nli_task import generation
 
 
 def generate_counterfactuals(yaml_file,
@@ -45,17 +16,16 @@ def generate_counterfactuals(yaml_file,
                              n_to_generate=1) -> generation.CounterGenerator:
 
     special_tokens = yaml_file['SPECIAL_TOKENS']
-    map_labels = yaml_file['MAP_LABELS']
     generation_prompt = yaml_file['GENERATION_PROMPT']
 
     # wrap the datasets with the prompt template
-    df_testset["wrapped_input"] = df_testset.apply(lambda row: utils.wrap_dataset_with_prompt(row,
-                                                                                              generation_prompt,
-                                                                                              map_labels,
-                                                                                              special_tokens), axis=1)
+    df_testset["wrapped_input"] = df_testset.apply(lambda row: utils.wrap_nli_dataset_with_prompt(row,
+                                                                                                  generation_prompt,
+                                                                                                  special_tokens),
+                                                   axis=1)
 
     # prepare the data loader
-    test_set = generation.SentimentDataset(raw_dataframe=df_testset.copy(deep=True))
+    test_set = generation.NLIDataset(raw_dataframe=df_testset.copy(deep=True))
     test_set.prepare_dataloader()
 
     template_prompt = '{"placeholder":"text_a"}{"mask"}'
@@ -81,21 +51,21 @@ def generate_counterfactuals(yaml_file,
     return counter_generator
 
 
-def append_prompt(parsed_yaml_file, gen_testset, n_to_generate) -> pd.DataFrame:
-    generation_prompt = parsed_yaml_file['GENERATION_PROMPT']
-
-    # parse the prompt
-    generation_prompt = generation_prompt.replace("<", "")
-    generation_prompt = generation_prompt.replace(">", "")
-    parsed_prompt = generation_prompt.split(" ")
-    indexes = [eval(i) for i in parsed_prompt]
-
-    # append the words to the counterfactual
-    for idx in range(n_to_generate):
-        gen_testset[f"generated_counter_{idx}"] = gen_testset.apply(
-            lambda row: append_to_counter(row, indexes, idx), axis=1)
-
-    return gen_testset
+# def append_prompt(parsed_yaml_file, gen_testset, n_to_generate) -> pd.DataFrame:
+#     generation_prompt = parsed_yaml_file['GENERATION_PROMPT']
+#
+#     # parse the prompt
+#     generation_prompt = generation_prompt.replace("<", "")
+#     generation_prompt = generation_prompt.replace(">", "")
+#     parsed_prompt = generation_prompt.split(" ")
+#     indexes = [eval(i) for i in parsed_prompt]
+#
+#     # append the words to the counterfactual
+#     for idx in range(n_to_generate):
+#         gen_testset[f"generated_counter_{idx}"] = gen_testset.apply(
+#             lambda row: append_to_counter(row, indexes, idx), axis=1)
+#
+#     return gen_testset
 
 
 def append_to_counter(row, idxs, idx) -> str:
@@ -112,7 +82,6 @@ def main():
 
     # read params from command line
     parser = argparse.ArgumentParser()
-    # SETTINGS_PATH = "/home/diego/counterfactuals-generation/sentiment_task/zero_shot_experiments/settings/"
     parser.add_argument(
         "--setting_path",
         default=None,
@@ -136,14 +105,6 @@ def main():
         type=int,
         required=True,
         help="Whether to run the script in debug mode. The script will run with a reduced dataset size."
-    )
-
-    parser.add_argument(
-        "--run_kernl",
-        default=0,
-        type=int,
-        required=False,
-        help="Whether to speed up training with kernl library."
     )
 
     args = parser.parse_args()
@@ -178,24 +139,19 @@ def main():
         trained_lm = utils.load_gpt2_from_local(model_local_path)
     print(f"{datetime.datetime.now()}: Language model loaded from local:{parsed_yaml_file['MODEL_FROM_LOCAL']}")
 
-    # if args.run_kernl and kernl_imported:
-    #     trained_lm.eval().cuda()
-    #     optimize_model(trained_lm)
-    #     print("Runnning Kernel optimization!!")
-
     # generate the counterfactuals
     gen_params = parsed_yaml_file['GEN_CFGS']
 
     # we generate n_to_generate counterfactuals
     gen_testset = generate_counterfactuals(parsed_yaml_file, df_testset, trained_lm, tokenizer,
                                            gen_params, n_to_generate)
-    df_gen_testset = gen_testset.dataframe_from_dataset(n_to_generate)
+    # df_gen_testset = gen_testset.dataframe_from_dataset(n_to_generate)
 
     print("Generation completed!")
 
     # print test generation
-    gen_filename = f"{lm_name}{parsed_yaml_file['OUT_LABEL']}.csv"
-    df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
+    # gen_filename = f"{lm_name}{parsed_yaml_file['OUT_LABEL']}.csv"
+    # df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
 
     print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")
 

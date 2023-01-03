@@ -1,7 +1,7 @@
 import argparse
 import pandas as pd
 import transformers
-from sentiment_task import utils
+import utils
 
 
 def classify_text(text_to_classify, model, label_map):
@@ -24,7 +24,7 @@ def evaluate(args):
         counter_data["generated_counter_2"] = counter_data["generated_counter_0"].values
 
     # load classifier
-    classification_tools = utils.prepare_classifier(args.classifier_name)
+    classification_tools = utils.prepare_sentiment_classifier(args.classifier_name)
 
     # prepare the classifier
     classifier = transformers.pipeline(

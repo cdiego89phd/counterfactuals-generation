@@ -5,7 +5,8 @@ import wandb
 import sys
 import os
 import numpy as np
-from sentiment_task import evaluation, utils
+from sentiment_task import evaluation
+import utils
 
 
 def main():
@@ -111,7 +112,7 @@ def main():
     results_table = pd.read_csv(f"{args.generation_path}{args.results_filename}", sep='\t')
 
     # load classifier
-    classification_tools = utils.prepare_classifier(args.classifier_name)
+    classification_tools = utils.prepare_sentiment_classifier(args.classifier_name)
 
     # Whether to calculate correlation for all the reported metrics
     calculate_corr = args.calculate_corr

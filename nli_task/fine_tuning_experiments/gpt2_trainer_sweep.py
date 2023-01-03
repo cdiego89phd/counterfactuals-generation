@@ -3,7 +3,7 @@ import datetime
 import yaml
 import wandb
 import sys
-from sentiment_task import utils
+import utils
 import cad_fine_tuning_trainer
 
 

@@ -4,7 +4,8 @@ import argparse
 import datetime
 import yaml
 import torch
-from sentiment_task import generator, utils
+from sentiment_task import generator
+import utils
 
 
 def append_prompt(parsed_yaml_file, gen_testset, n_to_generate) -> pd.DataFrame:

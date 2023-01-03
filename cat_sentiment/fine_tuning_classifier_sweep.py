@@ -5,7 +5,7 @@ import wandb
 import sys
 import os
 import transformers
-from sentiment_task import utils
+import utils
 from cat_sentiment import fine_tuning_classifier
 
 

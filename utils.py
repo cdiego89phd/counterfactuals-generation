@@ -87,7 +87,7 @@ def load_gpt2_from_local(model_path):
     return model
 
 
-def prepare_classifier(classifier_name):
+def prepare_sentiment_classifier(classifier_name):
     # load the sentiment classifier
     classifier_tokenizer = transformers.AutoTokenizer.from_pretrained(classifier_name)
     classifier = transformers.AutoModelForSequenceClassification.from_pretrained(classifier_name)
@@ -101,3 +101,8 @@ def prepare_classifier(classifier_name):
                             "label_map": classifier_label_map}
 
     return classification_tools
+
+
+# TODO
+def prepare_nli_classifier(classifier_name):
+    pass

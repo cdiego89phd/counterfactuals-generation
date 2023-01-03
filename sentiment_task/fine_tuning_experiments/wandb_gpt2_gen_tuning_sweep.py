@@ -7,7 +7,8 @@ import yaml
 import wandb
 import sys
 import openprompt
-from sentiment_task import evaluation, generation, utils
+from sentiment_task import evaluation, generation
+import utils
 
 from openprompt.prompts import ManualTemplate
 from openprompt.plms.lm import LMTokenizerWrapper
@@ -79,7 +80,7 @@ def run_agent(args, yaml_file):
     trained_lm = utils.load_gpt2_from_local(model_local_path)
 
     # load classifier for the evaluation
-    classification_tools = utils.prepare_classifier(classifier_name)
+    classification_tools = utils.prepare_sentiment_classifier(classifier_name)
     print(f"{datetime.datetime.now()}: Classifier prepared!")
 
     # load the dataset (we only use the valset)

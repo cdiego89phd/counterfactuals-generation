@@ -2,7 +2,7 @@ import argparse
 import datetime
 import yaml
 import cad_fine_tuning_trainer
-from sentiment_task import utils
+import utils
 
 
 def main():

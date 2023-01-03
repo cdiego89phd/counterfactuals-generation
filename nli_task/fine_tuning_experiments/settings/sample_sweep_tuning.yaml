@@ -1,0 +1,22 @@
+DATASET_PATH: "~/counterfactuals-generation/nli_task/cad_flickr_nli/"
+OUT_DIR: "home/diego/counterfactuals-generation/nli_task/fine_tuning_experiments/sweep_tuning"
+N_SWEEP_RUNS: 1
+
+FOLD: "0"
+
+MODEL_FROM_LOCAL: False
+MODEL_DIR: "home/diego/counterfactuals-generation/nli_task/fine_tuning_experiments/saved_models"
+BASE_MODEL: "sshleifer/tiny-gpt2"
+LM_NAME: "sshleifer/tiny-gpt2" #{gpt2 (gpt2-small, 12 layers), gpt2-medium (24 layers), gpt2-large (36 layers), gpt2-xl (48 layers)}
+
+SPECIAL_TOKENS: # or set it to None
+  "bos_token": "<|BOS|>"
+  "eos_token": "<|EOS|>"
+  "unk_token": "<|UNK|>"
+  "pad_token": "<|PAD|>"
+  "sep_token": "<|SEP|>"
+TOKENIZE_IN_BATCH: True
+NO_CUDA: False
+
+PROMPT_ID: "1"
+TEMPLATE_PROMPT: "<bos_token>Label: <original_label>\n<sep>P: <P>\n<sep>H: <H>\n<sep>Counterfactual Label: <counter_label>\n<sep><TC>: <counter_text><eos_token>"

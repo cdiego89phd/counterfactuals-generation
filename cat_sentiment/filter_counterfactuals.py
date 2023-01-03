@@ -20,7 +20,6 @@ def evaluate(args):
 
     if args.debug_mode:
         counter_data = counter_data[:3]
-        # TODO remove this
         counter_data["generated_counter_1"] = counter_data["generated_counter_0"].values
         counter_data["generated_counter_2"] = counter_data["generated_counter_0"].values
 
@@ -66,7 +65,7 @@ def evaluate(args):
          "label_counter": labels}
 
     # print filtered counterfactuals
-    pd.DataFrame(data=d).to_csv(f"{args.generation_path}filtered_counterfactual@{out_label}.csv",
+    pd.DataFrame(data=d).to_csv(f"{args.generation_path}filtered_counterfactuals@{out_label}.csv",
                                 sep='\t', header=True, index=False)
 
     # print filtered cat data

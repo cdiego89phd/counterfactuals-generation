@@ -1,11 +1,16 @@
-import pandas as pd
 import numpy as np
 import argparse
 import datetime
+
+import pandas as pd
 import yaml
 import torch
 import utils
-from nli_task import generation
+import generation
+import openprompt
+
+from openprompt.prompts import ManualTemplate
+from openprompt.plms.lm import LMTokenizerWrapper
 
 
 def generate_counterfactuals(yaml_file,
@@ -13,7 +18,7 @@ def generate_counterfactuals(yaml_file,
                              trained_lm,
                              tokenizer,
                              gen_params,
-                             n_to_generate=1) -> generation.CounterGenerator:
+                             n_to_generate=1) -> pd.DataFrame:
 
     special_tokens = yaml_file['SPECIAL_TOKENS']
     generation_prompt = yaml_file['GENERATION_PROMPT']
@@ -25,7 +30,7 @@ def generate_counterfactuals(yaml_file,
                                                    axis=1)
 
     # prepare the data loader
-    test_set = generation.NLIDataset(raw_dataframe=df_testset.copy(deep=True))
+    test_set = utils.NLIDataset(raw_dataframe=df_testset.copy(deep=True))
     test_set.prepare_dataloader()
 
     template_prompt = '{"placeholder":"text_a"}{"mask"}'
@@ -45,37 +50,13 @@ def generate_counterfactuals(yaml_file,
                                                     test_set,
                                                     gen_params)
 
+    # the generated counterfactuals are held inside the counter_generator object
     counter_generator.perform_generation(tokenizer, n_to_generate)
 
-    # the generated counterfactuals are held inside the counter_generator object
-    return counter_generator
+    # make a dataframe
+    df_counter = utils.NLIDataset.to_dataframe(n_to_generate, counter_generator.get_dataset())
 
-
-# def append_prompt(parsed_yaml_file, gen_testset, n_to_generate) -> pd.DataFrame:
-#     generation_prompt = parsed_yaml_file['GENERATION_PROMPT']
-#
-#     # parse the prompt
-#     generation_prompt = generation_prompt.replace("<", "")
-#     generation_prompt = generation_prompt.replace(">", "")
-#     parsed_prompt = generation_prompt.split(" ")
-#     indexes = [eval(i) for i in parsed_prompt]
-#
-#     # append the words to the counterfactual
-#     for idx in range(n_to_generate):
-#         gen_testset[f"generated_counter_{idx}"] = gen_testset.apply(
-#             lambda row: append_to_counter(row, indexes, idx), axis=1)
-#
-#     return gen_testset
-
-
-def append_to_counter(row, idxs, idx) -> str:
-    example = row['example'].split(" ")
-    to_add = ""
-    for i in idxs:
-        to_add += example[i] + " "
-    to_return = to_add + row[f"generated_counter_{idx}"]
-
-    return to_return
+    return df_counter
 
 
 def main():
@@ -143,15 +124,19 @@ def main():
     gen_params = parsed_yaml_file['GEN_CFGS']
 
     # we generate n_to_generate counterfactuals
-    gen_testset = generate_counterfactuals(parsed_yaml_file, df_testset, trained_lm, tokenizer,
-                                           gen_params, n_to_generate)
-    # df_gen_testset = gen_testset.dataframe_from_dataset(n_to_generate)
+    # we return a dataframe
+    df_gen_testset = generate_counterfactuals(parsed_yaml_file,
+                                              df_testset,
+                                              trained_lm,
+                                              tokenizer,
+                                              gen_params,
+                                              n_to_generate)
 
     print("Generation completed!")
 
     # print test generation
-    # gen_filename = f"{lm_name}{parsed_yaml_file['OUT_LABEL']}.csv"
-    # df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
+    gen_filename = f"{lm_name}{parsed_yaml_file['OUT_LABEL']}.csv"
+    df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
 
     print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")
 

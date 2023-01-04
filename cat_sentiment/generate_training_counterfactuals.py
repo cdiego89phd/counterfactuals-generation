@@ -104,13 +104,13 @@ def main():
     print(f"{datetime.datetime.now()}: Language model loaded from local")
 
     # generate counterfactuals from the seed dataset
-    gen_data = generator.generate_counterfactuals(parsed_yaml_file,
-                                                  df_seed,
-                                                  generator_lm,
-                                                  tokenizer,
-                                                  gen_params,
-                                                  n_to_generate)
-    df_gen = gen_data.dataframe_from_dataset(n_to_generate)
+    df_gen = generator.generate_counterfactuals(parsed_yaml_file,
+                                                df_seed,
+                                                generator_lm,
+                                                tokenizer,
+                                                gen_params,
+                                                n_to_generate)
+
     df_gen.to_csv(f"{dataset_path}counterfactuals@{base_lm_name}.csv", sep='\t', header=True, index=False)
     print(f"{datetime.datetime.now()}: Generation completed!")
 

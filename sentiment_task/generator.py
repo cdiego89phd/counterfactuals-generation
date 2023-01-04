@@ -5,7 +5,7 @@ import datetime
 import yaml
 import torch
 import openprompt
-from sentiment_task import generation
+import generation
 import utils
 
 from openprompt.prompts import ManualTemplate
@@ -42,7 +42,7 @@ def generate_counterfactuals(yaml_file,
                              trained_lm,
                              tokenizer,
                              gen_params,
-                             n_to_generate=1) -> generation.CounterGenerator:
+                             n_to_generate=1) -> pd.DataFrame:
 
     special_tokens = yaml_file['SPECIAL_TOKENS']
     map_labels = yaml_file['MAP_LABELS']
@@ -75,44 +75,19 @@ def generate_counterfactuals(yaml_file,
                                                     test_set,
                                                     gen_params)
 
+    # the generated counterfactuals are held inside the counter_generator object
     counter_generator.perform_generation(tokenizer, n_to_generate)
 
-    # the generated counterfactuals are held inside the counter_generator object
-    return counter_generator
+    # make a dataframe
+    df_counter = utils.SentimentDataset.to_dataframe(n_to_generate, counter_generator.get_dataset())
 
-
-def append_prompt(parsed_yaml_file, gen_testset, n_to_generate) -> pd.DataFrame:
-    generation_prompt = parsed_yaml_file['GENERATION_PROMPT']
-
-    # parse the prompt
-    generation_prompt = generation_prompt.replace("<", "")
-    generation_prompt = generation_prompt.replace(">", "")
-    parsed_prompt = generation_prompt.split(" ")
-    indexes = [eval(i) for i in parsed_prompt]
-
-    # append the words to the counterfactual
-    for idx in range(n_to_generate):
-        gen_testset[f"generated_counter_{idx}"] = gen_testset.apply(
-            lambda row: append_to_counter(row, indexes, idx), axis=1)
-
-    return gen_testset
-
-
-def append_to_counter(row, idxs, idx) -> str:
-    example = row['example'].split(" ")
-    to_add = ""
-    for i in idxs:
-        to_add += example[i] + " "
-    to_return = to_add + row[f"generated_counter_{idx}"]
-
-    return to_return
+    return df_counter
 
 
 def main():
 
     # read params from command line
     parser = argparse.ArgumentParser()
-    # SETTINGS_PATH = "/home/diego/counterfactuals-generation/sentiment_task/zero_shot_experiments/settings/"
     parser.add_argument(
         "--setting_path",
         default=None,

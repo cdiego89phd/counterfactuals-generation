@@ -1,5 +1,9 @@
 import transformers
 import pandas as pd
+from dataclasses import dataclass, field
+from torch.utils.data import Dataset
+from openprompt.data_utils import InputExample
+import bs4
 
 
 def load_dataset(loading_path):
@@ -106,3 +110,153 @@ def prepare_sentiment_classifier(classifier_name):
 # TODO
 def prepare_nli_classifier(classifier_name):
     pass
+
+
+@dataclass
+class TaskDataset(Dataset):
+    raw_dataframe: pd.DataFrame
+    # guids: list = field(default_factory=list)
+    # dataset: dict = field(default_factory=dict)
+
+    def __init__(self, raw_dataframe):
+        super(Dataset, self).__init__()
+        self.raw_dataframe = raw_dataframe
+        self.guids = []
+        self.dataset = {}
+
+    def __getitem__(self, idx) -> InputExample:
+        """Return the item of index idx """
+        return self.dataset[idx]
+
+    def __len__(self) -> int:
+        """Return len of dataset"""
+        return len(self.dataset)
+
+    def __iter__(self):
+        """Return iterator of the dataset. Implemented because of inheritance from Dataset"""
+        return iter(self.dataset)
+
+    def __next__(self):
+        """Return next item of dataset"""
+        return iter(self.dataset)
+
+    def get_dataset(self) -> dict:
+        """Return the dataset in Dataset format (dict of InputExample)"""
+        return self.dataset
+
+    def get_raw_dataframe(self) -> pd.DataFrame:
+        """Return the raw dataset in pandas format"""
+        return self.raw_dataframe
+
+
+@dataclass
+class SentimentDataset(TaskDataset):
+    def __init__(self, raw_dataframe):
+        super().__init__(raw_dataframe)
+
+    def prepare_dataloader(self) -> None:
+        """Convert the raw_dataframe into the InputExample format dataset of openprompt
+        """
+        for index, row in self.raw_dataframe.iterrows():
+            self.dataset[row['paired_id']] = InputExample(guid=row['paired_id'],
+                                                          text_a=bs4.BeautifulSoup(
+                                                              row['wrapped_input'], "lxml").text,
+                                                          meta={"label_ex": row['label_ex'],
+                                                                "label_counter": row['label_counter'],
+                                                                'example': bs4.BeautifulSoup(
+                                                                    row['example'], "lxml").text,
+                                                                'counterfactual': bs4.BeautifulSoup(
+                                                                    row['counterfactual'], "lxml").text})
+            self.guids.append(row['paired_id'])
+    print('Dataloader prepared!')
+
+    @staticmethod
+    def to_dataframe(n_to_generate, dataset: TaskDataset) -> pd.DataFrame:
+        """Build a dataframe from dataset of InputExample"""
+
+        paired_ids = [idx for idx in dataset]
+        labels_ex = [dataset.__getitem__(idx).meta["label_ex"] for idx in dataset]
+        examples = [dataset.__getitem__(idx).meta["example"] for idx in dataset]
+        labels_counter = [dataset.__getitem__(idx).meta["label_counter"] for idx in dataset]
+        counterfactuals = [dataset.__getitem__(idx).meta["counterfactual"] for idx in dataset]
+        generated_counters = [dataset.__getitem__(idx).meta["generated_counter"] for idx in dataset]
+        d = {"paired_id": paired_ids,
+             "label_ex": labels_ex,
+             "example": examples,
+             "label_counter": labels_counter,
+             "counterfactual": counterfactuals,
+             }
+        for idx in range(n_to_generate):
+            d[f"generated_counter_{idx}"] = []
+
+        for item in generated_counters:
+            for idx in range(len(item)):
+                d[f"generated_counter_{idx}"].append(item[idx])
+
+        return pd.DataFrame(data=d)
+
+
+@dataclass
+class NLIDataset(TaskDataset):
+    def __init__(self, raw_dataframe):
+        super().__init__(raw_dataframe)
+
+    @staticmethod
+    def check_nan(text):
+        if str(text) == 'nan':
+            return "None"
+        else:
+            return text
+
+    def prepare_dataloader(self) -> None:
+        """Convert the raw_dataframe into the InputExample format dataset of openprompt
+        """
+        for index, row in self.raw_dataframe.iterrows():
+            self.dataset[index] = InputExample(guid=index,
+                                               text_a=bs4.BeautifulSoup(
+                                                   row['wrapped_input'], "lxml").text,
+                                               meta={"original_label": row['original_label'],
+                                                     "counter_label": row['counter_label'],
+                                                     "task": row['task'],
+                                                     'original_prem': bs4.BeautifulSoup(
+                                                         self.check_nan(row['original_prem']), "lxml").text,
+                                                     'counter_prem': bs4.BeautifulSoup(
+                                                         self.check_nan(row['counter_prem']), "lxml").text,
+                                                     'original_hyp': bs4.BeautifulSoup(
+                                                         self.check_nan(row['original_hyp']), "lxml").text,
+                                                     'counter_hyp': bs4.BeautifulSoup(
+                                                         self.check_nan(row['counter_hyp']), "lxml").text})
+            self.guids.append(index)
+    print('Dataloader prepared!')
+
+    @staticmethod
+    def to_dataframe(n_to_generate: int, dataset: TaskDataset) -> pd.DataFrame:
+        """Build a dataframe from dataset of InputExample"""
+
+        ids = [idx for idx in dataset]
+        original_labels = [dataset.__getitem__(idx).meta["original_label"] for idx in dataset]
+        counter_labels = [dataset.__getitem__(idx).meta["counter_label"] for idx in dataset]
+        tasks = [dataset.__getitem__(idx).meta["task"] for idx in dataset]
+        original_prems = [dataset.__getitem__(idx).meta["original_prem"] for idx in dataset]
+        counter_prems = [dataset.__getitem__(idx).meta["counter_prem"] for idx in dataset]
+        original_hyps = [dataset.__getitem__(idx).meta["original_hyp"] for idx in dataset]
+        counter_hyps = [dataset.__getitem__(idx).meta["counter_hyp"] for idx in dataset]
+        generated_counters = [dataset.__getitem__(idx).meta["generated_counter"] for idx in dataset]
+
+        d = {"id": ids,
+             "original_label": original_labels,
+             "counter_label": counter_labels,
+             "task": tasks,
+             "original_prem": original_prems,
+             "counter_prem": counter_prems,
+             "original_hyp": original_hyps,
+             "counter_hyp": counter_hyps,
+             }
+        for idx in range(n_to_generate):
+            d[f"generated_counter_{idx}"] = []
+
+        for item in generated_counters:
+            for idx in range(len(item)):
+                d[f"generated_counter_{idx}"].append(item[idx])
+
+        return pd.DataFrame(data=d)

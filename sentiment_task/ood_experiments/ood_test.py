@@ -84,13 +84,12 @@ def main():
 
     print(f"{datetime.datetime.now()}: Begin GEN TUNING")
     # we generate n_to_generate counterfactuals
-    gen_testset = generator.generate_counterfactuals(parsed_yaml_file,
-                                                     df_testset,
-                                                     trained_lm,
-                                                     tokenizer,
-                                                     gen_params,
-                                                     n_to_generate)
-    df_gen_testset = gen_testset.dataframe_from_dataset(n_to_generate)
+    df_gen_testset = generator.generate_counterfactuals(parsed_yaml_file,
+                                                        df_testset,
+                                                        trained_lm,
+                                                        tokenizer,
+                                                        gen_params,
+                                                        n_to_generate)
 
     # print test generation
     gen_filename = f"{args.output_name}.csv"

@@ -1,11 +1,11 @@
 DATASET_PATH: "~/counterfactuals-generation/nli_task/cad_flickr_nli/"
-OUT_DIR: "home/diego/counterfactuals-generation/nli_task/fine_tuning_experiments/sweep_tuning"
+OUT_DIR: "/home/diego/counterfactuals-generation/nli_task/fine_tuning_experiments/sweep_tuning"
 N_SWEEP_RUNS: 1
 
 FOLD: "0"
 
 MODEL_FROM_LOCAL: False
-MODEL_DIR: "home/diego/counterfactuals-generation/nli_task/fine_tuning_experiments/saved_models"
+MODEL_DIR: "/home/diego/counterfactuals-generation/nli_task/fine_tuning_experiments/saved_models"
 BASE_MODEL: "sshleifer/tiny-gpt2"
 LM_NAME: "sshleifer/tiny-gpt2" #{gpt2 (gpt2-small, 12 layers), gpt2-medium (24 layers), gpt2-large (36 layers), gpt2-xl (48 layers)}
 

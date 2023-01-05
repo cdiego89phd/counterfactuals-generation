@@ -63,12 +63,22 @@ def run_classifier(model_name: str,
                    n_batches: int
                    ) -> dict:
 
-    if model_name in ["roberta.large.mnli",
-                      "ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli",
+    #
+    if model_name in ["ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli",
                       "pepa/bigbird-roberta-large-snli",
                       "textattack/albert-base-v2-snli",
-                      "textattack/distilbert-base-cased-snli",
-                      ]:
+                      "textattack/distilbert-base-cased-snli"]:
+        class_map = {"entailment": 0,
+                     "neutral": 1,
+                     "contradiction": 2
+                     }
+    else:
+        class_map = {"contradiction": 0,
+                     "entailment": 1,
+                     "neutral": 2
+                     }
+
+    if model_name in ["roberta.large.mnli"]:
         class_map = {"contradiction": 0,
                      "neutral": 1,
                      "entailment": 2
@@ -85,11 +95,8 @@ def run_classifier(model_name: str,
         predictions = []
         for batch in batches:
             predictions += model.predict('mnli', batch).argmax(dim=1)
+
     else:
-        class_map = {"contradiction": 0,
-                     "entailment": 1,
-                     "neutral": 2
-                     }
         gold_labels = [class_map[el] for el in eval_data["counter_label"]]
 
         model = transformers.AutoModelForSequenceClassification.from_pretrained(model_name)

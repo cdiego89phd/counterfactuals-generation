@@ -4,6 +4,7 @@ import datasets
 import argparse
 import transformers
 import datetime
+import tabulate
 from fairseq.data.data_utils import collate_tokens
 
 
@@ -14,7 +15,12 @@ MODELS = ["roberta.large.mnli",
           "microsoft/deberta-v3-large",
           "microsoft/deberta-large-mnli",
           "cross-encoder/nli-deberta-v3-base",
-          "cross-encoder/nli-deberta-v3-large"
+          "cross-encoder/nli-deberta-v3-large",
+          "textattack/bert-base-uncased-snli",
+          "textattack/albert-base-v2-snli",
+          "textattack/distilbert-base-cased-snli",
+          "ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli",
+          "pepa/bigbird-roberta-large-snli"
           ]
 
 
@@ -54,7 +60,8 @@ def run_classifier(model_name: str,
                    eval_data: pd.DataFrame,
                    eval_batch: list,
                    eval_metrics: dict,
-                   n_batches: int) -> None:
+                   n_batches: int
+                   ) -> dict:
 
     if model_name == "roberta.large.mnli":
         class_map = {"contradiction": 0,
@@ -101,7 +108,8 @@ def run_classifier(model_name: str,
     del model
     torch.cuda.empty_cache()
 
-    return
+    model_result["model_name"] = model_name
+    return model_result
 
 
 def main():
@@ -142,7 +150,8 @@ def main():
 
     trainset = pd.read_csv("cad_flickr_nli/fold_0/training_set.tsv", sep='\t')
     valset = pd.read_csv("cad_flickr_nli/fold_0/val_set.tsv", sep='\t')
-    eval_data = pd.concat([trainset, valset], ignore_index=True)
+    testset = pd.read_csv("cad_flickr_nli/fold_0/test_set.tsv", sep='\t')
+    eval_data = pd.concat([trainset, valset, testset], ignore_index=True)
 
     if args.to_debug:
         eval_data = eval_data[:args.n_to_debug]
@@ -155,10 +164,21 @@ def main():
 
     print(f"# of instances to classify:{len(eval_data)}")
 
+    dict_comparison = {"model_name": [],
+                       "accuracy": [],
+                       "precision": [],
+                       "recall": [],
+                       "f1": []
+                       }
     for model_name in MODELS:
         print(f"{datetime.datetime.now()}: Begin evaluation for model:{model_name}")
-        run_classifier(model_name, eval_data, eval_batch, eval_metrics, args.n_batches)
+        results = run_classifier(model_name, eval_data, eval_batch, eval_metrics, args.n_batches)
+        for key in results:
+            dict_comparison[key].append(results[key])
         print("##############################################################")
+        print()
+        df_comparison = pd.DataFrame(data=dict_comparison)
+        print(tabulate.tabulate(df_comparison, headers='keys', tablefmt='psql', showindex=False))
 
 
 if __name__ == "__main__":

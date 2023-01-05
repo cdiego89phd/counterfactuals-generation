@@ -63,7 +63,12 @@ def run_classifier(model_name: str,
                    n_batches: int
                    ) -> dict:
 
-    if model_name == "roberta.large.mnli":
+    if model_name in ["roberta.large.mnli",
+                      "ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli",
+                      "pepa/bigbird-roberta-large-snli",
+                      "textattack/albert-base-v2-snli",
+                      "textattack/distilbert-base-cased-snli",
+                      ]:
         class_map = {"contradiction": 0,
                      "neutral": 1,
                      "entailment": 2

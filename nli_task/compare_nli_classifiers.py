@@ -18,7 +18,7 @@ MODELS = ["roberta.large.mnli",
           "cross-encoder/nli-deberta-v3-large",
           "textattack/bert-base-uncased-snli",
           "ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli",
-          "pepa/bigbird-roberta-large-snli"
+          "pepa/bigbird-roberta-large-snli",
           "textattack/distilbert-base-cased-snli",
           "textattack/albert-base-v2-snli",
           ]
@@ -63,7 +63,7 @@ def run_classifier(model_name: str,
                    n_batches: int
                    ) -> dict:
 
-    #
+    # set the label map
     if model_name in ["ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli",
                       "pepa/bigbird-roberta-large-snli",
                       "textattack/albert-base-v2-snli",

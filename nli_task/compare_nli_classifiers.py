@@ -7,6 +7,7 @@ import datetime
 import tabulate
 from fairseq.data.data_utils import collate_tokens
 
+import utils
 
 MODELS = ["roberta.large.mnli",
           "facebook/bart-large-mnli",
@@ -68,21 +69,6 @@ def run_classifier(model_name: str,
                    n_batches: int
                    ) -> dict:
 
-    # set the label map
-    if model_name in ["ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli",
-                      "pepa/bigbird-roberta-large-snli",
-                      "textattack/albert-base-v2-snli",
-                      "textattack/distilbert-base-cased-snli"]:
-        class_map = {"entailment": 0,
-                     "neutral": 1,
-                     "contradiction": 2
-                     }
-    else:
-        class_map = {"contradiction": 0,
-                     "entailment": 1,
-                     "neutral": 2
-                     }
-
     if model_name in ["roberta.large.mnli"]:
         class_map = {"contradiction": 0,
                      "neutral": 1,
@@ -102,11 +88,14 @@ def run_classifier(model_name: str,
             predictions += model.predict('mnli', batch).argmax(dim=1)
 
     else:
-        gold_labels = [class_map[el] for el in eval_data["counter_label"]]
 
-        model = transformers.AutoModelForSequenceClassification.from_pretrained(model_name)
-        tokenizer = transformers.AutoTokenizer.from_pretrained(model_name)
+        classification_tools = utils.prepare_nli_classifier(classifier_name=model_name)
+        class_map = classification_tools["label_map"]
+        model = classification_tools["classifier"]
+        tokenizer = classification_tools["tokenizer"]
+
         batches = generate_batches(eval_batch, n_batches)
+        gold_labels = [class_map[el] for el in eval_data["counter_label"]]
 
         model.cuda()
         model.eval()

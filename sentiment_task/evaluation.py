@@ -1,5 +1,6 @@
 import pandas as pd
 import transformers
+import torch
 import numpy as np
 import sklearn
 import nltk
@@ -278,3 +279,33 @@ class SentimentEvaluator:
             return np.mean(mean_scores), np.var(var_scores), np.mean(spear_scores), np.mean(pears_scores)
         else:
             return np.mean(mean_scores), np.var(var_scores), -100, -100  # default values for correlation
+
+
+class NLIEvaluator:
+    def __init__(self, tokenizer, model, eval_dataset):
+        self.tokenizer = tokenizer
+
+        self.model = model
+        self.model.cuda()
+
+        self.eval_dataset = eval_dataset
+        # self.predicted_labels = {}
+
+    def infer_predictions(self, batches, n_generated=1):
+        """Infer the labels for the counterfactuals"""
+
+        self.model.eval()
+        predictions = []
+
+        # we have n_generated set of batches
+        with torch.no_grad():
+            for batch in batches:
+                tokenized_batch = self.tokenizer(batch,
+                                                 padding=True,
+                                                 truncation=True,
+                                                 return_tensors="pt")
+                scores = self.model(**tokenized_batch.to('cuda')).logits
+                predictions += [score_max for score_max in scores.argmax(dim=1)]
+
+
+

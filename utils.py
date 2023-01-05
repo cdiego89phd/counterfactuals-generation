@@ -109,7 +109,35 @@ def prepare_sentiment_classifier(classifier_name):
 
 # TODO
 def prepare_nli_classifier(classifier_name):
-    pass
+    # cross-encoder/nli-deberta-v3-large is the best classifier so far
+    classifier = transformers.AutoModelForSequenceClassification.from_pretrained(classifier_name)
+    classifier_tokenizer = transformers.AutoTokenizer.from_pretrained(classifier_name)
+
+    if classifier_name in ["ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli",
+                           "pepa/bigbird-roberta-large-snli",
+                           "textattack/albert-base-v2-snli",
+                           "textattack/distilbert-base-cased-snli"]:
+        classifier_label_map = {"entailment": 0,
+                                "neutral": 1,
+                                "contradiction": 2
+                                }
+    else:
+        classifier_label_map = {"contradiction": 0,
+                                "entailment": 1,
+                                "neutral": 2
+                                }
+
+    classification_tools = {"tokenizer": classifier_tokenizer,
+                            "classifier": classifier,
+                            "label_map": classifier_label_map}
+    return classification_tools
+
+
+def generate_batches(data, n):
+    batch_size = len(data)//n
+    for i in range(0, len(data), batch_size):
+        yield data[i:i + batch_size]
+    return data
 
 
 @dataclass

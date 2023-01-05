@@ -17,10 +17,10 @@ MODELS = ["roberta.large.mnli",
           "cross-encoder/nli-deberta-v3-base",
           "cross-encoder/nli-deberta-v3-large",
           "textattack/bert-base-uncased-snli",
-          "textattack/albert-base-v2-snli",
-          "textattack/distilbert-base-cased-snli",
           "ynie/roberta-large-snli_mnli_fever_anli_R1_R2_R3-nli",
           "pepa/bigbird-roberta-large-snli"
+          "textattack/distilbert-base-cased-snli",
+          "textattack/albert-base-v2-snli",
           ]
 
 

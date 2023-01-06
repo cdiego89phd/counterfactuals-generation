@@ -124,7 +124,8 @@ def main():
     # prepare the evaluator
     evaluator = evaluation.NLIEvaluator(classification_tools["tokenizer"],
                                         classification_tools["classifier"],
-                                        classification_tools["label_map"])
+                                        classification_tools["label_map"],
+                                        results_table)
 
     # # run evaluation
     # eval_set, n_nan = evaluator.clean_evalset(results_table)  # remove the Nan counterfactuals

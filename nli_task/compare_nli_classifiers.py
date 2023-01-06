@@ -146,6 +146,14 @@ def main():
         help="The number of batches to use."
     )
 
+    parser.add_argument(
+        "--evaluate_cad_data",
+        default=1,
+        type=int,
+        required=True,
+        help="Whether to evaluate classifiers on the CAD dataset."
+    )
+
     args = parser.parse_args()
 
     eval_metrics = {"precision": datasets.load_metric("precision"),
@@ -163,8 +171,11 @@ def main():
         eval_data = eval_data[:args.n_to_debug]
     eval_data.reset_index(inplace=True, drop=True)
 
-    eval_data["premise"] = eval_data.apply(lambda row: extract_prems(row), axis=1)
-    eval_data["hypothesis"] = eval_data.apply(lambda row: extract_hyps(row), axis=1)
+    if args.evaluate_cad_data:
+        eval_data["premise"] = eval_data.apply(lambda row: extract_prems(row), axis=1)
+        eval_data["hypothesis"] = eval_data.apply(lambda row: extract_hyps(row), axis=1)
+    else:
+        eval_data = eval_data.rename(columns={"original_prem": "premise", "original_hyp": "hypothesis"})
 
     eval_batch = [[p, h] for p, h in zip(eval_data["premise"].values, eval_data["hypothesis"].values)]
 

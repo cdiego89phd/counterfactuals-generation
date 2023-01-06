@@ -282,14 +282,20 @@ class SentimentEvaluator:
 
 
 class NLIEvaluator:
-    def __init__(self, tokenizer, model, eval_dataset):
+    def __init__(self, tokenizer, model, label_map, eval_dataset):
         self.tokenizer = tokenizer
 
         self.model = model
         self.model.cuda()
 
+        self.label_map = label_map
         self.eval_dataset = eval_dataset
+        # self.batches = {}
         # self.predicted_labels = {}
+
+    # TODO
+    def prepare_batches(self):
+        pass
 
     def infer_predictions(self, batches, n_generated=1):
         """Infer the labels for the counterfactuals"""
@@ -298,6 +304,7 @@ class NLIEvaluator:
         predictions = []
 
         # we have n_generated set of batches
+        # TODO
         with torch.no_grad():
             for batch in batches:
                 tokenized_batch = self.tokenizer(batch,

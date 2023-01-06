@@ -2,7 +2,6 @@ import torch
 import pandas as pd
 import datasets
 import argparse
-import transformers
 import datetime
 import tabulate
 from fairseq.data.data_utils import collate_tokens
@@ -63,6 +62,7 @@ def evaluate_classifier(preds, labels, eval_m):
 
 
 def run_classifier(model_name: str,
+                   gold_label_str: str,
                    eval_data: pd.DataFrame,
                    eval_batch: list,
                    eval_metrics: dict,
@@ -74,7 +74,7 @@ def run_classifier(model_name: str,
                      "neutral": 1,
                      "entailment": 2
                      }
-        gold_labels = [class_map[el] for el in eval_data["counter_label"]]
+        gold_labels = [class_map[el] for el in eval_data[gold_label_str]]
 
         model = torch.hub.load('pytorch/fairseq', model_name)
         model.cuda()
@@ -95,7 +95,7 @@ def run_classifier(model_name: str,
         tokenizer = classification_tools["tokenizer"]
 
         batches = generate_batches(eval_batch, n_batches)
-        gold_labels = [class_map[el] for el in eval_data["counter_label"]]
+        gold_labels = [class_map[el] for el in eval_data[gold_label_str]]
 
         model.cuda()
         model.eval()
@@ -174,7 +174,9 @@ def main():
     if args.evaluate_cad_data:
         eval_data["premise"] = eval_data.apply(lambda row: extract_prems(row), axis=1)
         eval_data["hypothesis"] = eval_data.apply(lambda row: extract_hyps(row), axis=1)
+        label_str = "counter_label"
     else:
+        label_str = "original_label"
         eval_data = eval_data.rename(columns={"original_prem": "premise", "original_hyp": "hypothesis"})
 
     eval_batch = [[p, h] for p, h in zip(eval_data["premise"].values, eval_data["hypothesis"].values)]
@@ -189,7 +191,7 @@ def main():
                        }
     for model_name in MODELS:
         print(f"{datetime.datetime.now()}: Begin evaluation for model:{model_name}")
-        results = run_classifier(model_name, eval_data, eval_batch, eval_metrics, args.n_batches)
+        results = run_classifier(model_name, label_str, eval_data, eval_batch, eval_metrics, args.n_batches)
         for key in results:
             dict_comparison[key].append(results[key])
         print("##############################################################")

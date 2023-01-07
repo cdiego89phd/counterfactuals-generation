@@ -4,6 +4,14 @@ from dataclasses import dataclass, field
 from torch.utils.data import Dataset
 from openprompt.data_utils import InputExample
 import bs4
+import pynvml
+
+
+def print_gpu_utilization():
+    pynvml.nvmlInit()
+    handle = pynvml.nvmlDeviceGetHandleByIndex(0)
+    info = pynvml.nvmlDeviceGetMemoryInfo(handle)
+    print(f"GPU memory occupied: {info.used//1024**2} MB.")
 
 
 def load_dataset(loading_path):

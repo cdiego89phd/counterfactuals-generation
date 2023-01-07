@@ -23,18 +23,18 @@ def evaluate(args, results_filename):
     # prepare the evaluator
     evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],
                                               classification_tools["classifier"],
-                                              classification_tools["label_map"])
+                                              classification_tools["label_map"],
+                                              results_table)
 
     # run evaluation
-    eval_set, n_nan = evaluator.clean_evalset(results_table)  # remove the Nan counterfactuals
-    eval_set = evaluator.retrieve_sizes(eval_set, n_counter_generated)
-
+    n_nan = evaluator.clean_evalset()
     metrics_dict = {"n_nan": n_nan}
+    evaluator.calculate_sizes(n_counter_generated)
 
     # goal-orientdness metrics
     if "g" in args.metrics:
-        evaluator.infer_predictions(eval_set, n_counter_generated)
-        lf_score = evaluator.calculate_lf_score(eval_set)
+        evaluator.infer_predictions(n_counter_generated)
+        lf_score = evaluator.calculate_lf_score()
         conf_score = evaluator.get_conf_score_pred()
         print(f"{lf_score};{conf_score};")
         print(f"{datetime.datetime.now()}: LF score calculated!\n")
@@ -45,19 +45,19 @@ def evaluate(args, results_filename):
 
     # BLEU metrics
     if "b" in args.metrics:
-        bleu_corpus = evaluator.calculate_bleu_corpus(eval_set, n_counter_generated)
-        bleu_corpus_1 = evaluator.calculate_bleu_corpus(eval_set, n_counter_generated, weights=(1, 0, 0, 0))
-        bleu_corpus_2 = evaluator.calculate_bleu_corpus(eval_set, n_counter_generated, weights=(0, 1, 0, 0))
-        bleu_corpus_3 = evaluator.calculate_bleu_corpus(eval_set, n_counter_generated, weights=(0, 0, 1, 0))
-        bleu_corpus_4 = evaluator.calculate_bleu_corpus(eval_set, n_counter_generated, weights=(0, 0, 0, 1))
+        bleu_corpus = evaluator.calculate_bleu_corpus(n_counter_generated)
+        bleu_corpus_1 = evaluator.calculate_bleu_corpus(n_counter_generated, weights=(1, 0, 0, 0))
+        bleu_corpus_2 = evaluator.calculate_bleu_corpus(n_counter_generated, weights=(0, 1, 0, 0))
+        bleu_corpus_3 = evaluator.calculate_bleu_corpus(n_counter_generated, weights=(0, 0, 1, 0))
+        bleu_corpus_4 = evaluator.calculate_bleu_corpus(n_counter_generated, weights=(0, 0, 0, 1))
         print(f"{bleu_corpus};{bleu_corpus_1};{bleu_corpus_2};{bleu_corpus_3};{bleu_corpus_4}")
         print(f"{datetime.datetime.now()}: BLEU corpus score calculated!\n")
 
     # closeness metrics
     if "c" in args.metrics:
-        lev_dist_mean, lev_dist_var, lev_spear, lev_pears = evaluator.calculate_lev_dist(eval_set, n_counter_generated,
+        lev_dist_mean, lev_dist_var, lev_spear, lev_pears = evaluator.calculate_lev_dist(n_counter_generated,
                                                                                          calculate_corr=calculate_corr)
-        zss_dist_mean, zss_dist_var, zss_spear, zss_pears = evaluator.calculate_zss_dist(eval_set, n_counter_generated,
+        zss_dist_mean, zss_dist_var, zss_spear, zss_pears = evaluator.calculate_zss_dist(n_counter_generated,
                                                                                          calculate_corr=calculate_corr)
         print(f"{datetime.datetime.now()}: Distances scores calculated!\n")
 
@@ -73,7 +73,7 @@ def evaluate(args, results_filename):
 
     if "d" in args.metrics:
         self_bleu_mean, self_bleu_var, self_bleu_spear, self_bleu_pears = evaluator.calculate_self_bleu(
-            eval_set, n_counter_generated, weights=None, calculate_corr=True)  # it calculates the 4-grams
+            n_counter_generated, weights=None, calculate_corr=True)  # it calculates the 4-grams
         print(f"{datetime.datetime.now()}: self-BLEU score calculated!\n")
 
         # update dict

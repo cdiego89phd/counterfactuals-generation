@@ -18,22 +18,23 @@ def evaluate(args, results_filename):
     # prepare the evaluator
     evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],
                                               classification_tools["classifier"],
-                                              classification_tools["label_map"])
+                                              classification_tools["label_map"],
+                                              results_table)
 
     # run evaluation
     results_table.rename(columns={"label": "label_counter", "text": "generated_counter_0"}, inplace=True)
-    eval_set, n_nan = evaluator.clean_evalset(results_table)  # remove the Nan counterfactuals
+    n_nan = evaluator.clean_evalset()  # remove the Nan counterfactuals
     print(f"Removed {n_nan} null counterfactuals!")
 
     # measures the label flip score
-    evaluator.infer_predictions(eval_set, 1)
-    lf_score = evaluator.calculate_lf_score(eval_set)
+    evaluator.infer_predictions(n_generated=1)
+    lf_score = evaluator.calculate_lf_score()
     conf_score = evaluator.get_conf_score_pred()
     print(f"{lf_score};{conf_score};")
     print(f"{datetime.datetime.now()}: LF score calculated!\n")
 
-    avg_len_examples = np.mean([len(el.split(" ")) for el in eval_set["example"]])
-    avg_len_counters = np.mean([len(el.split(" ")) for el in eval_set["generated_counter_0"]])
+    avg_len_examples = np.mean([len(el.split(" ")) for el in results_table["example"]])
+    avg_len_counters = np.mean([len(el.split(" ")) for el in results_table["generated_counter_0"]])
 
     print(f"Avg len seed review:{avg_len_examples}")
     print(f"Avg len counter review:{avg_len_counters}")

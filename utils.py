@@ -107,7 +107,6 @@ def prepare_sentiment_classifier(classifier_name):
     return classification_tools
 
 
-# TODO
 def prepare_nli_classifier(classifier_name):
     # cross-encoder/nli-deberta-v3-large is the best classifier so far
     classifier = transformers.AutoModelForSequenceClassification.from_pretrained(classifier_name)
@@ -143,8 +142,6 @@ def generate_batches(data, n):
 @dataclass
 class TaskDataset(Dataset):
     raw_dataframe: pd.DataFrame
-    # guids: list = field(default_factory=list)
-    # dataset: dict = field(default_factory=dict)
 
     def __init__(self, raw_dataframe):
         super(Dataset, self).__init__()

@@ -5,7 +5,7 @@ import wandb
 import sys
 import os
 import numpy as np
-from sentiment_task import evaluation
+import evaluation
 import utils
 
 

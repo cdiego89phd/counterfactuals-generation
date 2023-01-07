@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 import sys
 import os
-from sentiment_task import evaluation
+import evaluation
 import utils
 
 

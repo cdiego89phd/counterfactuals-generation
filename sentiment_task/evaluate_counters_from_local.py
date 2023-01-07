@@ -3,7 +3,7 @@ import argparse
 import pandas as pd
 import sys
 import os
-from sentiment_task import evaluation
+import evaluation
 import utils
 
 

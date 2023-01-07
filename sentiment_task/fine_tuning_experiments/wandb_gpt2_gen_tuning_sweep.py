@@ -7,7 +7,8 @@ import yaml
 import wandb
 import sys
 import openprompt
-from sentiment_task import evaluation, generation
+from sentiment_task import generation
+import evaluation
 import utils
 
 from openprompt.prompts import ManualTemplate

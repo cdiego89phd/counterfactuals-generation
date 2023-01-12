@@ -1,10 +1,10 @@
+import utils
 import argparse
 import datetime
 import yaml
 import wandb
 import sys
-from nli_task.generator import generate_counterfactuals
-import utils
+from nli_task import generator
 import evaluation
 
 import os
@@ -25,7 +25,7 @@ def run_agent(args, yaml_file):
     trained_lm = utils.load_gpt2_from_local(model_local_path)
 
     # load classifier for the evaluation
-    classification_tools = utils.prepare_sentiment_classifier(classifier_name)
+    classification_tools = utils.prepare_nli_classifier(classifier_name)
     print(f"{datetime.datetime.now()}: Classifier prepared!")
 
     # load the dataset (we only use the valset)
@@ -39,12 +39,12 @@ def run_agent(args, yaml_file):
         gen_params["do_sample"] = True
         print(f"Running generation with run:{wandb.run.name}")
 
-        gen_valset = generate_counterfactuals(yaml_file,
-                                              df_valset,
-                                              trained_lm,
-                                              tokenizer,
-                                              gen_params,
-                                              n_to_generate)
+        gen_valset = generator.generate_counterfactuals(yaml_file,
+                                                        df_valset,
+                                                        trained_lm,
+                                                        tokenizer,
+                                                        gen_params,
+                                                        n_to_generate)
         print(f"{datetime.datetime.now()}: Generation completed!")
 
         evaluator = evaluation.NLIEvaluator(classification_tools["tokenizer"],

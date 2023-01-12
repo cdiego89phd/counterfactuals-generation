@@ -1,6 +1,6 @@
 import transformers
 import pandas as pd
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from torch.utils.data import Dataset
 from openprompt.data_utils import InputExample
 import bs4
@@ -201,7 +201,7 @@ class SentimentDataset(TaskDataset):
                                                                 'counterfactual': bs4.BeautifulSoup(
                                                                     row['counterfactual'], "lxml").text})
             self.guids.append(row['paired_id'])
-    print('Dataloader prepared!')
+        print('Dataloader prepared!')
 
     @staticmethod
     def to_dataframe(n_to_generate, dataset: TaskDataset) -> pd.DataFrame:
@@ -260,7 +260,7 @@ class NLIDataset(TaskDataset):
                                                      'counter_hyp': bs4.BeautifulSoup(
                                                          self.check_nan(row['counter_hyp']), "lxml").text})
             self.guids.append(index)
-    print('Dataloader prepared!')
+        print('Dataloader prepared!')
 
     @staticmethod
     def to_dataframe(n_to_generate: int, dataset: TaskDataset) -> pd.DataFrame:

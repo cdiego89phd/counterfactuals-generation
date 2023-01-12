@@ -104,7 +104,7 @@ def main():
     torch.manual_seed(parsed_yaml_file["SEED"])
     np.random.seed(parsed_yaml_file["SEED"])
 
-    print(f"{datetime.datetime.now()}: Begin GEN TUNING for fold:{fold}")
+    print(f"{datetime.datetime.now()}: Begin GEN for fold:{fold}")
 
     # load the dataset
     dataset_path = parsed_yaml_file['DATASET_PATH']
@@ -138,7 +138,7 @@ def main():
     gen_filename = f"{lm_name}{parsed_yaml_file['OUT_LABEL']}.csv"
     df_gen_testset.to_csv(f"{parsed_yaml_file['OUT_DIR']}{gen_filename}", sep='\t', header=True, index=False)
 
-    print(f"{datetime.datetime.now()}: End GEN TUNING for fold:{fold}")
+    print(f"{datetime.datetime.now()}: End GEN for fold:{fold}")
 
     return
 

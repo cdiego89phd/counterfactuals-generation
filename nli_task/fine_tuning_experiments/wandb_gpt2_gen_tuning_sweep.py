@@ -1,69 +1,13 @@
-import numpy as np
-import pandas as pd
-import torch
 import argparse
 import datetime
 import yaml
 import wandb
 import sys
-import openprompt
-import generation
-import evaluation
+from nli_task.generator import generate_counterfactuals
 import utils
+import evaluation
 
-from openprompt.prompts import ManualTemplate
-from openprompt.plms.lm import LMTokenizerWrapper
 import os
-
-
-def generate_counterfactuals(yaml_file,
-                             df_valset,
-                             trained_lm,
-                             tokenizer,
-                             gen_params,
-                             n_to_generate) -> pd.DataFrame:
-
-    special_tokens = yaml_file['SPECIAL_TOKENS']
-    map_labels = yaml_file['MAP_LABELS']
-    generation_prompt = yaml_file['GENERATION_PROMPT']
-
-    # wrap the datasets with the prompt template
-    df_valset["wrapped_input"] = df_valset.apply(lambda row: utils.wrap_dataset_with_prompt(row,
-                                                                                            generation_prompt,
-                                                                                            map_labels,
-                                                                                            special_tokens), axis=1)
-
-    # prepare the data loader
-    valset = generation.SentimentDataset(raw_dataframe=df_valset.copy(deep=True))
-    valset.prepare_dataloader()
-    print(f"{datetime.datetime.now()}: Valset prepared!")
-
-    template_prompt = '{"placeholder":"text_a"}{"mask"}'
-    prompt_template = ManualTemplate(text=template_prompt, tokenizer=tokenizer)
-    tokenizer_wrapper = LMTokenizerWrapper
-    val_data_loader = openprompt.PromptDataLoader(
-        dataset=list(valset.get_dataset().values()),
-        tokenizer=tokenizer,
-        template=prompt_template,
-        tokenizer_wrapper_class=tokenizer_wrapper
-    )
-
-    # set Random seed
-    torch.manual_seed(yaml_file["SEED"])
-    np.random.seed(yaml_file["SEED"])
-
-    counter_generator = generation.CounterGenerator(prompt_template,
-                                                    trained_lm,
-                                                    val_data_loader,
-                                                    valset,
-                                                    gen_params)
-    print(f"{datetime.datetime.now()}: Begin of generation...")
-
-    # the generated counterfactuals are held inside the counter_generator object
-    counter_generator.perform_generation(tokenizer, n_to_generate=n_to_generate)
-    generated = counter_generator.dataframe_from_dataset(n_to_generate=n_to_generate)
-
-    return generated
 
 
 def run_agent(args, yaml_file):
@@ -103,20 +47,19 @@ def run_agent(args, yaml_file):
                                               n_to_generate)
         print(f"{datetime.datetime.now()}: Generation completed!")
 
-        evaluator = evaluation.SentimentEvaluator(classification_tools["tokenizer"],
-                                                  classification_tools["classifier"],
-                                                  classification_tools["label_map"],
-                                                  gen_valset)
-
+        evaluator = evaluation.NLIEvaluator(classification_tools["tokenizer"],
+                                            classification_tools["classifier"],
+                                            classification_tools["label_map"],
+                                            gen_valset)
         n_nan = evaluator.clean_evalset()
-        evaluator.infer_predictions(n_generated=n_to_generate)
+        evaluator.prepare_batches(args.n_batches, n_to_generate)
+
+        evaluator.infer_predictions(n_to_generate)
         lf_score = evaluator.calculate_lf_score()
-        conf_score = evaluator.get_conf_score_pred()
         blue_mean, blue_var, _, _ = evaluator.calculate_bleu_score(n_to_generate)
         blue_corpus = evaluator.calculate_bleu_corpus(n_to_generate)
 
         wandb.log({"lf_score": lf_score,
-                   "conf_score": conf_score,
                    "bleu_mean": blue_mean,
                    "bleu_var": blue_var,
                    "bleu_corpus": blue_corpus,
@@ -145,6 +88,14 @@ def main():
         type=str,
         required=True,
         help="The name of yaml file where to load the setting from."
+    )
+
+    parser.add_argument(
+        "--n_batches",
+        default=1,
+        type=int,
+        required=True,
+        help="The number of batches to use."
     )
 
     parser.add_argument(

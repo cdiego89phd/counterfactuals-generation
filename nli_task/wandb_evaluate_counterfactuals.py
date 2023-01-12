@@ -211,7 +211,7 @@ def main():
     with wandb.init(settings=wandb.Settings(console='off'),
                     project=args.wandb_project):
 
-        wandb.run.name = f"{args.eval_task_name}@{args.results_filename}"
+        wandb.run.name = f"{args.results_filename}"
 
         eval_set = evaluator.get_eval_set()
         metrics_dict["avg_len_counter"] = np.mean(eval_set["counter_size"].values)

@@ -22,6 +22,7 @@ def main():
 
     model = AutoModelForCausalLM.from_pretrained("EleutherAI/gpt-j-6B",
                                                  torch_dtype=precision)
+    model.cuda()
     tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
 
     prompt = (

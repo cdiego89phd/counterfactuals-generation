@@ -24,12 +24,14 @@ def main():
                                                  torch_dtype=precision)
     model.cuda()
     tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
+    tokenizer.cuda()
 
     prompt = (
         "In a shocking finding, scientists discovered "
     )
 
     input_ids = tokenizer(prompt, return_tensors="pt").input_ids
+    input_ids.cuda()
 
     gen_tokens = model.generate(
         input_ids,

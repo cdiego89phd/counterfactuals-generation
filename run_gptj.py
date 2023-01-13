@@ -25,9 +25,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
 
     prompt = (
-        "In a shocking finding, scientists discovered a herd of unicorns living in a remote, "
-        "previously unexplored valley, in the Andes Mountains. Even more surprising to the "
-        "researchers was the fact that the unicorns spoke perfect English."
+        "In a shocking finding, scientists discovered "
     )
 
     input_ids = tokenizer(prompt, return_tensors="pt").input_ids

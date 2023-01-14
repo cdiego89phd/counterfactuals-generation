@@ -34,10 +34,9 @@ def main():
     )
 
     input_ids = tokenizer(prompt, return_tensors="pt").input_ids
-    input_ids.cuda()
 
     gen_tokens = model.generate(
-        input_ids,
+        input_ids.cuda(),
         do_sample=True,
         temperature=0.9,
         max_length=100,

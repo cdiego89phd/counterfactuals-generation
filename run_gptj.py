@@ -27,7 +27,6 @@ def main():
                                                  torch_dtype=precision)
     model.cuda()
     tokenizer = AutoTokenizer.from_pretrained("EleutherAI/gpt-j-6B")
-    tokenizer.cuda()
 
     prompt = (
         "In a shocking finding, scientists discovered "

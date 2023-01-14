@@ -1,6 +1,12 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import argparse
 import torch
+import utils
+
+
+PRECISION_DICT = {16: torch.float16,
+                  32: torch.float32
+                  }
 
 
 def main():
@@ -14,12 +20,9 @@ def main():
         help=""
     )
     args = parser.parse_args()
+    precision = PRECISION_DICT[args.precision]
 
-    if args.precision == 16:
-        precision = torch.float16
-    else:
-        precision = torch.float32
-
+    utils.print_gpu_utilization()
     model = AutoModelForCausalLM.from_pretrained("EleutherAI/gpt-j-6B",
                                                  torch_dtype=precision)
     model.cuda()
@@ -41,6 +44,8 @@ def main():
     )
     gen_text = tokenizer.batch_decode(gen_tokens)[0]
     print(gen_text)
+    print()
+    utils.print_gpu_utilization()
 
 
 if __name__ == "__main__":

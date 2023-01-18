@@ -89,7 +89,11 @@ def main():
     print(f"# of samples for training:{len(df_trainset)}")
     print(f"# of samples for validation:{len(df_valset)}")
 
-    tokenizer, _, _ = utils.load_gpt2_objects(parsed_yaml_file['BASE_MODEL'], special_tokens)
+    base_name = parsed_yaml_file['BASE_MODEL']
+    if "EleutherAI" in base_name:  # load gptj
+        tokenizer, _, _ = utils.load_gptj_objects(base_name, special_tokens)
+    else:
+        tokenizer, _, _ = utils.load_gpt2_objects(base_name, special_tokens)
 
     # load the language model
     if parsed_yaml_file['MODEL_FROM_LOCAL']:

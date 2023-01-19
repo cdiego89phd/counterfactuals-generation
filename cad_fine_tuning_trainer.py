@@ -52,7 +52,6 @@ def prepare_training(df_trainset,
 
 def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, run_name=None, save_model=True):
 
-    utils.print_gpu_utilization()
     with wandb.init(project=project_name, name=run_name):
         if training_cfgs is None:
             # use wandb sweep config dict
@@ -82,10 +81,10 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, r
             metric_for_best_model='eval_loss',
             # tf32=True,
             fp16=True,
-            gradient_checkpointing=True
+            gradient_checkpointing=True,
+            optim="adafactor",
         )
 
-        # lm = lm.cuda()
         trainer = transformers.Trainer(
             model=lm,
             args=training_args,
@@ -94,6 +93,7 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, r
             callbacks=[early_stopping]
         )
 
+        utils.print_gpu_utilization()
         trainer.train()
 
         if save_model:

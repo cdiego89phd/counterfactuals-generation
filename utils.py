@@ -89,7 +89,10 @@ def load_tokenizer(tok_name, spec_tokens="None") -> transformers.AutoTokenizer:
 def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
         (transformers.AutoModelForCausalLM, transformers.AutoConfig):
     model_config_class = transformers.AutoConfig.from_pretrained(model_name)
-    model = transformers.AutoModelForCausalLM.from_pretrained(model_name, config=model_config_class)
+    model = transformers.AutoModelForCausalLM.from_pretrained(model_name,
+                                                              config=model_config_class,
+                                                              low_cpu_mem_usage=True,
+                                                              load_in_8bit=True)
     print("Downloaded model and cfg!")
     if spec_tokens != "None":
         # special tokens added, model needs to be resized accordingly

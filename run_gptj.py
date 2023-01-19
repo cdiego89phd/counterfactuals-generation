@@ -1,6 +1,7 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import argparse
 import torch
+import os
 import utils
 
 
@@ -47,4 +48,5 @@ def main():
 
 
 if __name__ == "__main__":
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
     main()

@@ -75,6 +75,28 @@ def wrap_nli_dataset_with_prompt(df_row, template, spec_tokens):
     return final_text
 
 
+def load_tokenizer(tok_name, spec_tokens="None") -> transformers.AutoTokenizer:
+    tok = transformers.AutoTokenizer.from_pretrained(tok_name)
+    print("Downloaded tokenizer!")
+    if spec_tokens != "None":
+        print(f"Len of tokenizer before adding tokens:{len(tok)}")
+        tok.add_special_tokens(spec_tokens)  # add special tokens
+        print("Added special tokens to tokenizer!")
+        print(f"Len of tokenizer after adding tokens:{len(tok)}")
+    return tok
+
+
+def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
+        (transformers.AutoModelForCausalLM, transformers.AutoConfig):
+    model_config_class = transformers.AutoConfig.from_pretrained(model_name)
+    model = transformers.AutoModelForCausalLM.from_pretrained(model_name, config=model_config_class)
+    print("Downloaded model and cfg!")
+    if spec_tokens != "None":
+        # special tokens added, model needs to be resized accordingly
+        model.resize_token_embeddings(n_tokens)
+    return model, model_config_class
+
+
 def load_gpt2_objects(model_name, spec_tokens):
     # Load language gpt2 objects
     tok = transformers.GPT2Tokenizer.from_pretrained(model_name)
@@ -96,8 +118,8 @@ def load_gpt2_objects(model_name, spec_tokens):
 
 
 def load_gptj_objects(model_name, spec_tokens):
-    # Load language gpt2 objects
-    tok = transformers.AutoModelForCausalLM.from_pretrained(model_name)
+    # Load language gptj objects
+    tok = transformers.AutoTokenizer.from_pretrained(model_name)
     print("Downloaded tokenizer!")
     if spec_tokens != "None":
         print(f"Len of tokenizer before adding tokens:{len(tok)}")
@@ -106,7 +128,7 @@ def load_gptj_objects(model_name, spec_tokens):
         print(f"Len of tokenizer after adding tokens:{len(tok)}")
 
     model_config_class = transformers.AutoConfig.from_pretrained(model_name)
-    model = transformers.AutoTokenizer.from_pretrained(model_name, config=model_config_class)
+    model = transformers.AutoModelForCausalLM.from_pretrained(model_name, config=model_config_class)
     print("Downloaded model and cfg!")
     if spec_tokens != "None":
         # special tokens added, model needs to be resized accordingly

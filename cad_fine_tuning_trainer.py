@@ -2,6 +2,8 @@ import transformers
 import wandb
 import datasets
 
+import utils
+
 
 def freeze_layers_lm(to_freeze, n_to_unfreeze, model):
     if to_freeze:
@@ -50,6 +52,7 @@ def prepare_training(df_trainset,
 
 def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, run_name=None, save_model=True):
 
+    utils.print_gpu_utilization()
     with wandb.init(project=project_name, name=run_name):
         if training_cfgs is None:
             # use wandb sweep config dict

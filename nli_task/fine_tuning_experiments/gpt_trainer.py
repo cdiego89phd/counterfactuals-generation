@@ -94,9 +94,9 @@ def main():
     tokenizer = utils.load_tokenizer(base_name, special_tokens)
 
     if "EleutherAI" in base_name:  # load gptj
-        load_in_8bit = True
+        load_in_8bit = False
     else:
-        load_in_8bit = True
+        load_in_8bit = False
 
     # load the language model
     if parsed_yaml_file['MODEL_FROM_LOCAL']:

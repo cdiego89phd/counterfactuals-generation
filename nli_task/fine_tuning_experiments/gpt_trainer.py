@@ -93,21 +93,16 @@ def main():
     base_name = parsed_yaml_file['BASE_MODEL']
     tokenizer = utils.load_tokenizer(base_name, special_tokens)
 
-    if "EleutherAI" in base_name:  # load gptj
-        load_in_8bit = False
-    else:
-        load_in_8bit = False
-
     # load the language model
     if parsed_yaml_file['MODEL_FROM_LOCAL']:
         model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{lm_name}"
-        lm, _ = utils.load_causal_model(model_local_path, len(tokenizer), load_in_8bit, special_tokens)
+        lm, _ = utils.load_causal_model(model_local_path, len(tokenizer), special_tokens)
 
         # add new, random embeddings for the new tokens
         # this might be needed if the model has been pre-trained with a different tokenizer (of different lenght)
         lm.resize_token_embeddings(len(tokenizer))
     else:
-        lm, _ = utils.load_causal_model(lm_name, len(tokenizer), load_in_8bit, special_tokens)
+        lm, _ = utils.load_causal_model(lm_name, len(tokenizer), special_tokens)
 
     print("Downloaded tokenizer, model and cfg!")
 
@@ -131,6 +126,15 @@ def main():
     training_cfgs = None
     if not parsed_yaml_file['IS_SWEEP']:
         training_cfgs = parsed_yaml_file['TRAINING_CFGS']
+
+    if "EleutherAI" in lm_name:  # load gptj
+        training_cfgs["tf32"] = False
+        training_cfgs["fp16"] = True
+        training_cfgs["optim"] = "adafactor"
+    else:
+        training_cfgs["tf32"] = True
+        training_cfgs["fp16"] = False
+        training_cfgs["optim"] = "adamw_hf"
 
     run_name = f"{lm_name}@prompt-{prompt_id}@cad_fine_tuning"
     out_name = f"{out_dir}/{run_name}"

@@ -127,14 +127,15 @@ def main():
     if not parsed_yaml_file['IS_SWEEP']:
         training_cfgs = parsed_yaml_file['TRAINING_CFGS']
 
-    if "EleutherAI" in lm_name:  # load gptj
-        training_cfgs["tf32"] = False
-        training_cfgs["fp16"] = True
-        training_cfgs["optim"] = "adafactor"
-    else:
-        training_cfgs["tf32"] = True
-        training_cfgs["fp16"] = False
-        training_cfgs["optim"] = "adamw_hf"
+        if "EleutherAI" in lm_name:  # load gptj
+            print("Running GPTJ configuration!")
+            training_cfgs["tf32"] = False
+            training_cfgs["fp16"] = True
+            training_cfgs["optim"] = "adafactor"
+        else:
+            training_cfgs["tf32"] = True
+            training_cfgs["fp16"] = False
+            training_cfgs["optim"] = "adamw_hf"
 
     run_name = f"{lm_name}@prompt-{prompt_id}@cad_fine_tuning"
     out_name = f"{out_dir}/{run_name}"

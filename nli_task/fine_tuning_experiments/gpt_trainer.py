@@ -96,7 +96,7 @@ def main():
     if "EleutherAI" in base_name:  # load gptj
         load_in_8bit = True
     else:
-        load_in_8bit = False
+        load_in_8bit = True
 
     # load the language model
     if parsed_yaml_file['MODEL_FROM_LOCAL']:

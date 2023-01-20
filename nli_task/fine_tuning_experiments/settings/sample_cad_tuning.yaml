@@ -5,8 +5,8 @@ FOLD: "0"
 IS_SWEEP: False
 
 MODEL_FROM_LOCAL: False
-BASE_MODEL: "gpt2"
-LM_NAME: "gpt2" #{gpt2 (gpt2-small, 12 layers), gpt2-medium (24 layers), gpt2-large (36 layers), gpt2-xl (48 layers)}
+BASE_MODEL: "sshleifer/tiny-gpt2"
+LM_NAME: "sshleifer/tiny-gpt2" #{gpt2 (gpt2-small, 12 layers), gpt2-medium (24 layers), gpt2-large (36 layers), gpt2-xl (48 layers)}
 
 TO_FREEZE_LAYERS: False
 UNFREEZE_LAST_N: 6 # The last N layers to unfreeze for training

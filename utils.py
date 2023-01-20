@@ -94,9 +94,9 @@ def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
     model = gptj.GPTJForCausalLM.from_pretrained(model_name, low_cpu_mem_usage=True)
 
     print("Downloaded model and cfg!")
-    # if spec_tokens != "None":
-    #     # special tokens added, model needs to be resized accordingly
-    #     model.resize_token_embeddings(n_tokens)
+    if spec_tokens != "None":
+        # special tokens added, model needs to be resized accordingly
+        model.resize_token_embeddings(n_tokens)
     return model, model_config_class
 
 

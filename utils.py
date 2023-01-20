@@ -90,6 +90,7 @@ def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
         (transformers.AutoModelForCausalLM, transformers.AutoConfig):
     model_config_class = transformers.AutoConfig.from_pretrained(model_name)
     model = transformers.AutoModelForCausalLM.from_pretrained(model_name,
+                                                              load_in_8bit=True,
                                                               device_map='sequential')
 
     print("Downloaded model and cfg!")

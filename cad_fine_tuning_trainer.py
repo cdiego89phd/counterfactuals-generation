@@ -79,8 +79,8 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, r
             save_strategy=transformers.IntervalStrategy.EPOCH,
             load_best_model_at_end=True,
             metric_for_best_model='eval_loss',
-            # tf32=True,
-            fp16=True,
+            tf32=True,
+            # fp16=True,
             gradient_checkpointing=True,
             # optim="adafactor",
         )

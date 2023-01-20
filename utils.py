@@ -5,6 +5,7 @@ from torch.utils.data import Dataset
 from openprompt.data_utils import InputExample
 import bs4
 import pynvml
+import gptj
 
 
 def print_gpu_utilization():
@@ -90,7 +91,7 @@ def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
         (transformers.AutoModelForCausalLM, transformers.AutoConfig):
     model_config_class = transformers.AutoConfig.from_pretrained(model_name)
     # model = transformers.AutoModelForCausalLM.from_pretrained(model_name)
-    model = transformers.GPTJForCausalLM.from_pretrained(model_name, low_cpu_mem_usage=True)
+    model = gptj.GPTJForCausalLM.from_pretrained(model_name, low_cpu_mem_usage=True)
 
     print("Downloaded model and cfg!")
     if spec_tokens != "None":

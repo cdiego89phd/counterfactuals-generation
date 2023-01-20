@@ -4,6 +4,7 @@ from torch import nn
 from torch.cuda.amp import custom_fwd, custom_bwd
 import transformers
 from bitsandbytes.functional import quantize_blockwise, dequantize_blockwise
+from typing import Optional
 
 
 class FrozenBNBLinear(nn.Module):
@@ -134,16 +135,46 @@ class GPTJBlock(transformers.models.gptj.modeling_gptj.GPTJBlock):
         convert_to_int8(self.mlp)
 
 
-class GPTJModel(transformers.models.gptj.modeling_gptj.GPTJModel):
-    def __init__(self, config):
-        super().__init__(config)
-        convert_to_int8(self)
+# class GPTJModel(transformers.models.gptj.modeling_gptj.GPTJModel):
+#     def __init__(self, config):
+#         super().__init__(config)
+#         convert_to_int8(self)
 
 
 class GPTJForCausalLM(transformers.models.gptj.modeling_gptj.GPTJForCausalLM):
     def __init__(self, config):
         super().__init__(config)
         convert_to_int8(self)
+
+    def resize_token_embeddings(self, new_num_tokens: Optional[int] = None) -> FrozenBNBEmbedding:
+        """
+        Resizes input token embeddings matrix of the model if :obj:`new_num_tokens != config.vocab_size`.
+
+        Takes care of tying weights embeddings afterwards if the model class has a :obj:`tie_weights()` method.
+
+        Arguments:
+            new_num_tokens (:obj:`int`, `optional`):
+                The number of new tokens in the embedding matrix. Increasing the size will add newly initialized
+                vectors at the end. Reducing the size will remove vectors from the end. If not provided or :obj:`None`,
+                just returns a pointer to the input tokens :obj:`torch.nn.Embedding` module of the model without doing
+                anything.
+
+        Return:
+            :obj:`FrozenBNBEmbedding`: Pointer to the input tokens Embeddings Module of the model.
+        """
+        model_embeds = self._resize_token_embeddings(new_num_tokens)
+        if new_num_tokens is None:
+            return model_embeds
+
+        # Update base model and current model config
+        self.config.vocab_size = new_num_tokens
+        self.vocab_size = new_num_tokens
+
+        # Tie weights again if needed
+        self.tie_weights()
+
+        return model_embeds
+
 
 
 transformers.models.gptj.modeling_gptj.GPTJBlock = GPTJBlock  # monkey-patch GPT-J

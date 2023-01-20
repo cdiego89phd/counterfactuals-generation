@@ -55,7 +55,7 @@ class DequantizeAndLinear(torch.autograd.Function):
         return grad_input, None, None, None, grad_bias
 
 
-class FrozenBNBEmbedding(nn.Module):
+class FrozenBNBEmbedding(nn.modules.sparse.Embedding):
     def __init__(self, weight, absmax, code):
         super().__init__()
         self.num_embeddings, self.embedding_dim = weight.shape
@@ -174,7 +174,6 @@ class GPTJForCausalLM(transformers.models.gptj.modeling_gptj.GPTJForCausalLM):
         self.tie_weights()
 
         return model_embeds
-
 
 
 transformers.models.gptj.modeling_gptj.GPTJBlock = GPTJBlock  # monkey-patch GPT-J

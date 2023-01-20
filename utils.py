@@ -87,11 +87,12 @@ def load_tokenizer(tok_name, spec_tokens="None") -> transformers.AutoTokenizer:
     return tok
 
 
-def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
+def load_causal_model(model_name: str, n_tokens: int, load_in_8bit=False, spec_tokens="None") -> \
         (transformers.AutoModelForCausalLM, transformers.AutoConfig):
     model_config_class = transformers.AutoConfig.from_pretrained(model_name)
-    model = transformers.AutoModelForCausalLM.from_pretrained(model_name, load_in_8bit=True, device_map='auto')
-    # model = gptj.GPTJForCausalLM.from_pretrained(model_name, low_cpu_mem_usage=True)
+    model = transformers.AutoModelForCausalLM.from_pretrained(model_name,
+                                                              load_in_8bit=load_in_8bit,
+                                                              device_map='sequential')
 
     print("Downloaded model and cfg!")
     if spec_tokens != "None":
@@ -100,49 +101,29 @@ def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
     return model, model_config_class
 
 
-def load_gpt2_objects(model_name, spec_tokens):
-    # Load language gpt2 objects
-    tok = transformers.GPT2Tokenizer.from_pretrained(model_name)
-    print("Downloaded tokenizer!")
-    if spec_tokens != "None":
-        print(f"Len of tokenizer before adding tokens:{len(tok)}")
-        tok.add_special_tokens(spec_tokens)  # add special tokens
-        print("Added special tokens to tokenizer!")
-        print(f"Len of tokenizer after adding tokens:{len(tok)}")
-
-    model_config_class = transformers.GPT2Config.from_pretrained(model_name)
-    model = transformers.GPT2LMHeadModel.from_pretrained(model_name, config=model_config_class)
-    print("Downloaded model and cfg!")
-    if spec_tokens != "None":
-        # special tokens added, model needs to be resized accordingly
-        model.resize_token_embeddings(len(tok))
-
-    return tok, model, model_config_class
-
-
-def load_gptj_objects(model_name, spec_tokens):
-    # Load language gptj objects
-    tok = transformers.AutoTokenizer.from_pretrained(model_name)
-    print("Downloaded tokenizer!")
-    if spec_tokens != "None":
-        print(f"Len of tokenizer before adding tokens:{len(tok)}")
-        tok.add_special_tokens(spec_tokens)  # add special tokens
-        print("Added special tokens to tokenizer!")
-        print(f"Len of tokenizer after adding tokens:{len(tok)}")
-
-    model_config_class = transformers.AutoConfig.from_pretrained(model_name)
-    model = transformers.AutoModelForCausalLM.from_pretrained(model_name, config=model_config_class)
-    print("Downloaded model and cfg!")
-    if spec_tokens != "None":
-        # special tokens added, model needs to be resized accordingly
-        model.resize_token_embeddings(len(tok))
-
-    return tok, model, model_config_class
+# def load_gpt2_objects(model_name, spec_tokens):
+#     # Load language gpt2 objects
+#     tok = transformers.GPT2Tokenizer.from_pretrained(model_name)
+#     print("Downloaded tokenizer!")
+#     if spec_tokens != "None":
+#         print(f"Len of tokenizer before adding tokens:{len(tok)}")
+#         tok.add_special_tokens(spec_tokens)  # add special tokens
+#         print("Added special tokens to tokenizer!")
+#         print(f"Len of tokenizer after adding tokens:{len(tok)}")
+#
+#     model_config_class = transformers.GPT2Config.from_pretrained(model_name)
+#     model = transformers.GPT2LMHeadModel.from_pretrained(model_name, config=model_config_class)
+#     print("Downloaded model and cfg!")
+#     if spec_tokens != "None":
+#         # special tokens added, model needs to be resized accordingly
+#         model.resize_token_embeddings(len(tok))
+#
+#     return tok, model, model_config_class
 
 
-def load_gpt2_from_local(model_path):
-    model = transformers.GPT2LMHeadModel.from_pretrained(model_path, local_files_only=True)
-    return model
+# def load_gpt2_from_local(model_path):
+#     model = transformers.GPT2LMHeadModel.from_pretrained(model_path, local_files_only=True)
+#     return model
 
 
 def prepare_sentiment_classifier(classifier_name):

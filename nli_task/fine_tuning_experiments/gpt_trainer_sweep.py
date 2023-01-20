@@ -4,6 +4,7 @@ import yaml
 import wandb
 import sys
 import utils
+import os
 import cad_fine_tuning_trainer
 
 
@@ -149,4 +150,5 @@ def main():
 
 
 if __name__ == "__main__":
+    os.environ["TOKENIZERS_PARALLELISM"] = "false"
     main()

@@ -5,7 +5,6 @@ from torch.utils.data import Dataset
 from openprompt.data_utils import InputExample
 import bs4
 import pynvml
-import gptj
 
 
 def print_gpu_utilization():
@@ -98,6 +97,10 @@ def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
         model.resize_token_embeddings(n_tokens)
     return model, model_config_class
 
+
+def load_causal_model_from_local(model_path):
+    model = transformers.AutoModelForCausalLM.from_pretrained(model_path, local_files_only=True)
+    return model
 
 # def load_gpt2_objects(model_name, spec_tokens):
 #     # Load language gpt2 objects

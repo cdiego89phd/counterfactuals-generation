@@ -4,12 +4,12 @@ import yaml
 import cad_fine_tuning_trainer
 import utils
 
-try:
-    from kernl.model_optimization import optimize_model
-    kernl_imported = True
-except ImportError:
-    kernl_imported = False
-    print("Kernl module not found! GPU optimization not available for training")
+# try:
+#     from kernl.model_optimization import optimize_model
+#     kernl_imported = True
+# except ImportError:
+#     kernl_imported = False
+#     print("Kernl module not found! GPU optimization not available for training")
 
 
 def main():
@@ -105,22 +105,23 @@ def main():
     print(f"# of samples for training:{len(df_trainset)}")
     print(f"# of samples for validation:{len(df_valset)}")
 
-    tokenizer, _, _ = utils.load_gpt2_objects(parsed_yaml_file['BASE_MODEL'], special_tokens)
+    base_lm_name = parsed_yaml_file['BASE_MODEL']
+    tokenizer = utils.load_tokenizer(base_lm_name, special_tokens)
 
     # load the language model
     if parsed_yaml_file['MODEL_FROM_LOCAL']:
         model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{lm_name}"
-        lm = utils.load_gpt2_from_local(model_local_path)
+        lm = utils.load_causal_model_from_local(model_local_path)
 
         # add new, random embeddings for the new tokens
         # this might be needed if the model has been pre-trained with a different tokenizer (of different lenght)
         lm.resize_token_embeddings(len(tokenizer))
     else:
-        _, lm, _ = utils.load_gpt2_objects(lm_name, special_tokens)
+        lm, _ = utils.load_causal_model(base_lm_name, len(tokenizer), special_tokens)
 
-    if args.run_kernl and kernl_imported:  # TODO future development for training with fast kernl library
-        optimize_model(lm)
-        print("Runnning Kernel optimization!!")
+    # if args.run_kernl and kernl_imported:  # TODO future development for training with fast kernl library
+    #     optimize_model(lm)
+    #     print("Runnning Kernel optimization!!")
 
     print("Downloaded tokenizer, model and cfg!")
 
@@ -145,6 +146,15 @@ def main():
     training_cfgs = None
     if not parsed_yaml_file['IS_SWEEP']:
         training_cfgs = parsed_yaml_file['TRAINING_CFGS']
+
+    if "EleutherAI" in lm_name:  # load gptj
+        training_cfgs["tf32"] = False
+        training_cfgs["fp16"] = True
+        training_cfgs["optim"] = "adafactor"
+    else:
+        training_cfgs["tf32"] = True
+        training_cfgs["fp16"] = False
+        training_cfgs["optim"] = "adamw_hf"
 
     run_name = f"{lm_name}@prompt-{prompt_id}@fold-{fold}@cad_fine_tuning"
     out_name = f"{out_dir}/{run_name}"

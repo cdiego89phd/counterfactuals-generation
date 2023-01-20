@@ -96,7 +96,7 @@ def main():
     # load the language model
     if parsed_yaml_file['MODEL_FROM_LOCAL']:
         model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{lm_name}"
-        lm, _ = utils.load_causal_model(model_local_path, len(tokenizer), special_tokens)
+        lm, _ = utils.load_causal_model_from_local(model_local_path)
 
         # add new, random embeddings for the new tokens
         # this might be needed if the model has been pre-trained with a different tokenizer (of different lenght)

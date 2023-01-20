@@ -20,9 +20,9 @@ def run_agent(args, yaml_file):
     classifier_name = yaml_file['CLASSIFIER_NAME']
     n_to_generate = yaml_file['N_TO_GENERATE']
 
-    tokenizer, _, _ = utils.load_gpt2_objects(base_model, special_tokens)
+    tokenizer = utils.load_tokenizer(base_model, special_tokens)
     model_local_path = f"{yaml_file['MODEL_DIR']}/{lm_name}"
-    trained_lm = utils.load_gpt2_from_local(model_local_path)
+    trained_lm, _ = utils.load_causal_model_from_local(model_local_path)
 
     # load classifier for the evaluation
     classification_tools = utils.prepare_nli_classifier(classifier_name)

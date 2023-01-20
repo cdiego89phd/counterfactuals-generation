@@ -7,8 +7,8 @@ import yaml
 import wandb
 import sys
 import openprompt
-import generation
 import evaluation
+from sentiment_task import generator
 import utils
 
 from openprompt.prompts import ManualTemplate
@@ -34,7 +34,7 @@ def generate_counterfactuals(yaml_file,
                                                                                             special_tokens), axis=1)
 
     # prepare the data loader
-    valset = generation.SentimentDataset(raw_dataframe=df_valset.copy(deep=True))
+    valset = utils.SentimentDataset(raw_dataframe=df_valset.copy(deep=True))
     valset.prepare_dataloader()
     print(f"{datetime.datetime.now()}: Valset prepared!")
 
@@ -52,11 +52,11 @@ def generate_counterfactuals(yaml_file,
     torch.manual_seed(yaml_file["SEED"])
     np.random.seed(yaml_file["SEED"])
 
-    counter_generator = generation.CounterGenerator(prompt_template,
-                                                    trained_lm,
-                                                    val_data_loader,
-                                                    valset,
-                                                    gen_params)
+    counter_generator = generator.CounterGenerator(prompt_template,
+                                                   trained_lm,
+                                                   val_data_loader,
+                                                   valset,
+                                                   gen_params)
     print(f"{datetime.datetime.now()}: Begin of generation...")
 
     # the generated counterfactuals are held inside the counter_generator object

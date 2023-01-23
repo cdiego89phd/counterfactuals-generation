@@ -85,8 +85,8 @@ def main():
     # load the dataset
     df_trainset, df_valset, _ = utils.load_dataset(f"{dataset_path}/fold_{fold}/")
     if args.debug_mode:
-        df_trainset = df_trainset[:1]
-        df_valset = df_valset[:1]
+        df_trainset = df_trainset[:100]
+        df_valset = df_valset[:100]
     print(f"# of samples for training:{len(df_trainset)}")
     print(f"# of samples for validation:{len(df_valset)}")
 

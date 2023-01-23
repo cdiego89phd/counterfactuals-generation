@@ -82,7 +82,7 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, r
             metric_for_best_model='eval_loss',
             # tf32=training_cfgs['tf32'],
             # tf32=True,
-            # fp16=True,
+            fp16=True,
             # fp16=training_cfgs['fp16'],
             gradient_checkpointing=True,
             optim="adafactor",

@@ -84,7 +84,7 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name, r
             fp16=True,
             # fp16=training_cfgs['fp16'],
             gradient_checkpointing=True,
-            optim="adafactor",
+            # optim="adafactor",
             # optim=training_cfgs['optim'],
         )
 

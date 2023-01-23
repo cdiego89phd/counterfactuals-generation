@@ -94,8 +94,10 @@ def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
     #                                                           load_in_8bit=True,
     #                                                           device_map='sequential')
 
-    model = transformers.GPTJForCausalLM.from_pretrained(model_name, revision="float16",
-                                                         torch_dtype=torch.float16, low_cpu_mem_usage=True)
+    model = transformers.GPTJForCausalLM.from_pretrained(model_name,
+                                                         revision="float16",
+                                                         torch_dtype=torch.float16,
+                                                         low_cpu_mem_usage=True)
     # model = transformers.AutoModelForCausalLM.from_pretrained(model_name)
 
     print("Downloaded model and cfg!")

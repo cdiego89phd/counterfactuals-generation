@@ -8,6 +8,13 @@ import pynvml
 import torch
 
 
+CAUSALLM = {"EleutherAI/gpt-j-6B": transformers.GPTJForCausalLM.from_pretrained("EleutherAI/gpt-j-6B",
+                                                                                revision="float16",
+                                                                                torch_dtype=torch.float16,
+                                                                                low_cpu_mem_usage=True)
+            }
+
+
 def print_gpu_utilization():
     pynvml.nvmlInit()
     handle = pynvml.nvmlDeviceGetHandleByIndex(0)
@@ -94,10 +101,10 @@ def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
     #                                                           load_in_8bit=True,
     #                                                           device_map='sequential')
 
-    model = transformers.GPTJForCausalLM.from_pretrained(model_name,
-                                                         revision="float16",
-                                                         torch_dtype=torch.float16,
-                                                         low_cpu_mem_usage=True)
+    if model_name in CAUSALLM:
+        model = CAUSALLM[model_name]
+    else:
+        model = transformers.AutoModelForCausalLM.from_pretrained(model_name)
     # model = transformers.AutoModelForCausalLM.from_pretrained(model_name)
     # model.gradient_checkpointing_enable()
 

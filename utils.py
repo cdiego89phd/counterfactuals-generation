@@ -5,6 +5,7 @@ from torch.utils.data import Dataset
 from openprompt.data_utils import InputExample
 import bs4
 import pynvml
+import torch
 
 
 def print_gpu_utilization():
@@ -89,9 +90,12 @@ def load_tokenizer(tok_name, spec_tokens="None") -> transformers.AutoTokenizer:
 def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
         (transformers.AutoModelForCausalLM, transformers.AutoConfig):
     model_config_class = transformers.AutoConfig.from_pretrained(model_name)
-    model = transformers.AutoModelForCausalLM.from_pretrained(model_name,
-                                                              load_in_8bit=True,
-                                                              device_map='sequential')
+    # model = transformers.AutoModelForCausalLM.from_pretrained(model_name,
+    #                                                           load_in_8bit=True,
+    #                                                           device_map='sequential')
+
+    model = transformers.GPTJForCausalLM.from_pretrained(model_name, revision="float16",
+                                                         torch_dtype=torch.float16, low_cpu_mem_usage=True)
     # model = transformers.AutoModelForCausalLM.from_pretrained(model_name)
 
     print("Downloaded model and cfg!")

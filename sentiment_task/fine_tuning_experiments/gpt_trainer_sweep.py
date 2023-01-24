@@ -63,7 +63,8 @@ def run_agent(args, data_fold, wandb_project, yaml_file):
 
     training_cfgs = None  # because this is a sweep agent
     cad_fine_tuning_trainer.train(out_name, lm, tokenized_train, tokenized_val,
-                                  no_cuda, training_cfgs, wandb_project, None, False)
+                                  no_cuda, training_cfgs, wandb_project,
+                                  run_name=None, save_model=False, is_sweep=True)
 
 
 def main():

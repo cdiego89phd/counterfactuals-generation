@@ -62,9 +62,21 @@ def run_agent(args, data_fold, wandb_project, yaml_file):
                                                                               tokenize_in_batch)
     print("Datasets have been tokenized successfully!")
 
-    training_cfgs = None  # because this is a sweep agent
+    training_cfgs = {}
+    if lm_name in ["EleutherAI", "gpt2-large", "gpt2-xl"]:
+        training_cfgs['gradient_checkpointing'] = True
+        lm.gradient_checkpointing_enable()
+        training_cfgs["fp16"] = True
+        training_cfgs["optim"] = "adafactor"
+        print("Running Large Model configuration!")
+    else:
+        training_cfgs['gradient_checkpointing'] = False
+        training_cfgs["fp16"] = False
+        training_cfgs["optim"] = "adamw_hf"
+
     cad_fine_tuning_trainer.train(out_name, lm, tokenized_train, tokenized_val,
-                                  no_cuda, training_cfgs, wandb_project, None, False)
+                                  no_cuda, training_cfgs, wandb_project,
+                                  run_name=None, save_model=False, is_sweep=True)
 
 
 def main():

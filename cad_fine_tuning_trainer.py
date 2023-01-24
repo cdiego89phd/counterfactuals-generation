@@ -56,7 +56,7 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name,
     with wandb.init(project=project_name, name=run_name):
         if is_sweep:
             # use wandb sweep config dict
-            for k in wandb.config:
+            for k in wandb.config.keys():
                 training_cfgs[k] = wandb.config[k]
 
         lm = freeze_layers_lm(training_cfgs['FREEZE_LAYERS'], training_cfgs['UNFREEZE_LAST_N'], lm)

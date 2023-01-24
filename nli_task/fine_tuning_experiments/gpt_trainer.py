@@ -127,14 +127,13 @@ def main():
     if not parsed_yaml_file['IS_SWEEP']:
         training_cfgs = parsed_yaml_file['TRAINING_CFGS']
 
-        if "EleutherAI" in lm_name:  # load gptj
-            print("Running GPTJ configuration!")
-            # training_cfgs["tf32"] = False
-            # training_cfgs["fp16"] = True
+        if lm_name in ["EleutherAI", "gpt2-large", "gpt2-xl"]:
+            training_cfgs['gradient_checkpointing'] = True
+            lm.gradient_checkpointing_enable()
             training_cfgs["optim"] = "adafactor"
+            print("Running Large Model configuration!")
         else:
-            # training_cfgs["tf32"] = True
-            # training_cfgs["fp16"] = False
+            training_cfgs['gradient_checkpointing'] = False
             training_cfgs["optim"] = "adamw_hf"
 
     run_name = f"{lm_name}@prompt-{prompt_id}@cad_fine_tuning"

@@ -64,13 +64,11 @@ def run_agent(args, data_fold, wandb_project, yaml_file):
 
     training_cfgs = {}
     if lm_name in ["EleutherAI", "gpt2-large", "gpt2-xl"]:
-        training_cfgs['gradient_checkpointing'] = True
         lm.gradient_checkpointing_enable()
         training_cfgs["fp16"] = True
         training_cfgs["optim"] = "adafactor"
         print("Running Large Model configuration!")
     else:
-        training_cfgs['gradient_checkpointing'] = False
         training_cfgs["fp16"] = False
         training_cfgs["optim"] = "adamw_hf"
 

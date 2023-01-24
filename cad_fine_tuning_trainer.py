@@ -82,7 +82,6 @@ def train(out_dir, lm, trainset, valset, no_cuda, training_cfgs, project_name,
             load_best_model_at_end=True,
             metric_for_best_model='eval_loss',
             fp16=training_cfgs['fp16'],
-            gradient_checkpointing=training_cfgs['gradient_checkpointing'],
             optim=training_cfgs['optim'],
         )
 

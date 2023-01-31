@@ -119,7 +119,7 @@ def main():
     if parsed_yaml_file['MODEL_FROM_LOCAL']:
         model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{parsed_yaml_file['LM_NAME']}"
         trained_lm = utils.load_causal_model_from_local(model_local_path)
-        trained_lm.resize_token_embeddings(len(tokenizer))
+        # trained_lm.resize_token_embeddings(len(tokenizer))
     else:
         trained_lm, _ = utils.load_causal_model(base_lm_name, len(tokenizer), special_tokens)
     print(f"{datetime.datetime.now()}: Language model loaded from local:{parsed_yaml_file['MODEL_FROM_LOCAL']}")

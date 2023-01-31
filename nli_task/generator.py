@@ -114,7 +114,8 @@ def main():
     print(f"{datetime.datetime.now()}: Test set loaded for fold:{fold}")
     print(f"# of samples for test:{len(df_testset)}")
 
-    tokenizer = utils.load_tokenizer(base_lm_name, special_tokens)
+    # tokenizer = utils.load_tokenizer(base_lm_name, special_tokens)
+    tokenizer = utils.load_tokenizer_bis(base_lm_name, special_tokens)
 
     if parsed_yaml_file['MODEL_FROM_LOCAL']:
         model_local_path = f"{parsed_yaml_file['MODEL_DIR']}/{parsed_yaml_file['LM_NAME']}"

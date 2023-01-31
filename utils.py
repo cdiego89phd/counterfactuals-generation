@@ -90,6 +90,17 @@ def load_tokenizer(tok_name, spec_tokens="None") -> transformers.AutoTokenizer:
     return tok
 
 
+def load_tokenizer_bis(tok_name, spec_tokens="None") -> transformers.GPT2Tokenizer:
+    tok = transformers.GPT2Tokenizer.from_pretrained(tok_name)
+    print("Downloaded tokenizer!")
+    if spec_tokens != "None":
+        print(f"Len of tokenizer before adding tokens:{len(tok)}")
+        tok.add_special_tokens(spec_tokens)  # add special tokens
+        print("Added special tokens to tokenizer!")
+        print(f"Len of tokenizer after adding tokens:{len(tok)}")
+    return tok
+
+
 def load_causal_model(model_name: str, n_tokens: int, spec_tokens="None") -> \
         (transformers.AutoModelForCausalLM, transformers.AutoConfig):
     model_config_class = transformers.AutoConfig.from_pretrained(model_name)

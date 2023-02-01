@@ -81,7 +81,7 @@ class CounterGenerator:
                     instance_to_update.meta["generated_counter"].append(generated_counter[0])
 
             except Exception as e:
-                instance_to_update.meta["generated_counter"] = None
+                instance_to_update.meta["generated_counter"] = [None for i in range(n_to_generate)]
                 print(f"Instance that generated the exception:{instance_guid}")
                 print(f"Step:{step}")
                 print(e)

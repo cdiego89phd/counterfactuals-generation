@@ -90,7 +90,7 @@ def load_tokenizer(tok_name, spec_tokens="None") -> transformers.AutoTokenizer:
     return tok
 
 
-def load_tokenizer_bis(tok_name, spec_tokens="None") -> transformers.GPT2Tokenizer:
+def load_gpt2_tokenizer(tok_name, spec_tokens="None") -> transformers.GPT2Tokenizer:
     tok = transformers.GPT2Tokenizer.from_pretrained(tok_name)
     print("Downloaded tokenizer!")
     if spec_tokens != "None":

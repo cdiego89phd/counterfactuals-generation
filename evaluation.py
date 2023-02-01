@@ -24,6 +24,9 @@ class Evaluator(object):
         n_nan = self.df_eval_dataset['generated_counter_0'].isna().sum()
         print(f"# of nan values removed in generated counterfactuals:{n_nan}")
         self.df_eval_dataset.dropna(subset=['generated_counter_0'], inplace=True)
+        self.df_eval_dataset.dropna(subset=['generated_counter_1'], inplace=True)
+        self.df_eval_dataset.dropna(subset=['generated_counter_2'], inplace=True)
+
         return n_nan
 
     @staticmethod

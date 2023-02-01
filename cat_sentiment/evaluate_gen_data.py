@@ -23,7 +23,7 @@ def evaluate(args, results_filename):
 
     # run evaluation
     results_table.rename(columns={"label": "label_counter", "text": "generated_counter_0"}, inplace=True)
-    n_nan = evaluator.clean_evalset()  # remove the Nan counterfactuals
+    n_nan = evaluator.clean_evalset(1)  # remove the Nan counterfactuals
     print(f"Removed {n_nan} null counterfactuals!")
 
     # measures the label flip score

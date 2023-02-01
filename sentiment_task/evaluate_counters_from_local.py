@@ -27,7 +27,7 @@ def evaluate(args, results_filename):
                                               results_table)
 
     # run evaluation
-    n_nan = evaluator.clean_evalset()
+    n_nan = evaluator.clean_evalset(n_counter_generated)
     metrics_dict = {"n_nan": n_nan}
     evaluator.calculate_sizes(n_counter_generated)
 

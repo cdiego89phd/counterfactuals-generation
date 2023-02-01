@@ -51,7 +51,7 @@ def run_agent(args, yaml_file):
                                             classification_tools["classifier"],
                                             classification_tools["label_map"],
                                             gen_valset)
-        n_nan = evaluator.clean_evalset()
+        n_nan = evaluator.clean_evalset(n_to_generate)
         evaluator.prepare_batches(args.n_batches, n_to_generate)
 
         evaluator.infer_predictions(n_to_generate)

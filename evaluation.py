@@ -18,14 +18,14 @@ class Evaluator(object):
         self.model = model
         self.df_eval_dataset = eval_dataset
 
-    def clean_evalset(self) -> int:
+    def clean_evalset(self, n_generated: int) -> int:
         """Remove some nan values in the generated counterfactuals"""
 
-        n_nan = self.df_eval_dataset['generated_counter_0'].isna().sum()
+        original_len = len(self.df_eval_dataset)
+        for idx in range(n_generated):
+            self.df_eval_dataset.dropna(subset=[f'generated_counter_{idx}'], inplace=True)
+        n_nan = original_len - len(self.df_eval_dataset)
         print(f"# of nan values removed in generated counterfactuals:{n_nan}")
-        self.df_eval_dataset.dropna(subset=['generated_counter_0'], inplace=True)
-        self.df_eval_dataset.dropna(subset=['generated_counter_1'], inplace=True)
-        self.df_eval_dataset.dropna(subset=['generated_counter_2'], inplace=True)
 
         return n_nan
 

@@ -135,7 +135,7 @@ def main():
                                               classification_tools["classifier"],
                                               classification_tools["label_map"],
                                               results_table)
-    n_nan = evaluator.clean_evalset()
+    n_nan = evaluator.clean_evalset(n_counter_generated)
     metrics_dict = {"n_nan": n_nan}
     evaluator.calculate_sizes(n_counter_generated)
 

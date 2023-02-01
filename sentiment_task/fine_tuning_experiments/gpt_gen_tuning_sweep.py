@@ -108,7 +108,7 @@ def run_agent(args, yaml_file):
                                                   classification_tools["label_map"],
                                                   gen_valset)
 
-        n_nan = evaluator.clean_evalset()
+        n_nan = evaluator.clean_evalset(n_to_generate)
         evaluator.infer_predictions(n_generated=n_to_generate)
         lf_score = evaluator.calculate_lf_score()
         conf_score = evaluator.get_conf_score_pred()

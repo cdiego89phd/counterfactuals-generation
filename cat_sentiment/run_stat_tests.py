@@ -5,7 +5,7 @@ import datetime
 from statsmodels.stats.contingency_tables import mcnemar
 
 
-def build_contingency(pred_1: list, pred_2: list, gold_labels: list) -> list[list]:
+def build_contingency(pred_1: list, pred_2: list, gold_labels: list) -> list:
 
     check_correct = {True: "C",
                      False: "I"}

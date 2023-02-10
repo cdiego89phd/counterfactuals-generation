@@ -77,7 +77,7 @@ def run_mcnemar(args: argparse.Namespace) -> None:
 
     print()
     test = mcnemar(cont_table, exact=False, correction=True)
-    print("Results with exact=True parameter:")
+    print("Results with exact=False parameter:")
     for alpha in alpha_values:
         print(f"Significance with McNemar test at alpha:{alpha}: {test.pvalue < alpha} --> p-value:{test.pvalue}")
 

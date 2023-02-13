@@ -143,6 +143,7 @@ def main():
     )
 
     args = parser.parse_args()
+    print(f"{args.classifier_name_1} -- VS -- {args.classifier_name_2}")
 
     run_mcnemar(args)
 
